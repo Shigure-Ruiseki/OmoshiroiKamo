@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.fluid;
+package ruiseki.omoshiroikamo.module.machinery.common.fluid;
 
 import lombok.Getter;
 

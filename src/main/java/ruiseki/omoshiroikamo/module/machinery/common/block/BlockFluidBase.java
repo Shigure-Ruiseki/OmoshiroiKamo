@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.block;
+package ruiseki.omoshiroikamo.module.machinery.common.block;
 
 import java.util.Random;
 

@@ -22,7 +22,6 @@ import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
 import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.fluid.ModFluidGases;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
@@ -65,7 +64,6 @@ public class CoreModule extends ModModuleBase {
         CapabilityRedstone.register();
         CapabilityLight.register();
 
-        ModFluidGases.preInit();
     }
 
     @Override

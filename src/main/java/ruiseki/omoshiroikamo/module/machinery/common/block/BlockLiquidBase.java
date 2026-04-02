@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.block;
+package ruiseki.omoshiroikamo.module.machinery.common.block;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -10,7 +10,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 
-import ruiseki.omoshiroikamo.core.fluid.EnumFluidMaterial;
+import ruiseki.omoshiroikamo.module.machinery.common.fluid.EnumFluidMaterial;
 
 /**
  * Base block for all fluids (liquids and gases).

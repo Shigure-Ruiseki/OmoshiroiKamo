@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.network.packet.PacketReloadNEI;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.module.machinery.common.command.CommandModular;
+import ruiseki.omoshiroikamo.module.machinery.common.fluid.ModFluidGases;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryOreDict;
@@ -77,6 +78,7 @@ public class MachineryModule extends ModModuleBase {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         configDir = event.getModConfigurationDirectory();
+        ModFluidGases.preInit();
         MachineryIntegration.preInit();
         MachineryBlocks.preInit();
         MachineryItems.preInit();

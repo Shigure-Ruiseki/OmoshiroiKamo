@@ -1,7 +1,9 @@
-package ruiseki.omoshiroikamo.core.world.gen;
+package ruiseki.omoshiroikamo.module.machinery.common.world.gen;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+
+import ruiseki.omoshiroikamo.core.world.gen.WorldGenMinableExtended;
 
 /**
  * WorldGenerator specialized for gas pockets.

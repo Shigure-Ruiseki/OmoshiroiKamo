@@ -21,8 +21,6 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.core.fluid.EnumFluidMaterial;
-import ruiseki.omoshiroikamo.core.fluid.ModFluidGases;
 
 /**
  * Universal container for gases and liquids.
@@ -146,14 +144,12 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem {
         // Empty canister
         list.add(new ItemStack(item));
 
-        // Filled canisters for each fluid material
-        for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
+        // Filled canisters for all registered fluids (including other mods)
+        for (Fluid fluid : FluidRegistry.getRegisteredFluids()
+            .values()) {
             ItemStack stack = new ItemStack(item);
-            Fluid fluid = ModFluidGases.FLUIDS.get(mat);
-            if (fluid != null) {
-                fill(stack, new FluidStack(fluid, 1000), true);
-                list.add(stack);
-            }
+            fill(stack, new FluidStack(fluid, 1000), true);
+            list.add(stack);
         }
     }
 
@@ -164,16 +160,6 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem {
         if (renderPass == 1) {
             FluidStack fluid = getFluid(stack);
             if (fluid != null && fluid.getFluid() != null) {
-                // Find matching material to get color
-                for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
-                    if (mat.getName()
-                        .equals(
-                            fluid.getFluid()
-                                .getName())) {
-                        return mat.getColor();
-                    }
-                }
-                // Fallback to fluid color if not in our enum
                 return fluid.getFluid()
                     .getColor(fluid);
             }

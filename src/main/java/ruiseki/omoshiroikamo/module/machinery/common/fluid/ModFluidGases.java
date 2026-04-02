@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.fluid;
+package ruiseki.omoshiroikamo.module.machinery.common.fluid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,13 +10,13 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.block.BlockFluidBase;
-import ruiseki.omoshiroikamo.core.block.BlockLiquidBase;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.world.gen.SimpleMinableWorldGenerator;
-import ruiseki.omoshiroikamo.core.world.gen.WorldGenGasPocket;
 import ruiseki.omoshiroikamo.core.world.gen.WorldGenMinableExtended;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidBase;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockLiquidBase;
+import ruiseki.omoshiroikamo.module.machinery.common.world.gen.WorldGenGasPocket;
 
 /**
  * Registration class for all fluid materials.
