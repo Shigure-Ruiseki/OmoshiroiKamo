@@ -5,7 +5,6 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 
 import ruiseki.omoshiroikamo.config.backport.IDsConfig;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.world.biome.BiomeMeneglin;
 
 public class IDsBiomes {
@@ -13,7 +12,7 @@ public class IDsBiomes {
     public static BiomeGenBase MENEGILIN;
 
     public static void preInit() {
-        MENEGILIN = new BiomeMeneglin(LibResources.BIOME_MENEGLIN);
+        MENEGILIN = new BiomeMeneglin(IDsConfig.meneglinBiomeID);
         if (IDsConfig.spawnWeight > 0) {
             BiomeManager
                 .addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(MENEGILIN, IDsConfig.spawnWeight));
