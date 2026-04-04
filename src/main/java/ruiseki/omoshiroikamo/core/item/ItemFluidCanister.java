@@ -4,12 +4,14 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -19,20 +21,56 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import com.gtnewhorizon.gtnhlib.color.RGBColor;
+import com.gtnewhorizon.gtnhlib.itemrendering.IItemTexture;
+import com.gtnewhorizon.gtnhlib.itemrendering.ItemTexture;
+import com.gtnewhorizon.gtnhlib.itemrendering.ItemWithTextures;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.config.item.ItemConfigs;
+import ruiseki.omoshiroikamo.core.client.render.item.MaskedBlockItemTexture;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 /**
  * Universal container for gases and liquids.
  * Tints its texture based on the contained fluid.
  * Can be used like a bucket to place/pick up fluids.
  */
-public class ItemFluidCanister extends ItemOK implements IFluidContainerItem {
+public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, ItemWithTextures {
 
     public ItemFluidCanister() {
         super("fluid_canister");
         setMaxStackSize(1);
         setHasSubtypes(true);
+    }
+
+    private IIcon iconFluid;
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "modular/canister");
+        iconFluid = register.registerIcon(LibResources.PREFIX_MOD + "modular/canister_fluid");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IItemTexture[] getTextures(ItemStack stack) {
+        FluidStack fluid = getFluid(stack);
+        if (fluid != null && fluid.getFluid() != null) {
+            IIcon fluidIcon = fluid.getFluid()
+                .getStillIcon();
+            RGBColor tint = RGBColor.fromRGB(
+                fluid.getFluid()
+                    .getColor(fluid));
+            // Use the actual fluid texture clipped to the mask shape (no overflow).
+            // Fall back to colored mask when the fluid has no still icon registered.
+            IItemTexture fluidLayer = fluidIcon != null ? new MaskedBlockItemTexture(iconFluid, fluidIcon, tint)
+                : new ItemTexture(s -> iconFluid, s -> tint);
+            return new IItemTexture[] { fluidLayer, new ItemTexture(s -> itemIcon, s -> RGBColor.WHITE) };
+        }
+        return new IItemTexture[] { new ItemTexture(s -> itemIcon, s -> RGBColor.WHITE) };
     }
 
     @Override
@@ -139,10 +177,24 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem {
     }
 
     @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        FluidStack fluid = getFluid(stack);
+        if (fluid != null && fluid.getFluid() != null) {
+            return super.getItemStackDisplayName(stack) + " ("
+                + fluid.getFluid()
+                    .getLocalizedName(fluid)
+                + ")";
+        }
+        return super.getItemStackDisplayName(stack);
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         // Empty canister
         list.add(new ItemStack(item));
+
+        if (!ItemConfigs.showAllCanisters) return;
 
         // Filled canisters for all registered fluids (including other mods)
         for (Fluid fluid : FluidRegistry.getRegisteredFluids()
@@ -151,20 +203,6 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem {
             fill(stack, new FluidStack(fluid, 1000), true);
             list.add(stack);
         }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public int getColorFromItemStack(ItemStack stack, int renderPass) {
-        // Render pass 1 is the fluid/content part of the canister
-        if (renderPass == 1) {
-            FluidStack fluid = getFluid(stack);
-            if (fluid != null && fluid.getFluid() != null) {
-                return fluid.getFluid()
-                    .getColor(fluid);
-            }
-        }
-        return super.getColorFromItemStack(stack, renderPass);
     }
 
     /* IFluidContainerItem Implementation */
