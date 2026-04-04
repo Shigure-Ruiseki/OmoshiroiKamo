@@ -7,11 +7,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -19,6 +22,9 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.IFluidHandler;
+
+import org.lwjgl.input.Keyboard;
 
 import com.gtnewhorizon.gtnhlib.color.RGBColor;
 import com.gtnewhorizon.gtnhlib.itemrendering.IItemTexture;
@@ -160,6 +166,43 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
         }
     }
 
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+        float hitX, float hitY, float hitZ) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof IFluidHandler tank) {
+            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
+            FluidStack containerFluid = getFluid(stack);
+
+            if (containerFluid == null || containerFluid.amount < 1000) {
+                // Try to fill canister from tank
+                FluidStack available = tank.drain(dir, 1000, false);
+                if (available != null && available.amount > 0) {
+                    int filled = fill(stack, available, false);
+                    if (filled > 0) {
+                        FluidStack drained = tank.drain(dir, filled, true);
+                        fill(stack, drained, true);
+                        world.playSoundAtEntity(player, "game.neutral.swim.splash", 0.5F, 1.0F);
+                        return true;
+                    }
+                }
+            } else {
+                // Try to fill tank from canister
+                int filled = tank.fill(dir, containerFluid, false);
+                if (filled > 0) {
+                    FluidStack drained = drain(stack, filled, false);
+                    if (drained != null && drained.amount > 0) {
+                        tank.fill(dir, drained, true);
+                        drain(stack, drained.amount, true);
+                        world.playSoundAtEntity(player, "game.neutral.swim.splash", 0.5F, 1.0F);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean tryPlaceContainedFluid(World world, int x, int y, int z, Fluid fluid) {
         if (fluid == null || !fluid.canBePlacedInWorld()) {
             return false;
@@ -176,6 +219,12 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
                 }
 
                 Block block = fluid.getBlock();
+                if (block == null || block == Blocks.water) {
+                    if (fluid == FluidRegistry.WATER) block = Blocks.flowing_water;
+                }
+                if (block == null || block == Blocks.lava) {
+                    if (fluid == FluidRegistry.LAVA) block = Blocks.flowing_lava;
+                }
 
                 if (block != null) {
                     int meta = 0; // Source block
@@ -191,12 +240,43 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
     public String getItemStackDisplayName(ItemStack stack) {
         FluidStack fluid = getFluid(stack);
         if (fluid != null && fluid.getFluid() != null) {
-            return super.getItemStackDisplayName(stack) + " ("
-                + fluid.getFluid()
-                    .getLocalizedName(fluid)
-                + ")";
+            String fluidName = fluid.getFluid()
+                .getLocalizedName(fluid);
+
+            // Try to find if we have a custom name for this fluid in our Enum
+            String registryName = FluidRegistry.getFluidName(fluid);
+            for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
+                if (mat.getName()
+                    .equalsIgnoreCase(registryName)) {
+                    // Force our mod's localized name if it match our material
+                    String local = StatCollector.translateToLocal("fluid." + mat.getName());
+                    if (local != null && !local.equals("fluid." + mat.getName())) {
+                        fluidName = local;
+                    }
+                    break;
+                }
+            }
+
+            return super.getItemStackDisplayName(stack) + " (" + fluidName + ")";
         }
         return super.getItemStackDisplayName(stack);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean advanced) {
+        FluidStack fluid = getFluid(stack);
+        if (fluid != null && fluid.getFluid() != null) {
+            // Display amount
+            list.add(String.format("§7%d / %d mB§r", fluid.amount, getCapacity(stack)));
+
+            // Shift for ID
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+                list.add("§8Fluid ID: " + FluidRegistry.getFluidName(fluid) + "§r");
+            } else {
+                list.add(StatCollector.translateToLocal("tooltip.holdshift"));
+            }
+        }
     }
 
     @Override
