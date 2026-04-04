@@ -31,7 +31,7 @@ public class ModFluidGases {
     public static void preInit() {
         for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
             // 1. Fluid registration
-            Fluid fluid = new Fluid(mat.getName()).setDensity(mat.getDensity())
+            Fluid fluid = new FluidOK(mat).setDensity(mat.getDensity())
                 .setTemperature(mat.getTemperature())
                 .setGaseous(mat.isGaseous())
                 .setViscosity(mat.getViscosity());

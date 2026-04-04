@@ -43,6 +43,10 @@ public class BlockLiquidBase extends BlockFluidBase {
         return this;
     }
 
+    public EnumFluidMaterial getFluidMaterial() {
+        return material;
+    }
+
     /**
      * How many blocks the fluid spreads horizontally. Default = 8 (same as water).
      */
@@ -53,8 +57,7 @@ public class BlockLiquidBase extends BlockFluidBase {
 
     @Override
     protected void applyFluidEffect(World world, int x, int y, int z, Entity entity) {
-        if (world.isRemote || !(entity instanceof EntityLivingBase)) return;
-        EntityLivingBase living = (EntityLivingBase) entity;
+        if (world.isRemote || !(entity instanceof EntityLivingBase living)) return;
 
         if (material == EnumFluidMaterial.HELIUM) {
             // Refresh Jump Boost II every tick so it persists while inside

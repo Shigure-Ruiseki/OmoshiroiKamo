@@ -7,7 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +30,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.client.render.item.MaskedBlockItemTexture;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.fluid.EnumFluidMaterial;
 
 /**
  * Universal container for gases and liquids.
@@ -61,9 +61,25 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
         if (fluid != null && fluid.getFluid() != null) {
             IIcon fluidIcon = fluid.getFluid()
                 .getStillIcon();
-            RGBColor tint = RGBColor.fromRGB(
-                fluid.getFluid()
-                    .getColor(fluid));
+
+            int color = 0xFFFFFF;
+            boolean found = false;
+            for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
+                if (mat.getName()
+                    .equalsIgnoreCase(
+                        fluid.getFluid()
+                            .getName())) {
+                    color = mat.getColor();
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                color = fluid.getFluid()
+                    .getColor(fluid);
+            }
+
+            RGBColor tint = RGBColor.fromRGB(color);
             // Use the actual fluid texture clipped to the mask shape (no overflow).
             // Fall back to colored mask when the fluid has no still icon registered.
             IItemTexture fluidLayer = fluidIcon != null ? new MaskedBlockItemTexture(iconFluid, fluidIcon, tint)
@@ -105,8 +121,8 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
                     if (fluid != null) {
                         // Check if it's a source block
                         boolean isSource = false;
-                        if (block instanceof IFluidBlock) {
-                            if (((IFluidBlock) block).canDrain(world, x, y, z)) {
+                        if (block instanceof IFluidBlock fluidBlock) {
+                            if (fluidBlock.canDrain(world, x, y, z)) {
                                 isSource = true;
                             }
                         } else if (meta == 0) {
@@ -160,11 +176,6 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
                 }
 
                 Block block = fluid.getBlock();
-                if (block == null) {
-                    // Fallback to vanilla if applicable
-                    if (fluid == FluidRegistry.WATER) block = Blocks.flowing_water;
-                    else if (fluid == FluidRegistry.LAVA) block = Blocks.flowing_lava;
-                }
 
                 if (block != null) {
                     int meta = 0; // Source block
@@ -222,37 +233,54 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
 
     @Override
     public int fill(ItemStack container, FluidStack resource, boolean doFill) {
-        if (resource == null || resource.getFluid() == null) return 0;
+        if (resource == null || resource.getFluid() == null || resource.amount <= 0) return 0;
 
         FluidStack current = getFluid(container);
         if (current != null && !current.isFluidEqual(resource)) return 0;
 
-        if (!doFill) return 1000;
+        int capacity = getCapacity(container);
+        int currentAmount = current == null ? 0 : current.amount;
+        int toFill = Math.min(resource.amount, capacity - currentAmount);
 
-        if (container.stackTagCompound == null) {
-            container.setTagCompound(new NBTTagCompound());
+        if (toFill <= 0) return 0;
+
+        if (doFill) {
+            if (container.stackTagCompound == null) {
+                container.setTagCompound(new NBTTagCompound());
+            }
+            if (current == null) {
+                current = new FluidStack(resource.getFluid(), toFill);
+            } else {
+                current.amount += toFill;
+            }
+            NBTTagCompound fluidTag = new NBTTagCompound();
+            current.writeToNBT(fluidTag);
+            container.stackTagCompound.setTag("Fluid", fluidTag);
         }
-
-        NBTTagCompound fluidTag = new NBTTagCompound();
-        resource.writeToNBT(fluidTag);
-        container.stackTagCompound.setTag("Fluid", fluidTag);
-        return 1000;
+        return toFill;
     }
 
     @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
-        FluidStack stack = getFluid(container);
-        if (stack == null) return null;
+        FluidStack current = getFluid(container);
+        if (current == null || maxDrain <= 0) return null;
 
-        int drained = Math.min(stack.amount, maxDrain);
+        int toDrain = Math.min(current.amount, maxDrain);
+        FluidStack drained = new FluidStack(current.getFluid(), toDrain);
+
         if (doDrain) {
-            stack.amount -= drained;
-            if (stack.amount <= 0) {
+            current.amount -= toDrain;
+            if (current.amount <= 0) {
                 container.stackTagCompound.removeTag("Fluid");
+                if (container.stackTagCompound.hasNoTags()) {
+                    container.setTagCompound(null);
+                }
             } else {
-                fill(container, stack, true);
+                NBTTagCompound fluidTag = new NBTTagCompound();
+                current.writeToNBT(fluidTag);
+                container.stackTagCompound.setTag("Fluid", fluidTag);
             }
         }
-        return new FluidStack(stack.getFluid(), drained);
+        return drained;
     }
 }
