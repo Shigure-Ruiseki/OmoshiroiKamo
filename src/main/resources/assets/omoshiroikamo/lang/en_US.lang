@@ -1281,21 +1281,6 @@ machinery.design.vented=Vented Machine Casing
 machinery.design.circuitry=Circuitry Machine Casing
 
 
-# Materials
-item.ingot_osmiridium.name=Osmiridium Ingot
-item.plate_osmiridium.name=Osmiridium Plate
-item.gear_osmiridium.name=Osmiridium Gear
-item.ingot_hikarium.name=Hikarium Ingot
-item.plate_hikarium.name=Hikarium Plate
-item.gear_hikarium.name=Hikarium Gear
-item.ingot_tairithium.name=Tairithium Ingot
-item.plate_tairithium.name=Tairithium Plate
-item.gear_tairithium.name=Tairithium Gear
-item.ingot_vitarium.name=Vitarium Ingot
-item.plate_vitarium.name=Vitarium Plate
-item.gear_vitarium.name=Vitarium Gear
-
-
 # Item Input Port
 tile.modular_item_input.name=Item Input Port Tier %d
 
@@ -1419,8 +1404,12 @@ part.gear.format=%s Gear
 
 # Materials
 material.neutronium=Neutronium
+material.lithium=Lithium
+material.beryllium=Beryllium
 material.boron=Boron
+material.sodium=Sodium
 material.aluminium=Aluminium
+material.phosphorus=Phosphorus
 material.titanium=Titanium
 material.vanadium=Vanadium
 material.chromium=Chromium
@@ -1440,7 +1429,9 @@ material.indium=Indium
 material.tin=Tin
 material.europium=Europium
 material.holmium=Holmium
+material.tantalum=Tantalum
 material.tungsten=Tungsten
+material.rhenium=Rhenium
 material.osmium=Osmium
 material.iridium=Iridium
 material.platinum=Platinum
@@ -1454,14 +1445,23 @@ material.graphite=Graphite
 material.steel=Steel
 material.cupronickel=Cupronickel
 material.kanthal=Kanthal
+material.ingap=Indium Gallium Phosphide
 material.stainlesssteel=Stainless Steel
 material.tungstensteel=Tungsten Steel
 material.vanadiumsteel=Vanadium Steel
+material.blacksteel=Black Steel
+material.bluesteel=Blue Steel
+material.redsteel=Red Steel
+material.rosegold=Rose Gold
+material.platinumalloy=Platinum Alloy
+material.titaniumalloy=Titanium Alloy
+material.chromechloride=Chromium Chloride
 material.hss_g=HSS-G
 material.hss_s=HSS-S
 material.osmiridium=Osmiridium
 material.rhodiumpalladium=Rhodium Palladium
 material.thouranium=Thouranium
+material.exciteduranium=Excited Uranium
 material.toughalloy=Tough Alloy
 material.adamantium=Adamantium
 material.aurarium=Aurarium
@@ -1473,3 +1473,6 @@ material.orihalkon=Orihalkon
 material.paradox=Paradox
 material.voidsteel=Void Steel
 material.vulcanium=Vulcanium
+material.chlonox=Chlonox
+material.leviathan=Leviathan
+material.perfect=Perfect

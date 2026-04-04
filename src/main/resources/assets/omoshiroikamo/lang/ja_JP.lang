@@ -1280,21 +1280,6 @@ machinery.design.vented=放熱マシンケーシング
 machinery.design.circuitry=回路マシンケーシング
 
 
-# Materials
-item.ingot_osmiridium.name=オスミリジウムインゴット
-item.plate_osmiridium.name=オスミリジウムプレート
-item.gear_osmiridium.name=オスミリジウム歯車
-item.ingot_hikarium.name=光イウムインゴット
-item.plate_hikarium.name=光イウムプレート
-item.gear_hikarium.name=光イウム歯車
-item.ingot_tairithium.name=対立イウムインゴット
-item.plate_tairithium.name=対立イウムプレート
-item.gear_tairithium.name=対立イウム歯車
-item.ingot_vitarium.name=ヴィータリウムインゴット
-item.plate_vitarium.name=ヴィータリウムプレート
-item.gear_vitarium.name=ヴィータリウム歯車
-
-
 # Item Input Port
 tile.modular_item_input.name=アイテム搬入口 ティア%d
 
@@ -1416,8 +1401,12 @@ part.gear.format=%sギア
 
 # Materials
 material.neutronium=ニュートロニウム
+material.lithium=リチウム
+material.beryllium=ベリリウム
 material.boron=ホウ素
+material.sodium=ナトリウム
 material.aluminium=アルミニウム
+material.phosphorus=リン
 material.titanium=チタン
 material.vanadium=バナジウム
 material.chromium=クロム
@@ -1437,7 +1426,9 @@ material.indium=インジウム
 material.tin=スズ
 material.europium=ユウロピウム
 material.holmium=ホルミウム
+material.tantalum=タンタル
 material.tungsten=タングステン
+material.rhenium=レニウム
 material.osmium=オスミウム
 material.iridium=イリジウム
 material.platinum=プラチナ
@@ -1451,22 +1442,34 @@ material.graphite=グラファイト
 material.steel=スチール
 material.cupronickel=キュプロニッケル
 material.kanthal=カンタル
+material.ingap=インジウム燐
 material.stainlesssteel=ステンレススチール
 material.tungstensteel=タングステンスチール
 material.vanadiumsteel=バナジウムスチール
+material.blacksteel=ブラックスチール
+material.bluesteel=ブルースチール
+material.redsteel=レッドスチール
+material.rosegold=ローズゴールド
+material.platinumalloy=プラチナ合金
+material.titaniumalloy=チタン合金
+material.chromechloride=塩化クロム
 material.hss_g=HSS-G
 material.hss_s=HSS-S
 material.osmiridium=オスミリジウム
 material.rhodiumpalladium=ロジウムパラジウム
 material.thouranium=トウラニウム
+material.exciteduranium=励起ウラン
 material.toughalloy=タフアロイ
 material.adamantium=アダマンチウム
 material.aurarium=オーラリウム
 material.freezium=フリージウム
-material.enderalloy=エンダーアロイ
+material.enderalloy=エンダー合金
 material.hihiirokane=ヒヒイロカネ
 material.opticallium=オプティカリウム
 material.orihalkon=オリハルコン
 material.paradox=パラドックス
 material.voidsteel=ボイドスチール
 material.vulcanium=ヴォルケニウム
+material.chlonox=クロノックス
+material.leviathan=リヴァイアサン
+material.perfect=パーフェクト
