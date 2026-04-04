@@ -17,11 +17,12 @@ import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.StorageItemStackHandler;
-import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.storage.common.block.BlockBarrel;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.*;
@@ -68,6 +69,11 @@ public class StorageWrapper implements IStorageWrapper {
 
         this.storageItemStackHandler = new StorageItemStackHandler(storageSlots, this);
         this.upgradeItemStackHandler = new UpgradeItemStackHandler(upgradeSlots);
+    }
+
+    @Override
+    public UpgradeItemStackHandler getUpgradeHandler() {
+        return null;
     }
 
     @Override
@@ -154,6 +160,56 @@ public class StorageWrapper implements IStorageWrapper {
     }
 
     @Override
+    public int applySlotLimitModifiers(int original, int slot) {
+        return 0;
+    }
+
+    @Override
+    public int applyStackLimitModifiers(int original, int slot, ItemStack stack) {
+        return 0;
+    }
+
+    @Override
+    public boolean canAddUpgrade(int slot, ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean canInsert(int slot, @Nullable ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtract(int slot, @Nullable ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean canAddStack(int slot, ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean canRemoveUpgrade(int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean canReplaceUpgrade(int slot, ItemStack replacement) {
+        return false;
+    }
+
+    @Override
+    public boolean tick(World world, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    public void applyContainerEntity(World world, Entity selfEntity) {
+
+    }
+
+    @Override
     public int getSlotLimit(int slot) {
         return storageItemStackHandler.getSlotLimit(slot);
     }
@@ -165,6 +221,11 @@ public class StorageWrapper implements IStorageWrapper {
 
     public boolean isSlotMemorized(int slotIndex) {
         return storageItemStackHandler.memorizedSlotStack.get(slotIndex) != null;
+    }
+
+    @Override
+    public ItemStack getMemoryStack(int slotIndex) {
+        return null;
     }
 
     public ItemStack getMemorizedStack(int slotIndex) {
@@ -417,5 +478,35 @@ public class StorageWrapper implements IStorageWrapper {
             }
         }
         return result;
+    }
+
+    @Override
+    public void setSortType(SortType sortType) {
+
+    }
+
+    @Override
+    public SortType getSortType() {
+        return null;
+    }
+
+    @Override
+    public boolean isDirty() {
+        return false;
+    }
+
+    @Override
+    public void markDirty() {
+
+    }
+
+    @Override
+    public void markClean() {
+
+    }
+
+    @Override
+    public void setInventorySlotChangeHandler(Runnable contentsChangeHandler) {
+
     }
 }

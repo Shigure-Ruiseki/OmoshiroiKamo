@@ -6,8 +6,8 @@ import java.util.List;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
+import ruiseki.omoshiroikamo.api.storage.syncHandler.StorageSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
@@ -35,7 +35,7 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
         super(2, OKGuiTextures.BACKPACK_ICON, "gui.backpack.backpack_settings", 80, TabWidget.ExpandDirection.RIGHT);
 
         this.panel = panel;
-        this.wrapper = panel.getWrapper();
+        this.wrapper = panel.wrapper;
         this.settingPanel = settingPanel;
         this.parentTabWidget = parentTabWidget;
 
@@ -46,17 +46,17 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
 
         CyclicVariantButtonWidget tabButton = new CyclicVariantButtonWidget(
             KEEP_TAB_VARIANTS,
-            wrapper.isKeepTab() ? 0 : 1,
+            wrapper.keepTab ? 0 : 1,
             (index) -> {
-                wrapper.setKeepTab(index == 0);
+                wrapper.keepTab = index == 0;
                 updateWrapper();
             });
 
         CyclicVariantButtonWidget lockButton = new CyclicVariantButtonWidget(
             LOCK_VARIANTS,
-            wrapper.isLockBackpack() ? 0 : 1,
+            wrapper.lockBackpack ? 0 : 1,
             (index) -> {
-                wrapper.setLockBackpack(index == 0);
+                wrapper.lockBackpack = index == 0;
                 updateWrapper();
             });
 
@@ -81,14 +81,13 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
     }
 
     private void updateWrapper() {
-        BackpackSH backpackSyncHandler = this.panel.getBackpackSyncHandler();
-        backpackSyncHandler.syncToServer(BackpackSH.UPDATE_SETTING, buffer -> {
-            buffer.writeBoolean(wrapper.isLockBackpack());
+        StorageSH backpackSyncHandler = this.panel.backpackSyncHandler;
+        backpackSyncHandler.syncToServer(StorageSH.UPDATE_SETTING, buffer -> {
+            buffer.writeBoolean(wrapper.lockBackpack);
             buffer.writeStringToBuffer(
-                panel.getPlayer()
-                    .getUniqueID()
+                panel.player.getUniqueID()
                     .toString());
-            buffer.writeBoolean(wrapper.isKeepTab());
+            buffer.writeBoolean(wrapper.keepTab);
         });
     }
 }

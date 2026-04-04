@@ -1,29 +1,48 @@
 package ruiseki.omoshiroikamo.module.backpack.common.item.wrapper;
 
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IFeedingUpgrade;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
 public class FeedingUpgradeWrapper extends BasicUpgradeWrapper implements IFeedingUpgrade {
 
-    public FeedingUpgradeWrapper(ItemStack upgrade) {
-        super(upgrade);
-        handler = new UpgradeItemStackHandler(9) {
+    public FeedingUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
+        super(upgrade, storage);
+        handler = new ItemStackHandlerBase(9) {
 
             @Override
             public boolean isItemValid(int slot, ItemStack stack) {
                 return stack != null && stack.getItem() instanceof ItemFood;
             }
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+                tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
+            }
         };
-        handler.setOnSlotChanged((integer, stack) -> {
-            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-            tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
-        });
+
+        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+        if (handlerTag != null) handler.deserializeNBT(handlerTag);
+    }
+
+    @Override
+    public String getSettingLangKey() {
+        return "gui.backpack.feeding_settings";
     }
 
     @Override
@@ -48,4 +67,36 @@ public class FeedingUpgradeWrapper extends BasicUpgradeWrapper implements IFeedi
         return check.getItem() instanceof ItemFood && super.checkFilter(check);
     }
 
+    @Override
+    public boolean tick(EntityPlayer player) {
+        if (player.capabilities.isCreativeMode) return false;
+        if (player.ticksExisted % 20 != 0) return false;
+        return feed(player, storage);
+    }
+
+    @Override
+    public boolean tick(World world, BlockPos pos) {
+        if (world.isRemote) return false;
+        if (world.getWorldTime() % 20 != 0) return false;
+
+        double range = 5;
+
+        AxisAlignedBB aabb = AxisAlignedBB
+            .getBoundingBox(pos.x - range, pos.y - range, pos.z - range, pos.x + range, pos.y + range, pos.z + range);
+
+        List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
+        if (players.isEmpty()) return false;
+
+        boolean fedAny = false;
+
+        for (EntityPlayer player : players) {
+            if (player.capabilities.isCreativeMode) continue;
+
+            if (feed(player, storage)) {
+                fedAny = true;
+            }
+        }
+
+        return fedAny;
+    }
 }

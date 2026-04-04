@@ -5,18 +5,19 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IBasicFilterable;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IBasicFilterable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
 
-public class BasicExpandedTabWidget<T extends UpgradeWrapper & IBasicFilterable> extends ExpandedUpgradeTabWidget<T> {
+public class BasicExpandedTabWidget<T extends UpgradeWrapperBase & IBasicFilterable>
+    extends ExpandedUpgradeTabWidget<T> {
 
     protected final T wrapper;
     protected final Row startingRow;
     protected final BasicFilterWidget filterWidget;
 
-    public BasicExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey, String filterSyncKey,
-        int coveredTabSize, int width) {
-        super(slotIndex, coveredTabSize, stack, titleKey, width);
+    public BasicExpandedTabWidget(int slotIndex, T wrapper, ItemStack delegatedIconStack, String titleKey,
+        String filterSyncKey, int coveredTabSize, int width) {
+        super(slotIndex, coveredTabSize, delegatedIconStack, titleKey, width);
 
         this.wrapper = wrapper;
 
@@ -36,12 +37,13 @@ public class BasicExpandedTabWidget<T extends UpgradeWrapper & IBasicFilterable>
         child(column);
     }
 
-    public BasicExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey) {
-        this(slotIndex, stack, wrapper, titleKey, "common_filter", 4, 75);
+    public BasicExpandedTabWidget(int slotIndex, T wrapper, ItemStack delegatedIconStack, String titleKey) {
+        this(slotIndex, wrapper, delegatedIconStack, titleKey, "common_filter", 4, 75);
     }
 
-    public BasicExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey, String filterSyncKey) {
-        this(slotIndex, stack, wrapper, titleKey, filterSyncKey, 4, 75);
+    public BasicExpandedTabWidget(int slotIndex, T wrapper, ItemStack delegatedIconStack, String titleKey,
+        String filterSyncKey) {
+        this(slotIndex, wrapper, delegatedIconStack, titleKey, filterSyncKey, 4, 75);
     }
 
     @Override

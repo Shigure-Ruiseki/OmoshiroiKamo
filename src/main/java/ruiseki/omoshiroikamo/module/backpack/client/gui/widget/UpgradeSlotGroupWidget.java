@@ -20,12 +20,12 @@ import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widget.Widget;
 
 import lombok.Setter;
+import ruiseki.omoshiroikamo.api.storage.syncHandler.UpgradeSlotSH;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IToggleable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IToggleable;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 
 public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget> {
 
@@ -129,10 +129,9 @@ public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget>
         }
 
         public IToggleable getWrapper() {
-            ItemStack stack = panel.getWrapper()
-                .getUpgradeHandler()
+            ItemStack stack = panel.wrapper.getUpgradeHandler()
                 .getStackInSlot(slotIndex);
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, panel.wrapper);
             if (wrapper instanceof IToggleable toggleableWrapper) {
                 return toggleableWrapper;
             } else {

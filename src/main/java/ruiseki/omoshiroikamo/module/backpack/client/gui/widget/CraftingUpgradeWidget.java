@@ -7,19 +7,20 @@ import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.Interactable;
+import com.cleanroommc.modularui.network.NetworkUtils;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
+import ruiseki.omoshiroikamo.api.storage.syncHandler.UpgradeSlotSH;
+import ruiseki.omoshiroikamo.api.storage.wrapper.ICraftingUpgrade;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BigItemSlot;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
+import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryHelpers;
 
 public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgradeWrapper> {
 
@@ -37,8 +38,9 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
     private ItemSlot[] craftingMatrix;
     private ItemSlot craftingResult;
 
-    public CraftingUpgradeWidget(int slotIndex, ItemStack stack, CraftingUpgradeWrapper wrapper, BackpackPanel panel) {
-        super(slotIndex, 5, stack, "gui.backpack.crafting_settings", 90);
+    public CraftingUpgradeWidget(int slotIndex, CraftingUpgradeWrapper wrapper, ItemStack stack, BackpackPanel panel,
+        String titleKey) {
+        super(slotIndex, 5, stack, titleKey, 90);
         this.wrapper = wrapper;
 
         this.syncHandler("upgrades", slotIndex);
@@ -71,7 +73,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                     Interactable.playButtonClickSound();
                     boolean clockwise = !Interactable.hasShiftDown();
 
-                    BackpackInventoryUtils.rotated(wrapper.getStorage(), clockwise);
+                    BackpackInventoryHelpers.rotated(wrapper.getStorage(), clockwise);
                     getSlotSyncHandler()
                         .syncToServer(UpgradeSlotSH.UPDATE_CRAFTING_R, buf -> { buf.writeBoolean(clockwise); });
                     return true;
@@ -86,9 +88,9 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                     boolean balance = !Interactable.hasShiftDown();
 
                     if (balance) {
-                        BackpackInventoryUtils.balance(wrapper.getStorage());
+                        BackpackInventoryHelpers.balance(wrapper.getStorage());
                     } else {
-                        BackpackInventoryUtils.spread(wrapper.getStorage());
+                        BackpackInventoryHelpers.spread(wrapper.getStorage());
                     }
                     getSlotSyncHandler()
                         .syncToServer(UpgradeSlotSH.UPDATE_CRAFTING_G, buf -> { buf.writeBoolean(balance); });
@@ -103,7 +105,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                 if (button == 0) {
                     Interactable.playButtonClickSound();
 
-                    BackpackInventoryUtils.clear(
+                    BackpackInventoryHelpers.clear(
                         panel,
                         wrapper.getStorage(),
                         wrapper.getCraftingDes()
@@ -166,9 +168,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
     public void updateWrapper() {
         this.getSyncHandler()
             .syncToServer(UpgradeSlotSH.UPDATE_CRAFTING, buf -> {
-                buf.writeInt(
-                    wrapper.getCraftingDes()
-                        .ordinal());
+                NetworkUtils.writeEnumValue(buf, wrapper.getCraftingDes());
                 buf.writeBoolean(wrapper.isUseBackpack());
             });
     }

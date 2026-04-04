@@ -267,8 +267,7 @@ public class CommandBackpack extends CommandMod {
         // Determine tier name
         String tier = "Base";
         for (BackpackBlocks block : BackpackBlocks.VALUES) {
-            if (block.getItem() == wrapper.getBackpack()
-                .getItem()) {
+            if (block.getItem() == wrapper.backpack.getItem()) {
                 tier = block.name()
                     .replace("BACKPACK_", "");
                 break;
@@ -279,10 +278,8 @@ public class CommandBackpack extends CommandMod {
         mat.setAccentColor(BackpackMaterial.toHexColor(wrapper.getAccentColor()));
 
         // Inventory
-        for (int i = 0; i < wrapper.getBackpackHandler()
-            .getSlots(); i++) {
-            ItemStack stack = wrapper.getBackpackHandler()
-                .getStackInSlot(i);
+        for (int i = 0; i < wrapper.backpackHandler.getSlots(); i++) {
+            ItemStack stack = wrapper.backpackHandler.getStackInSlot(i);
             if (stack != null) {
                 mat.getInventory()
                     .add(BackpackMaterial.BackpackEntry.fromItemStack(i, stack));
@@ -304,14 +301,10 @@ public class CommandBackpack extends CommandMod {
     }
 
     private void applyMaterialToWrapper(BackpackMaterial mat, BackpackWrapper wrapper) {
-        wrapper.setMainColor(mat.parseMainColor());
-        wrapper.setAccentColor(mat.parseAccentColor());
+        wrapper.setColors(mat.parseMainColor(), mat.parseAccentColor());
 
         // Clear existing
-        for (int i = 0; i < wrapper.getBackpackHandler()
-            .getSlots(); i++)
-            wrapper.getBackpackHandler()
-                .setStackInSlot(i, null);
+        for (int i = 0; i < wrapper.getSlots(); i++) wrapper.setStackInSlot(i, null);
         for (int i = 0; i < wrapper.getUpgradeHandler()
             .getSlots(); i++)
             wrapper.getUpgradeHandler()
@@ -319,10 +312,8 @@ public class CommandBackpack extends CommandMod {
 
         // Set new
         for (BackpackMaterial.BackpackEntry entry : mat.getInventory()) {
-            if (entry.slot < wrapper.getBackpackHandler()
-                .getSlots()) {
-                wrapper.getBackpackHandler()
-                    .setStackInSlot(entry.slot, entry.toItemStack());
+            if (entry.slot < wrapper.getSlots()) {
+                wrapper.setStackInSlot(entry.slot, entry.toItemStack());
             }
         }
         for (BackpackMaterial.BackpackEntry entry : mat.getUpgrade()) {

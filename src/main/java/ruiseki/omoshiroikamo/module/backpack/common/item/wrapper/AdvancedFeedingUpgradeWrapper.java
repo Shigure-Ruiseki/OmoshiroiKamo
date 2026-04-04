@@ -1,32 +1,51 @@
 package ruiseki.omoshiroikamo.module.backpack.common.item.wrapper;
 
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IFeedingUpgrade;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
 public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implements IFeedingUpgrade {
 
     private static final String HUNGER_FEEDING_STRATEGY_TAG = "HungerFeedingStrategy";
     private static final String HURT_FEEDING_STRATEGY_TAG = "HurtFeedingStrategy";
 
-    public AdvancedFeedingUpgradeWrapper(ItemStack upgrade) {
-        super(upgrade);
-        handler = new UpgradeItemStackHandler(16) {
+    public AdvancedFeedingUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
+        super(upgrade, storage);
+        handler = new ItemStackHandlerBase(16) {
 
             @Override
             public boolean isItemValid(int slot, ItemStack stack) {
                 return stack != null && stack.getItem() instanceof ItemFood;
             }
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+                tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
+            }
         };
-        handler.setOnSlotChanged((integer, stack) -> {
-            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-            tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
-        });
+
+        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+        if (handlerTag != null) handler.deserializeNBT(handlerTag);
+    }
+
+    @Override
+    public String getSettingLangKey() {
+        return "gui.backpack.advanced_feeding_settings";
     }
 
     @Override
@@ -69,10 +88,9 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
     }
 
     public void setHungerFeedingStrategy(FeedingStrategy.Hunger strategy) {
-        if (strategy == null) {
-            strategy = FeedingStrategy.Hunger.FULL;
-        }
+        if (strategy == null) strategy = FeedingStrategy.Hunger.FULL;
         ItemNBTHelpers.setInt(upgrade, HUNGER_FEEDING_STRATEGY_TAG, strategy.ordinal());
+        markDirty();
     }
 
     public FeedingStrategy.HEALTH getHealthFeedingStrategy() {
@@ -82,23 +100,41 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
     }
 
     public void setHealthFeedingStrategy(FeedingStrategy.HEALTH strategy) {
-        if (strategy == null) {
-            strategy = FeedingStrategy.HEALTH.ALWAYS;
-        }
+        if (strategy == null) strategy = FeedingStrategy.HEALTH.ALWAYS;
         ItemNBTHelpers.setInt(upgrade, HURT_FEEDING_STRATEGY_TAG, strategy.ordinal());
+        markDirty();
     }
 
-    public static class FeedingStrategy {
+    @Override
+    public boolean tick(EntityPlayer player) {
+        if (player.capabilities.isCreativeMode) return false;
+        if (player.ticksExisted % 20 != 0) return false;
+        return feed(player, storage);
+    }
 
-        public enum Hunger {
-            FULL,
-            HALF,
-            ALWAYS;
+    @Override
+    public boolean tick(World world, BlockPos pos) {
+        if (world.isRemote) return false;
+        if (world.getWorldTime() % 20 != 0) return false;
+
+        double range = 5;
+
+        AxisAlignedBB aabb = AxisAlignedBB
+            .getBoundingBox(pos.x - range, pos.y - range, pos.z - range, pos.x + range, pos.y + range, pos.z + range);
+
+        List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
+        if (players.isEmpty()) return false;
+
+        boolean fedAny = false;
+
+        for (EntityPlayer player : players) {
+            if (player.capabilities.isCreativeMode) continue;
+
+            if (feed(player, storage)) {
+                fedAny = true;
+            }
         }
 
-        public enum HEALTH {
-            ALWAYS,
-            IGNORE;
-        }
+        return fedAny;
     }
 }

@@ -300,16 +300,14 @@ public class StorageContainer extends ModularContainer {
                             int available = Math.min(slotStack.stackSize, slotStack.getMaxStackSize());
                             int take = mouseButton == LEFT_MOUSE ? available : (available + 1) / 2;
 
-                            ItemStack taken = slotStack.splitStack(take);
+                            ItemStack taken = clickedSlot.decrStackSize(take);
                             inventoryplayer.setItemStack(taken);
 
-                            if (slotStack.stackSize == 0) {
+                            if (clickedSlot.getStack() == null || clickedSlot.getStack().stackSize <= 0) {
                                 clickedSlot.putStack(null);
-                            } else {
-                                clickedSlot.putStack(slotStack);
                             }
 
-                            clickedSlot.onPickupFromSlot(player, inventoryplayer.getItemStack());
+                            clickedSlot.onPickupFromSlot(player, taken);
                         }
                         // Player holding something
                         else {
@@ -496,6 +494,7 @@ public class StorageContainer extends ModularContainer {
 
         // merge stack
         if (fromStack.stackSize > 0 && !fromSlot.isPhantom()
+            && toSlot.isItemValid(fromStack)
             && toStack != null
             && ItemHandlerHelper.canItemStacksStack(fromStack, toStack)) {
 
@@ -524,7 +523,7 @@ public class StorageContainer extends ModularContainer {
         }
 
         // empty slot
-        if (fromStack.stackSize > 0 && toStack == null) {
+        if (fromStack.stackSize > 0 && toStack == null && toSlot.isItemValid(fromStack)) {
 
             int move = Math.min(fromStack.stackSize, limit);
 

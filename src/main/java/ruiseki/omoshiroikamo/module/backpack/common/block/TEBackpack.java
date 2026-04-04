@@ -14,13 +14,11 @@ import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
@@ -39,10 +37,28 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     public TEBackpack() {
         this.wrapper = new BackpackWrapper();
+        this.wrapper.setInventorySlotChangeHandler(new Runnable() {
+
+            @Override
+            public void run() {
+                markDirty();
+            }
+        });
+        allSlots = new int[wrapper.getSlots()];
+        for (int i = 0; i < allSlots.length; i++) {
+            allSlots[i] = i;
+        }
     }
 
     public void setWrapper(BackpackWrapper wrapper) {
         this.wrapper = wrapper;
+        this.wrapper.setInventorySlotChangeHandler(new Runnable() {
+
+            @Override
+            public void run() {
+                markDirty();
+            }
+        });
         allSlots = new int[wrapper.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;
@@ -56,7 +72,15 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
-        return false;
+        return wrapper.tick(worldObj, getPos());
+    }
+
+    @Override
+    public void onChunkLoad() {
+        super.onChunkLoad();
+        if (worldObj != null && !worldObj.isRemote) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override
@@ -69,12 +93,8 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         if (slot < 0 || slot >= getSizeInventory()) {
             return false;
         }
-        if (!wrapper.canInsert(stack)) {
+        if (!wrapper.canInsert(slot, stack)) {
             return false;
-        }
-        ItemStack existing = wrapper.getStackInSlot(slot);
-        if (existing != null) {
-            return ItemUtils.areStackMergable(existing, stack);
         }
         return isItemValidForSlot(slot, stack);
     }
@@ -88,7 +108,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         if (existing == null || existing.stackSize < stack.stackSize) {
             return false;
         }
-        if (!wrapper.canExtract(stack)) {
+        if (!wrapper.canExtract(slot, stack)) {
             return false;
         }
         return stack.getItem() == existing.getItem();
@@ -138,22 +158,13 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
         if (stack == null) {
             wrapper.setStackInSlot(slot, null);
-            return;
         }
 
-        if (wrapper.canVoid(stack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.AUTOMATION)
-            || wrapper.canVoid(stack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.AUTOMATION)) {
-
-            wrapper.setStackInSlot(slot, null);
-            return;
+        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+            stack.stackSize = getInventoryStackLimit();
         }
 
-        ItemStack copy = stack.copy();
-        if (copy.stackSize > getInventoryStackLimit()) {
-            copy.stackSize = getInventoryStackLimit();
-        }
-
-        wrapper.setStackInSlot(slot, copy);
+        wrapper.setStackInSlot(slot, stack);
     }
 
     @Override
@@ -168,7 +179,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public int getInventoryStackLimit() {
-        return 64 * wrapper.getTotalStackMultiplier();
+        return 64 * wrapper.applySlotLimitModifiers(1, 0);
     }
 
     @Override

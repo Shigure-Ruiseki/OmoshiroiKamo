@@ -8,8 +8,8 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
+import ruiseki.omoshiroikamo.api.storage.syncHandler.StorageSlotSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget.ExpandDirection;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;
@@ -42,15 +42,15 @@ public class MemorySettingWidget extends ExpandedTabWidget {
             .overlay(OKGuiTextures.ALL_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
-                    var wrapper = panel.getWrapper();
+                    var wrapper = panel.wrapper;
 
-                    for (int i = 0; i < wrapper.getBackpackSlots(); i++) {
+                    for (int i = 0; i < wrapper.getSlots(); i++) {
                         wrapper.setMemoryStack(i, panel.shouldMemorizeRespectNBT);
                     }
 
-                    for (BackpackSlotSH syncHandler : panel.getBackpackSlotSyncHandlers()) {
+                    for (StorageSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
                         syncHandler.syncToServer(
-                            BackpackSlotSH.UPDATE_SET_MEMORY_STACK,
+                            StorageSlotSH.UPDATE_SET_MEMORY_STACK,
                             buf -> buf.writeBoolean(panel.isMemorySettingTabOpened));
                     }
 
@@ -66,14 +66,14 @@ public class MemorySettingWidget extends ExpandedTabWidget {
             .overlay(OKGuiTextures.NONE_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
-                    var wrapper = panel.getWrapper();
+                    var wrapper = panel.wrapper;
 
-                    for (int i = 0; i < wrapper.getBackpackSlots(); i++) {
+                    for (int i = 0; i < wrapper.getSlots(); i++) {
                         wrapper.unsetMemoryStack(i);
                     }
 
-                    for (BackpackSlotSH syncHandler : panel.getBackpackSlotSyncHandlers()) {
-                        syncHandler.syncToServer(BackpackSlotSH.UPDATE_UNSET_MEMORY_STACK);
+                    for (StorageSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
+                        syncHandler.syncToServer(StorageSlotSH.UPDATE_UNSET_MEMORY_STACK);
                     }
 
                     return true;

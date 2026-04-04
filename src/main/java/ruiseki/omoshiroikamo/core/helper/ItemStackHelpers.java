@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.core.helper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import net.minecraft.entity.item.EntityItem;
@@ -215,6 +216,56 @@ public final class ItemStackHelpers {
             && ((a == null && b == null) || (a != null && a.stackSize == b.stackSize));
     }
 
+    public static boolean areItemsEqualIgnoreDurability(ItemStack stack1, ItemStack stack2) {
+        if (stack1 != null && stack2 != null) {
+            return stack1.getItem() != stack2.getItem() ? false
+                : Objects.equals(stack1.getTagCompound(), stack2.getTagCompound());
+        } else {
+            return false;
+        }
+    }
+
+    public static int getStackMeta(ItemStack stack) {
+        return stack.getItemDamage();
+    }
+
+    public static boolean isStackEmpty(ItemStack stack) {
+        return stack == null || stack.getItem() == null || stack.stackSize <= 0;
+    }
+
+    public static boolean isStackInvalid(ItemStack stack) {
+        return stack == null || stack.getItem() == null || stack.stackSize < 0;
+    }
+
+    public static boolean areStacksEqual(ItemStack stack1, ItemStack stack2) {
+        return areStacksEqual(stack1, stack2, false);
+    }
+
+    public static boolean areStacksEqual(ItemStack stack1, ItemStack stack2, boolean ignoreNBT) {
+        return stack1 != null && stack2 != null
+            && stack1.getItem() == stack2.getItem()
+            && doStackMetasMatch(getStackMeta(stack1), getStackMeta(stack2))
+            && (ignoreNBT || Objects.equals(stack1.getTagCompound(), stack2.getTagCompound()));
+    }
+
+    public static boolean doStackMetasMatch(int meta1, int meta2) {
+        if (meta1 == 32767) {
+            return true;
+        } else if (meta2 == 32767) {
+            return true;
+        } else {
+            return meta1 == meta2;
+        }
+    }
+
+    public static boolean areStackMergable(ItemStack s1, ItemStack s2) {
+        if (s1 != null && s2 != null && s1.isStackable() && s2.isStackable()) {
+            return !s1.isItemEqual(s2) ? false : areStacksEqual(s1, s2);
+        } else {
+            return false;
+        }
+    }
+
     public static NBTTagCompound saveAllSlotsExtended(NBTTagCompound nbt, List<ItemStack> inventory) {
         NBTTagList list = new NBTTagList();
 
@@ -223,7 +274,7 @@ public final class ItemStackHelpers {
 
             if (stack != null) {
                 NBTTagCompound tag = new NBTTagCompound();
-                tag.setByte("Slot", (byte) i);
+                tag.setInteger("Slot", i);
                 writeToNBTExtended(stack, tag);
                 list.appendTag(tag);
             }
@@ -244,7 +295,14 @@ public final class ItemStackHelpers {
 
         for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
-            int j = tag.getByte("Slot") & 255;
+            int j;
+            if (tag.hasKey("Slot", 3)) {
+                j = tag.getInteger("Slot"); // since 1.1.5
+            } else if (tag.hasKey("Slot", 1)) {
+                j = tag.getByte("Slot") & 255; // pre 1.1.5
+            } else {
+                j = 0; // fallback
+            }
 
             if (j < inventory.size()) {
                 inventory.set(j, loadItemStackExtended(tag));

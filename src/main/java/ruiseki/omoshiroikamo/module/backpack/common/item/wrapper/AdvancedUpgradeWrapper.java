@@ -6,77 +6,82 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IAdvancedFilterable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IToggleable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
-public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedFilterable, IToggleable {
+public class AdvancedUpgradeWrapper extends UpgradeWrapperBase implements IAdvancedFilterable, IToggleable {
 
-    protected UpgradeItemStackHandler handler;
-    private boolean filterItemsCached = false;
+    protected ItemStackHandlerBase handler;
+    protected ItemStackHandlerBase oreDict;
 
-    public AdvancedUpgradeWrapper(ItemStack upgrade) {
-        super(upgrade);
-        this.handler = new UpgradeItemStackHandler(16);
-        handler.setOnSlotChanged((integer, stack) -> {
-            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-            tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
-        });
+    public AdvancedUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
+        super(upgrade, storage);
+        this.handler = new ItemStackHandlerBase(16) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+                tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
+            }
+        };
+        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+        if (handlerTag != null) handler.deserializeNBT(handlerTag);
+
+        this.oreDict = new ItemStackHandlerBase(1) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+                tag.setTag(IAdvancedFilterable.ORE_DICT_ITEMS_TAG, this.serializeNBT());
+            }
+        };
+        NBTTagCompound oreDictTag = ItemNBTHelpers.getCompound(upgrade, ORE_DICT_ITEMS_TAG, false);
+        if (oreDictTag != null) oreDict.deserializeNBT(oreDictTag);
     }
 
     @Override
     public FilterType getFilterType() {
         int ordinal = ItemNBTHelpers.getInt(upgrade, FILTER_TYPE_TAG, FilterType.BLACKLIST.ordinal());
         FilterType[] types = FilterType.values();
-        if (ordinal < 0 || ordinal >= types.length) {
-            return FilterType.BLACKLIST;
-        }
+        if (ordinal < 0 || ordinal >= types.length) return FilterType.BLACKLIST;
         return types[ordinal];
     }
 
     @Override
     public void setFilterType(FilterType type) {
-        if (type == null) {
-            type = FilterType.BLACKLIST;
-        }
+        if (type == null) type = FilterType.BLACKLIST;
         ItemNBTHelpers.setInt(upgrade, FILTER_TYPE_TAG, type.ordinal());
+        markDirty();
     }
 
     @Override
-    public UpgradeItemStackHandler getFilterItems() {
-        if (!filterItemsCached) {
-            NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
-            if (handlerTag != null) {
-                handler.deserializeNBT(handlerTag);
-            }
-            filterItemsCached = true;
-        }
+    public ItemStackHandlerBase getFilterItems() {
         return handler;
     }
 
     @Override
-    public void setFilterItems(UpgradeItemStackHandler handler) {
-        if (handler != null) {
-            ItemNBTHelpers.setCompound(upgrade, FILTER_ITEMS_TAG, handler.serializeNBT());
-            filterItemsCached = false; // Invalidate cache when filter items are changed
-        }
+    public ItemStackHandlerBase getOreDictItem() {
+        return oreDict;
     }
 
     @Override
     public MatchType getMatchType() {
         int ordinal = ItemNBTHelpers.getInt(upgrade, MATCH_TYPE_TAG, MatchType.ITEM.ordinal());
         MatchType[] types = MatchType.values();
-        if (ordinal < 0 || ordinal >= types.length) {
-            return MatchType.ITEM;
-        }
+        if (ordinal < 0 || ordinal >= types.length) return MatchType.ITEM;
         return types[ordinal];
     }
 
     @Override
     public void setMatchType(MatchType matchType) {
-        if (matchType == null) {
-            matchType = MatchType.ITEM;
-        }
+        if (matchType == null) matchType = MatchType.ITEM;
         ItemNBTHelpers.setInt(upgrade, MATCH_TYPE_TAG, matchType.ordinal());
+        markDirty();
     }
 
     @Override
@@ -99,6 +104,7 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
             listTag.setString("e" + i, entries.get(i));
         }
         ItemNBTHelpers.setCompound(upgrade, ORE_DICT_LIST_TAG, listTag);
+        markDirty();
     }
 
     @Override
@@ -109,6 +115,7 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
     @Override
     public void setIgnoreDurability(boolean ignore) {
         ItemNBTHelpers.setBoolean(upgrade, IGNORE_DURABILITY_TAG, ignore);
+        markDirty();
     }
 
     @Override
@@ -119,6 +126,7 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
     @Override
     public void setIgnoreNBT(boolean ignore) {
         ItemNBTHelpers.setBoolean(upgrade, IGNORE_NBT_TAG, ignore);
+        markDirty();
     }
 
     @Override
@@ -134,6 +142,7 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
     @Override
     public void setEnabled(boolean enabled) {
         ItemNBTHelpers.setBoolean(upgrade, ENABLED_TAG, enabled);
+        markDirty();
     }
 
     @Override

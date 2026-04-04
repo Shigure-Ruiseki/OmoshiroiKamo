@@ -73,11 +73,17 @@ public class PacketHandler {
      * @param packetType The class of the packet.
      */
     public void register(Class<? extends PacketBase> packetType) {
-        int discriminator = getNewId(mod.getModId(), IDType.PACKET);
+        int id = getNewId(mod.getModId(), IDType.PACKET);
+
+        System.out.println("[PacketHandler] REGISTER "
+            + packetType.getSimpleName()
+            + " -> ID=" + id
+            + " SIDE=" + (MinecraftHelpers.isClientSide() ? "CLIENT" : "SERVER"));
+
         if (MinecraftHelpers.isClientSide()) {
-            networkWrapper.registerMessage(handlerClient, packetType, discriminator, Side.CLIENT);
+            networkWrapper.registerMessage(handlerClient, packetType, id, Side.CLIENT);
         }
-        networkWrapper.registerMessage(handlerServer, packetType, discriminator, Side.SERVER);
+        networkWrapper.registerMessage(handlerServer, packetType, id, Side.SERVER);
     }
 
     /**

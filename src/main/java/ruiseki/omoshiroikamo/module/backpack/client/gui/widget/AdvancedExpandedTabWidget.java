@@ -5,17 +5,17 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IAdvancedFilterable;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IAdvancedFilterable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
 
-public class AdvancedExpandedTabWidget<T extends UpgradeWrapper & IAdvancedFilterable>
+public class AdvancedExpandedTabWidget<T extends UpgradeWrapperBase & IAdvancedFilterable>
     extends ExpandedUpgradeTabWidget<T> {
 
     protected final T wrapper;
     protected final Row startingRow;
     protected final AdvancedFilterWidget filterWidget;
 
-    public AdvancedExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey, String filterSyncKey,
+    public AdvancedExpandedTabWidget(int slotIndex, T wrapper, ItemStack stack, String titleKey, String filterSyncKey,
         int coveredTabSize, int width) {
         super(slotIndex, coveredTabSize, stack, titleKey, width);
 
@@ -37,8 +37,8 @@ public class AdvancedExpandedTabWidget<T extends UpgradeWrapper & IAdvancedFilte
         child(column);
     }
 
-    public AdvancedExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey) {
-        this(slotIndex, stack, wrapper, titleKey, "adv_common_filter", 6, 100);
+    public AdvancedExpandedTabWidget(int slotIndex, T wrapper, ItemStack stack, String titleKey) {
+        this(slotIndex, wrapper, stack, titleKey, "adv_common_filter", 6, 100);
     }
 
     @Override

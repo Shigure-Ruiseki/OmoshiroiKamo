@@ -6,8 +6,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.syncHandler.DelegatedStackHandlerSH;
+import ruiseki.omoshiroikamo.api.storage.widget.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.FeedingUpgradeWidget;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.FeedingUpgradeWrapper;
 
 public class ItemFeedingUpgrade extends ItemUpgrade<FeedingUpgradeWrapper> {
@@ -29,7 +35,21 @@ public class ItemFeedingUpgrade extends ItemUpgrade<FeedingUpgradeWrapper> {
     }
 
     @Override
-    public FeedingUpgradeWrapper createWrapper(ItemStack stack) {
-        return new FeedingUpgradeWrapper(stack);
+    public FeedingUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper storage) {
+        return new FeedingUpgradeWrapper(stack, storage);
+    }
+
+    @Override
+    public void updateWidgetDelegates(FeedingUpgradeWrapper wrapper, UpgradeSlotUpdateGroup group) {
+        DelegatedStackHandlerSH handler = group.get("common_filter_handler");
+        if (handler == null) return;
+        handler.setDelegatedStackHandler(wrapper::getFilterItems);
+        handler.syncToServer(DelegatedStackHandlerSH.UPDATE_FILTERABLE);
+    }
+
+    @Override
+    public ExpandedTabWidget getExpandedTabWidget(int slotIndex, FeedingUpgradeWrapper wrapper, ItemStack stack,
+        BackpackPanel panel, String titleKey) {
+        return new FeedingUpgradeWidget(slotIndex, wrapper, stack, panel, titleKey);
     }
 }

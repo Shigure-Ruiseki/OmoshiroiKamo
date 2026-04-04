@@ -5,7 +5,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 
-import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 
@@ -25,7 +25,6 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
         handler.setOnSlotChanged((slot, stack) -> {
             NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
             tag.setTag(STORAGE_TAG, handler.serializeNBT());
-            markDirty();
         });
 
         NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, STORAGE_TAG, false);
@@ -40,11 +39,7 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
     @Override
     public void tick() {
         UpgradeItemStackHandler inv = getStorage();
-
-        ItemStack input = inv.getStackInSlot(0);
         ItemStack fuel = inv.getStackInSlot(1);
-        ItemStack output = inv.getStackInSlot(2);
-
         boolean burning = getBurnTime() > 0;
 
         // decrease burn time
@@ -72,6 +67,7 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
                 } else {
                     inv.setStackInSlot(1, fuel);
                 }
+                markDirty();
             }
         }
 
@@ -82,6 +78,7 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
             if (getCookTime() >= getCookTimeTotal()) {
                 setCookTime(0);
                 smeltItem(inv);
+                markDirty();
             }
         } else {
             if (getCookTime() > 0) {

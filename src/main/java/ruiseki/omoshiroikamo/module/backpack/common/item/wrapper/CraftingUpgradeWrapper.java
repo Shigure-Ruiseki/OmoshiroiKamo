@@ -3,36 +3,40 @@ package ruiseki.omoshiroikamo.module.backpack.common.item.wrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IBasicFilterable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
-public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingUpgrade {
+public class CraftingUpgradeWrapper extends UpgradeWrapperBase implements ICraftingUpgrade {
 
-    protected UpgradeItemStackHandler handler;
+    protected ItemStackHandlerBase handler;
 
-    public CraftingUpgradeWrapper(ItemStack upgrade) {
-        super(upgrade);
-        handler = new UpgradeItemStackHandler(10);
-        handler.setOnSlotChanged((integer, stack) -> {
-            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-            tag.setTag(STORAGE_TAG, handler.serializeNBT());
-        });
-    }
+    public CraftingUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
+        super(upgrade, storage);
+        handler = new ItemStackHandlerBase(10) {
 
-    @Override
-    public UpgradeItemStackHandler getStorage() {
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+                tag.setTag(STORAGE_TAG, handler.serializeNBT());
+            }
+        };
         NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, STORAGE_TAG, false);
-        if (handlerTag != null) {
-            handler.deserializeNBT(handlerTag);
-        }
-        return handler;
+        if (handlerTag != null) handler.deserializeNBT(handlerTag);
     }
 
     @Override
-    public void setStorage(UpgradeItemStackHandler handler) {
-        if (handler != null) {
-            ItemNBTHelpers.setCompound(upgrade, STORAGE_TAG, handler.serializeNBT());
-        }
+    public String getSettingLangKey() {
+        return "gui.backpack.crafting_settings";
+    }
+
+    @Override
+    public ItemStackHandlerBase getStorage() {
+        return handler;
     }
 
     @Override
@@ -48,11 +52,9 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
 
     @Override
     public void setCraftingDes(CraftingDestination type) {
-        if (type == null) {
-            type = CraftingDestination.BACKPACK;
-        }
+        if (type == null) type = CraftingDestination.BACKPACK;
         ItemNBTHelpers.setInt(upgrade, CRAFTING_DEST_TAG, type.ordinal());
-
+        markDirty();
     }
 
     @Override
@@ -63,6 +65,7 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
     @Override
     public void setUseBackpack(boolean used) {
         ItemNBTHelpers.setBoolean(upgrade, USE_BACKPACK_TAG, used);
+        markDirty();
     }
 
 }

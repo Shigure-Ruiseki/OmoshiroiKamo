@@ -34,15 +34,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.api.storage.IStoragePanel;
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.syncHandler.StorageSlotSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class BackpackSlot extends ItemSlot {
 
-    private final BackpackPanel panel;
-    private final BackpackWrapper wrapper;
+    private final IStoragePanel panel;
+    private final IStorageWrapper wrapper;
 
     @Getter
     @Setter
@@ -60,16 +62,16 @@ public class BackpackSlot extends ItemSlot {
     }
 
     private boolean isInMemorySettingMode() {
-        return panel.isMemorySettingTabOpened;
+        return panel.isMemorySettingTabOpened();
     }
 
     private boolean isInSortSettingMode() {
-        return panel.isSortingSettingTabOpened;
+        return panel.isSortingSettingTabOpened();
     }
 
     @Override
     public void buildTooltip(ItemStack stack, RichTooltip tooltip) {
-        ItemStack memorizedStack = wrapper.getMemorizedStack(getSlot().slotNumber);
+        ItemStack memorizedStack = wrapper.getMemoryStack(getSlot().slotNumber);
 
         if (stack == null && memorizedStack == null) return;
 
@@ -135,14 +137,14 @@ public class BackpackSlot extends ItemSlot {
 
             if (isMemorySet && mouseButton == 1) {
                 wrapper.unsetMemoryStack(index);
-                getSyncHandler().syncToServer(BackpackSlotSH.UPDATE_UNSET_MEMORY_STACK);
+                getSyncHandler().syncToServer(StorageSlotSH.UPDATE_UNSET_MEMORY_STACK);
                 return Result.SUCCESS;
 
             } else if (!isMemorySet && mouseButton == 0) {
-                wrapper.setMemoryStack(index, panel.shouldMemorizeRespectNBT);
+                wrapper.setMemoryStack(index, panel.shouldMemorizeRespectNBT());
                 getSyncHandler().syncToServer(
-                    BackpackSlotSH.UPDATE_SET_MEMORY_STACK,
-                    buf -> buf.writeBoolean(panel.shouldMemorizeRespectNBT));
+                    StorageSlotSH.UPDATE_SET_MEMORY_STACK,
+                    buf -> buf.writeBoolean(panel.shouldMemorizeRespectNBT()));
                 return Result.SUCCESS;
 
             } else return Result.STOP;
@@ -153,11 +155,11 @@ public class BackpackSlot extends ItemSlot {
 
             if (locked && mouseButton == 1) {
                 wrapper.setSlotLocked(index, false);
-                getSyncHandler().syncToServer(BackpackSlotSH.UPDATE_UNSET_SLOT_LOCK);
+                getSyncHandler().syncToServer(StorageSlotSH.UPDATE_UNSET_SLOT_LOCK);
                 return Result.SUCCESS;
             } else if (!locked && mouseButton == 0) {
                 wrapper.setSlotLocked(index, true);
-                getSyncHandler().syncToServer(BackpackSlotSH.UPDATE_SET_SLOT_LOCK);
+                getSyncHandler().syncToServer(StorageSlotSH.UPDATE_SET_SLOT_LOCK);
                 return Result.SUCCESS;
             } else return Result.STOP;
         }
@@ -204,7 +206,7 @@ public class BackpackSlot extends ItemSlot {
 
     private void drawSettingStack(ModularGuiContext context, WidgetTheme widgetTheme) {
         ItemStack slotStack = getSlot().getStack();
-        ItemStack memoryStack = wrapper.getBackpackHandler().memorizedSlotStack.get(getSlot().slotNumber);
+        ItemStack memoryStack = wrapper.getMemoryStack(getSlot().slotNumber);
         ItemStack toRender = slotStack != null ? slotStack : memoryStack;
 
         if (toRender == null) return;

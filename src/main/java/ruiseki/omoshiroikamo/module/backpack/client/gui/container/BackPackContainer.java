@@ -26,18 +26,17 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.storage.handler.IndexedInventoryCraftingWrapper;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.core.helper.TinkersHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.IndexedInventoryCraftingWrapper;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 public class BackPackContainer extends ModularContainer {
@@ -102,24 +101,21 @@ public class BackPackContainer extends ModularContainer {
         super.detectAndSendChanges();
 
         // Server-side only: sync dirty changes to client
-        if (!getGuiData().isClient() && wrapper.isDirty) {
+        if (!getGuiData().isClient() && wrapper.isDirty()) {
             EntityPlayer player = getPlayer();
 
             // Write changes to the actual ItemStack (using UUID tracking)
             wrapper.writeToItem(player);
 
             // Send NBT update packet to client (only if backpack is valid)
-            if (wrapper.getBackpack() != null && wrapper.getType() != null
+            if (wrapper.backpack != null && wrapper.getType() != null
                 && backpackSlotIndex != null
                 && player instanceof EntityPlayerMP playerMP) {
-                OmoshiroiKamo.instance.getPacketHandler()
-                    .sendToPlayer(
-                        new PacketBackpackNBT(backpackSlotIndex, wrapper.getTagCompound(), wrapper.getType()),
-                        playerMP);
-            }
+                // Clear dirty flag
+                wrapper.markClean();
 
-            // Clear dirty flag
-            wrapper.clearDirty();
+                OmoshiroiKamo.instance.getPacketHandler().sendToAllAround(new PacketBackpackNBT(backpackSlotIndex, wrapper.getBackpackNBT(), wrapper.getType()), playerMP);
+            }
         }
     }
 
@@ -130,7 +126,7 @@ public class BackPackContainer extends ModularContainer {
         // Final sync before closing - ensure all changes are saved
         if (!getGuiData().isClient()) {
             wrapper.writeToItem(player);
-            wrapper.clearDirty();
+            wrapper.markClean();
         }
     }
 
@@ -143,25 +139,6 @@ public class BackPackContainer extends ModularContainer {
         ItemStack returnable = null;
 
         if (clickTypeIn == ClickType.QUICK_CRAFT) {
-            if (heldStack != null && slotId >= 0) {
-                Slot clickedSlot = getSlot(slotId);
-                if (clickedSlot instanceof ModularBackpackSlot) {
-                    // VOID ANY
-                    if (wrapper.canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
-                        inventoryplayer.setItemStack(null);
-                        clickedSlot.onSlotChanged();
-                        return Platform.EMPTY_STACK;
-                    }
-
-                    // VOID OVERFLOW
-                    if (wrapper.canVoid(heldStack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
-                        wrapper.insertItem(heldStack, false);
-                        inventoryplayer.setItemStack(null);
-                        clickedSlot.onSlotChanged();
-                        return Platform.EMPTY_STACK;
-                    }
-                }
-            }
             return handleQuickCraft(slotId, mouseButton, mode, player);
         } else if (this.dragState != 0) {
             this.resetDrag();
@@ -186,7 +163,8 @@ public class BackPackContainer extends ModularContainer {
                         if (slot instanceof IndexedModularCraftingMatrixSlot matrixSlot) {
                             ItemStack stack = wrapper.getUpgradeHandler()
                                 .getStackInSlot(matrixSlot.getUpgradeSlotIndex());
-                            UpgradeWrapper upgradeWrapper = UpgradeWrapperFactory.createWrapper(stack);
+                            UpgradeWrapperBase upgradeWrapper = UpgradeWrapperFactory
+                                .createWrapper(stack, this.wrapper);
                             if (upgradeWrapper == null) continue;
                             if (!upgradeWrapper.isTabOpened()) continue;
                         }
@@ -201,7 +179,7 @@ public class BackPackContainer extends ModularContainer {
                             ItemStack removed = slot.decrStackSize(take);
                             cursor.stackSize += take;
 
-                            if (removed.stackSize <= 0) slot.putStack(null);
+                            if (removed.stackSize <= 0) slot.putStack(Platform.EMPTY_STACK);
 
                             slot.onPickupFromSlot(player, removed);
                         }
@@ -229,7 +207,7 @@ public class BackPackContainer extends ModularContainer {
                 if (fromSlot == null || !fromSlot.canTakeStack(player)) return Platform.EMPTY_STACK;
 
                 if (fromSlot instanceof ModularFilterSlot) {
-                    fromSlot.putStack(null);
+                    fromSlot.putStack(Platform.EMPTY_STACK);
                     return Platform.EMPTY_STACK;
                 }
 
@@ -256,7 +234,7 @@ public class BackPackContainer extends ModularContainer {
                         }
 
                         if (heldStack == null) {
-                            clickedSlot.putStack(null);
+                            clickedSlot.putStack(Platform.EMPTY_STACK);
                         }
 
                         return Platform.EMPTY_STACK;
@@ -267,57 +245,6 @@ public class BackPackContainer extends ModularContainer {
                         if (heldStack != null && clickedSlot.isItemValid(heldStack)) {
                             if (isCraftingSlot) {
                                 return Platform.EMPTY_STACK;
-                            }
-
-                            if (isBackpackSlot && wrapper != null
-                                && wrapper.canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
-
-                                if (mouseButton == LEFT_MOUSE) {
-                                    inventoryplayer.setItemStack(null);
-                                } else {
-                                    heldStack.splitStack(1);
-                                    if (heldStack.stackSize <= 0) {
-                                        inventoryplayer.setItemStack(null);
-                                    } else {
-                                        inventoryplayer.setItemStack(heldStack);
-                                    }
-                                }
-
-                                clickedSlot.putStack(null);
-                                clickedSlot.onSlotChanged();
-                                return Platform.EMPTY_STACK;
-                            }
-
-                            if (isBackpackSlot && wrapper != null
-                                && wrapper
-                                    .canVoid(heldStack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
-
-                                if (mouseButton == LEFT_MOUSE) {
-                                    ItemStack remainder = wrapper.insertItem(heldStack, false);
-                                    if (remainder == null || remainder.stackSize <= 0) {
-                                        inventoryplayer.setItemStack(null);
-                                        clickedSlot.onSlotChanged();
-                                        return Platform.EMPTY_STACK;
-                                    }
-                                    heldStack = remainder;
-                                    inventoryplayer.setItemStack(heldStack);
-
-                                } else {
-                                    ItemStack single = heldStack.splitStack(1);
-                                    ItemStack remainder = wrapper.insertItem(single, false);
-                                    if (remainder == null || remainder.stackSize <= 0) {
-                                        if (heldStack.stackSize <= 0) {
-                                            inventoryplayer.setItemStack(null);
-                                        } else {
-                                            inventoryplayer.setItemStack(heldStack);
-                                        }
-                                        clickedSlot.onSlotChanged();
-                                        return Platform.EMPTY_STACK;
-                                    } else {
-                                        heldStack.stackSize += remainder.stackSize;
-                                        inventoryplayer.setItemStack(heldStack);
-                                    }
-                                }
                             }
 
                             int lim = stackLimit(clickedSlot, heldStack);
@@ -340,16 +267,14 @@ public class BackPackContainer extends ModularContainer {
                             int available = Math.min(slotStack.stackSize, slotStack.getMaxStackSize());
                             int take = mouseButton == LEFT_MOUSE ? available : (available + 1) / 2;
 
-                            ItemStack taken = slotStack.splitStack(take);
+                            ItemStack taken = clickedSlot.decrStackSize(take);
                             inventoryplayer.setItemStack(taken);
 
-                            if (slotStack.stackSize == 0) {
-                                clickedSlot.putStack(null);
-                            } else {
-                                clickedSlot.putStack(slotStack);
+                            if (clickedSlot.getStack() == null || clickedSlot.getStack().stackSize <= 0) {
+                                clickedSlot.putStack(Platform.EMPTY_STACK);
                             }
 
-                            clickedSlot.onPickupFromSlot(player, inventoryplayer.getItemStack());
+                            clickedSlot.onPickupFromSlot(player, taken);
                         }
                         // Player holding something
                         else {
@@ -364,31 +289,6 @@ public class BackPackContainer extends ModularContainer {
                                 int canAdd = Math.max(0, lim - slotStack.stackSize);
 
                                 if (canAdd > 0) {
-                                    // Void Overflow
-                                    if (isBackpackSlot && wrapper != null
-                                        && wrapper.canVoid(
-                                            heldStack,
-                                            IVoidUpgrade.VoidType.OVERFLOW,
-                                            IVoidUpgrade.VoidInput.ALL)) {
-
-                                        int add = Math.min(heldStack.stackSize, canAdd);
-
-                                        slotStack.stackSize += add;
-                                        clickedSlot.putStack(slotStack);
-
-                                        int overflow = heldStack.stackSize - add;
-                                        if (overflow > 0) {
-                                            heldStack.stackSize = 0;
-                                            inventoryplayer.setItemStack(null);
-                                        } else {
-                                            heldStack.splitStack(add);
-                                            if (heldStack.stackSize <= 0) {
-                                                inventoryplayer.setItemStack(null);
-                                            }
-                                        }
-                                        clickedSlot.onSlotChanged();
-                                        return null;
-                                    }
 
                                     // Merge
                                     int want = mouseButton == LEFT_MOUSE ? heldStack.stackSize : 1;
@@ -408,10 +308,6 @@ public class BackPackContainer extends ModularContainer {
                             else if (clickedSlot.isItemValid(heldStack)
                                 && heldStack.stackSize <= stackLimit(clickedSlot, heldStack)) {
                                     // swap: put held into slot, give slotStack to cursor
-                                    if (isBackpackSlot && wrapper
-                                        .canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
-                                        heldStack = null;
-                                    }
                                     clickedSlot.putStack(heldStack);
                                     inventoryplayer.setItemStack(slotStack);
                                 }
@@ -425,7 +321,7 @@ public class BackPackContainer extends ModularContainer {
                                         heldStack.stackSize += canMove;
                                         ItemStack removed = clickedSlot.decrStackSize(canMove);
                                         if (removed.stackSize == 0) {
-                                            clickedSlot.putStack(null);
+                                            clickedSlot.putStack(Platform.EMPTY_STACK);
                                         } else {
                                             clickedSlot.putStack(removed);
                                         }
@@ -532,14 +428,27 @@ public class BackPackContainer extends ModularContainer {
         boolean isBackpackSlot = toSlot instanceof ModularBackpackSlot;
         ItemStack toStack = toSlot.getStack();
 
-        // VOID ANY
-        if (isBackpackSlot && wrapper.canVoid(fromStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
-            fromStack.stackSize = 0;
-            toSlot.onSlotChanged();
-            return;
-        }
-
         int limit = stackLimit(toSlot, fromStack);
+
+        if (isBackpackSlot) {
+            int slotIndex = toSlot.getSlotIndex();
+
+            if (wrapper.isSlotMemorized(slotIndex)) {
+
+                ItemStack memory = wrapper.getMemorizedStack(slotIndex);
+
+                if (memory != null) {
+
+                    boolean match = wrapper.isMemoryStackRespectNBT(slotIndex)
+                        ? ItemStack.areItemStacksEqual(memory, fromStack)
+                        : fromStack.isItemEqual(memory);
+
+                    if (!match) {
+                        return;
+                    }
+                }
+            }
+        }
 
         // merge stack
         if (fromStack.stackSize > 0 && !fromSlot.isPhantom()
@@ -553,16 +462,7 @@ public class BackPackContainer extends ModularContainer {
                 toStack.stackSize = j;
             } else {
 
-                if (isBackpackSlot
-                    && wrapper.canVoid(fromStack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
-
-                    fromStack.stackSize = 0;
-
-                } else {
-
-                    fromStack.stackSize -= limit - toStack.stackSize;
-                }
-
+                fromStack.stackSize -= limit - toStack.stackSize;
                 toStack.stackSize = limit;
             }
 

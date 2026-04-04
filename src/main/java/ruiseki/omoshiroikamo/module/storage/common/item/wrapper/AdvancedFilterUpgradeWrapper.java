@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 
 public class AdvancedFilterUpgradeWrapper extends AdvancedUpgradeWrapper implements IFilterUpgrade {

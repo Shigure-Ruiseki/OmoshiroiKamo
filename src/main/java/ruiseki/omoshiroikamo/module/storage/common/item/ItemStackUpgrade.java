@@ -81,7 +81,7 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapperBase> {
         list.add(LangHelpers.localize(LibResources.TOOLTIP + "storage.stack_upgrade", multiplier(itemstack)));
     }
 
-    public int multiplier(ItemStack stack) {
+    public static int multiplier(ItemStack stack) {
         switch (stack.getItemDamage()) {
             case 1:
                 return StorageConfig.stackUpgradeTier2Mul;

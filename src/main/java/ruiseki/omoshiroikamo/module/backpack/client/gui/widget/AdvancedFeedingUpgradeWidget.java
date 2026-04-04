@@ -6,10 +6,13 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.network.NetworkUtils;
 
 import lombok.Getter;
+import ruiseki.omoshiroikamo.api.storage.syncHandler.UpgradeSlotSH;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IFeedingUpgrade;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFeedingUpgradeWrapper;
 
 public class AdvancedFeedingUpgradeWidget extends AdvancedExpandedTabWidget<AdvancedFeedingUpgradeWrapper> {
@@ -34,16 +37,16 @@ public class AdvancedFeedingUpgradeWidget extends AdvancedExpandedTabWidget<Adva
     @Getter
     private final CyclicVariantButtonWidget heartButton;
 
-    public AdvancedFeedingUpgradeWidget(int slotIndex, ItemStack stack, AdvancedFeedingUpgradeWrapper wrapper) {
-        super(slotIndex, stack, wrapper, "gui.backpack.advanced_feeding_settings", "adv_feeding_filter", 6, 100);
+    public AdvancedFeedingUpgradeWidget(int slotIndex, AdvancedFeedingUpgradeWrapper wrapper, ItemStack stack,
+        BackpackPanel panel, String titleKey) {
+        super(slotIndex, wrapper, stack, titleKey, "adv_feeding_filter", 6, 100);
 
         this.hungerButton = new CyclicVariantButtonWidget(
             HUNGER_VARIANTS,
             wrapper.getHungerFeedingStrategy()
                 .ordinal(),
             index -> {
-                this.wrapper
-                    .setHungerFeedingStrategy(AdvancedFeedingUpgradeWrapper.FeedingStrategy.Hunger.values()[index]);
+                this.wrapper.setHungerFeedingStrategy(IFeedingUpgrade.FeedingStrategy.Hunger.values()[index]);
                 updateWrapper();
             });
 
@@ -52,8 +55,7 @@ public class AdvancedFeedingUpgradeWidget extends AdvancedExpandedTabWidget<Adva
             wrapper.getHealthFeedingStrategy()
                 .ordinal(),
             index -> {
-                this.wrapper
-                    .setHealthFeedingStrategy(AdvancedFeedingUpgradeWrapper.FeedingStrategy.HEALTH.values()[index]);
+                this.wrapper.setHealthFeedingStrategy(IFeedingUpgrade.FeedingStrategy.HEALTH.values()[index]);
                 updateWrapper();
             });
 
@@ -68,12 +70,8 @@ public class AdvancedFeedingUpgradeWidget extends AdvancedExpandedTabWidget<Adva
         if (this.filterWidget.getSlotSyncHandler() != null) {
             this.filterWidget.getSyncHandler()
                 .syncToServer(UpgradeSlotSH.UPDATE_ADVANCED_FEEDING, writer -> {
-                    writer.writeInt(
-                        wrapper.getHungerFeedingStrategy()
-                            .ordinal());
-                    writer.writeInt(
-                        wrapper.getHealthFeedingStrategy()
-                            .ordinal());
+                    NetworkUtils.writeEnumValue(writer, wrapper.getHungerFeedingStrategy());
+                    NetworkUtils.writeEnumValue(writer, wrapper.getHealthFeedingStrategy());
                 });
         }
     }

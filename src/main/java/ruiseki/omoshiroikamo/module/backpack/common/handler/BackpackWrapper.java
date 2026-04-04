@@ -1,112 +1,86 @@
 package ruiseki.omoshiroikamo.module.backpack.common.handler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
-import com.cleanroommc.modularui.utils.item.IItemHandler;
-import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
+import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import baubles.api.BaublesApi;
-import lombok.Getter;
-import lombok.Setter;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.SortType;
-import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
+import ruiseki.omoshiroikamo.api.storage.backpack.IBackpackWrapper;
+import ruiseki.omoshiroikamo.api.storage.handler.BackpackItemStackHandler;
+import ruiseki.omoshiroikamo.api.storage.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IEntityApplicable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IFilterUpgrade;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IInventoryModifiable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IPickupUpgrade;
+import ruiseki.omoshiroikamo.api.storage.wrapper.ISlotModifiable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.ITickable;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockSleepingBag;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemEverlastingUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemInceptionUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemStackUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IFeedingUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IFilterUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IMagnetUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IPickupUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
-public class BackpackWrapper implements IItemHandlerModifiable {
+public class BackpackWrapper implements IBackpackWrapper {
 
-    @Getter
-    private ItemStack backpack;
-    @Getter
-    private final BackpackItemStackHandler backpackHandler;
-    @Getter
-    private final UpgradeItemStackHandler upgradeHandler;
+    public ItemStack backpack;
+    public final TileEntity tile;
+    public final BackpackItemStackHandler backpackHandler;
+    public final UpgradeItemStackHandler upgradeHandler;
+    public int backpackSlots;
+    public int upgradeSlots;
+    public int mainColor;
+    public int accentColor;
+    public SortType sortType;
+    public boolean lockBackpack;
+    public boolean keepTab;
+    public String uuid;
+    public String playerUuid;
+    public String customName;
+    public boolean sleepingBagDeployed;
+    public int sleepingBagX;
+    public int sleepingBagY;
+    public int sleepingBagZ;
+    public int slotIndex = -1;
+    public InventoryType type = null;
+    public boolean isDirty;
+    private Runnable contentsChangeHandler;
 
     public static final String BACKPACK_INV = "BackpackInv";
     public static final String UPGRADE_INV = "UpgradeInv";
     public static final String BACKPACK_SLOTS = "BackpackSlots";
     public static final String UPGRADE_SLOTS = "UpgradeSlots";
-
-    @Getter
-    @Setter
-    private SortType sortType;
-
-    @Getter
-    @Setter
-    private boolean lockBackpack;
-
-    @Getter
-    @Setter
-    private boolean keepTab;
-
-    @Getter
-    @Setter
-    private String uuid;
-
-    @Getter
-    @Setter
-    private String customName;
-
-    @Getter
-    @Setter
-    private boolean sleepingBagDeployed;
-    @Getter
-    @Setter
-    private int sleepingBagX;
-    @Getter
-    @Setter
-    private int sleepingBagY;
-    @Getter
-    @Setter
-    private int sleepingBagZ;
-
+    public static final String MAIN_COLOR = "MainColor";
+    public static final String ACCENT_COLOR = "AccentColor";
     public static final String MEMORY_STACK_ITEMS_TAG = "MemoryItems";
     public static final String MEMORY_STACK_RESPECT_NBT_TAG = "MemoryRespectNBT";
     public static final String SORT_TYPE_TAG = "SortType";
     public static final String LOCKED_SLOTS_TAG = "LockedSlots";
     public static final String LOCKED_BACKPACK_TAG = "LockedBackpack";
     public static final String UUID_TAG = "UUID";
+    public static final String PLAYER_UUID_TAG = "PlayerUUID";
     public static final String KEEP_TAB_TAG = "KeepTab";
     public static final String CUSTOM_NAME_TAG = "CustomName";
     public static final String SLEEPING_BAG_DEPLOYED_TAG = "SleepingBagDeloyed";
@@ -114,85 +88,99 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     public static final String SLEEPING_BAG_Y = "SleepingBagY";
     public static final String SLEEPING_BAG_Z = "SleepingBagZ";
 
-    @Getter
-    @Setter
-    private int backpackSlots;
-    @Getter
-    @Setter
-    private int upgradeSlots;
-
-    @Getter
-    @Setter
-    private int mainColor;
-    @Getter
-    @Setter
-    private int accentColor;
-    @Getter
-    public static final String MAIN_COLOR = "MainColor";
-    @Getter
-    public static final String ACCENT_COLOR = "AccentColor";
-    public boolean isDirty;
-    @Getter
-    @Setter
-    protected int slotIndex = -1;
-    @Getter
-    @Setter
-    protected InventoryType type = null;
-
-    public void markDirty() {
-        this.isDirty = true;
-    }
-
-    public void clearDirty() {
-        this.isDirty = false;
-    }
-
     public BackpackWrapper() {
-        this(null, 120, 7);
+        this(null, null, 120, 7);
+    }
+
+    public BackpackWrapper(TileEntity tile) {
+        this(null, tile, 120, 7);
+    }
+
+    public BackpackWrapper(ItemStack backpack) {
+        this(backpack, null, 120, 7);
     }
 
     public BackpackWrapper(ItemStack backpack, TileEntity tile) {
-        this(backpack, 120, 7);
+        this(backpack, tile, 120, 7);
     }
 
-    public BackpackWrapper(ItemStack backpack, BlockBackpack.ItemBackpack itemBackpack) {
-        this(backpack, itemBackpack.getBackpackSlots(), itemBackpack.getUpgradeSlots());
+    public BackpackWrapper(ItemStack backpack, BlockBackpack.ItemBackpack item) {
+        this(backpack, null, item.backpackSlots, item.upgradeSlots);
     }
 
-    public BackpackWrapper(ItemStack backpack, BlockBackpack blockBackpack) {
-        this(backpack, blockBackpack.getBackpackSlots(), blockBackpack.getUpgradeSlots());
+    public BackpackWrapper(TileEntity tile, int backpackSlots, int upgradeSlots) {
+        this(null, tile, backpackSlots, upgradeSlots);
     }
 
     public BackpackWrapper(ItemStack backpack, int backpackSlots, int upgradeSlots) {
+        this(backpack, null, backpackSlots, upgradeSlots);
+    }
+
+    public BackpackWrapper(ItemStack backpack, BlockBackpack blockBackpack, TileEntity tile) {
+        this(backpack, tile, blockBackpack.getBackpackSlots(), blockBackpack.getUpgradeSlots());
+    }
+
+    public BackpackWrapper(ItemStack backpack, TileEntity tile, int backpackSlots, int upgradeSlots) {
         this.backpack = backpack;
+        this.tile = tile;
         this.backpackSlots = backpackSlots;
         this.upgradeSlots = upgradeSlots;
         this.mainColor = 0xFFCC613A;
         this.accentColor = 0xFF622E1A;
         this.sortType = SortType.BY_NAME;
         this.lockBackpack = false;
-        this.uuid = "";
+        this.uuid = UUID.randomUUID()
+            .toString();
+        this.playerUuid = "";
         this.keepTab = true;
         this.sleepingBagDeployed = false;
 
-        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this);
-        backpackHandler.setOnSlotChanged((integer, stack) -> { markDirty(); });
+        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
 
-        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots);
-        upgradeHandler.setOnSlotChanged((integer, stack) -> { markDirty(); });
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                markDirty();
+            }
+        };
+
+        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                markDirty();
+            }
+        };
 
         readFromItem();
     }
 
+    @Override
+    public UpgradeItemStackHandler getUpgradeHandler() {
+        return upgradeHandler;
+    }
+
+    @Override
     public String getDisplayName() {
         if (hasCustomInventoryName()) {
             return this.customName;
         }
+
         if (backpack != null && backpack.getItem() != null) {
             return LangHelpers.localize(
                 backpack.getItem()
                     .getUnlocalizedName(backpack) + ".name");
         }
+
+        if (tile != null && tile.getWorldObj() != null) {
+            Block block = tile.getWorldObj()
+                .getBlock(tile.xCoord, tile.yCoord, tile.zCoord);
+            if (block != null) {
+                return LangHelpers.localize(block.getUnlocalizedName() + ".name");
+            }
+        }
+
         return LangHelpers.localize("container.inventory");
     }
 
@@ -203,66 +191,68 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
     @Override
     public ItemStack getStackInSlot(int slot) {
-        return backpackHandler.getStackInSlot(slot);
+        ItemStack stack = backpackHandler.getStackInSlot(slot);
+
+        Map<Integer, IInventoryModifiable> mods = gatherCapabilityUpgrades(IInventoryModifiable.class);
+        for (IInventoryModifiable mod : mods.values()) {
+            stack = mod.onGet(slot, stack);
+        }
+
+        return stack;
+    }
+
+    @Override
+    public void setStackInSlot(int slot, @Nullable ItemStack stack) {
+        Map<Integer, IInventoryModifiable> mods = gatherCapabilityUpgrades(IInventoryModifiable.class);
+        for (IInventoryModifiable mod : mods.values()) {
+            stack = mod.onSet(slot, stack);
+        }
+
+        backpackHandler.setStackInSlot(slot, stack);
     }
 
     @Override
     public @Nullable ItemStack insertItem(int slot, @Nullable ItemStack stack, boolean simulate) {
+
+        // Apply slot-level modifications
+        Map<Integer, IInventoryModifiable> mods = gatherCapabilityUpgrades(IInventoryModifiable.class);
+        for (IInventoryModifiable mod : mods.values()) {
+            stack = mod.onInsert(slot, stack, simulate);
+            if (stack == null) return null;
+        }
+
         return backpackHandler.prioritizedInsertion(slot, stack, simulate);
     }
 
+    @Override
+    public @Nullable ItemStack extractItem(int slot, int amount, boolean simulate) {
+        ItemStack extracted = backpackHandler.extractItem(slot, amount, simulate);
+        if (extracted == null) return null;
+
+        // Apply IInventoryModifiable wrappers
+        Map<Integer, IInventoryModifiable> mods = gatherCapabilityUpgrades(IInventoryModifiable.class);
+        for (IInventoryModifiable mod : mods.values()) {
+            extracted = mod.onExtract(slot, extracted, simulate);
+            if (extracted == null) return null; // cancel extraction
+        }
+
+        return extracted;
+    }
+
+    @Override
     public @Nullable ItemStack insertItem(@Nullable ItemStack stack, boolean simulate) {
         if (stack == null || stack.stackSize <= 0) return null;
 
-        // Void ANY
-        if (canVoid(stack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
-            return simulate ? stack : null;
-        }
-
-        // Void Overflow early have max item
-        for (int i = 0; i < backpackHandler.getSlots(); i++) {
-            ItemStack slotStack = getStackInSlot(i);
-            if (slotStack != null && ItemHandlerHelper.canItemStacksStack(slotStack, stack)) {
-
-                int limit = getSlotLimit(i);
-                if (slotStack.stackSize >= limit
-                    && canVoid(stack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
-                    return null;
-                }
-            }
-        }
-
-        ItemStack remaining = stack;
+        ItemStack remaining = ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize);
 
         for (int i = 0; i < backpackHandler.getSlots() && remaining != null; i++) {
-
-            int before = remaining.stackSize;
             remaining = insertItem(i, remaining, simulate);
-
-            boolean changed = (remaining == null) || (remaining.stackSize != before);
-
-            // Void Overflow
-            if (changed && remaining != null && remaining.stackSize > 0) {
-                if (canVoid(remaining, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
-                    return simulate ? remaining : null;
-                }
-            }
-        }
-
-        if (remaining != null && remaining.stackSize > 0) {
-            if (simulate) {
-                return null;
-            }
         }
 
         return remaining;
     }
 
     @Override
-    public @Nullable ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return backpackHandler.extractItem(slot, amount, simulate);
-    }
-
     public ItemStack extractItem(ItemStack wanted, int amount, boolean simulate) {
         if (wanted == null || amount <= 0) return null;
 
@@ -294,15 +284,14 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         return backpackHandler.getSlotLimit(slot);
     }
 
-    @Override
-    public void setStackInSlot(int slot, @Nullable ItemStack stack) {
-        backpackHandler.setStackInSlot(slot, stack);
-    }
-
     // Setting
-
     public boolean isSlotMemorized(int slotIndex) {
         return !(backpackHandler.memorizedSlotStack.get(slotIndex) == null);
+    }
+
+    @Override
+    public ItemStack getMemoryStack(int slotIndex) {
+        return null;
     }
 
     public ItemStack getMemorizedStack(int slotIndex) {
@@ -340,181 +329,166 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         backpackHandler.sortLockedSlots.set(slotIndex, locked);
     }
 
-    // ---------- UPGRADE ----------
-    public int getTotalStackMultiplier() {
-        List<ItemStack> stacks = upgradeHandler.getStacks();
-        int result = 0;
-        boolean hasstackUpdateOmega = false;
+    @Override
+    public int applyStackLimitModifiers(int original, int slot, ItemStack stack) {
+        int result = original;
 
-        if (stacks.isEmpty()) {
-            return 1;
+        Map<Integer, ISlotModifiable> gathered = gatherCapabilityUpgrades(ISlotModifiable.class);
+        if (gathered.isEmpty()) return result;
+
+        for (ISlotModifiable mod : gathered.values()) {
+            result = mod.modifyStackLimit(result, slot, stack);
         }
 
-        for (ItemStack stack : stacks) {
-            if (stack == null) {
-                continue;
-            }
-            if (stack.getItem() instanceof ItemStackUpgrade upgrade) {
-                result += upgrade.multiplier(stack);
-            }
-            if (stack.equals(BackpackItems.STACK_UPGRADE.newItemStack(1, 4))) {
-                hasstackUpdateOmega = true;
-            }
+        if (result != original) {
+            return result - original;
         }
-        if (hasstackUpdateOmega) return BackpackConfig.stackUpgradeTierOmegaMul;
-        else return result == 0 ? 1 : result;
+
+        return original;
     }
 
-    public int getStackMultiplierExcluding(int excludeSlot, ItemStack replacement) {
-        List<ItemStack> stacks = upgradeHandler.getStacks();
+    @Override
+    public int applySlotLimitModifiers(int original, int slot) {
+        int result = original;
 
-        int result = 0;
-        for (int i = 0; i < upgradeHandler.getSlots(); i++) {
-            ItemStack stack = stacks.get(i);
+        Map<Integer, ISlotModifiable> gathered = gatherCapabilityUpgrades(ISlotModifiable.class);
+        if (gathered.isEmpty()) return result;
 
-            if (i == excludeSlot) {
-                if (replacement != null && replacement.getItem() instanceof ItemStackUpgrade up) {
-                    result += up.multiplier(replacement);
+        for (ISlotModifiable mod : gathered.values()) {
+            result = mod.modifySlotLimit(result, slot);
+        }
+
+        if (result != original) {
+            return result - original;
+        }
+
+        return original;
+    }
+
+    @Override
+    public boolean canAddUpgrade(int slot, ItemStack stack) {
+        Map<Integer, ISlotModifiable> gathered = gatherCapabilityUpgrades(ISlotModifiable.class);
+        if (gathered.isEmpty()) return true;
+
+        for (ISlotModifiable mod : gathered.values()) {
+            if (!mod.canAddUpgrade(slot, stack)) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canAddStack(int slot, ItemStack stack) {
+        Map<Integer, ISlotModifiable> gathered = gatherCapabilityUpgrades(ISlotModifiable.class);
+        if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
+
+            for (ISlotModifiable mod : gathered.values()) {
+                if (mod.canAddStack(slot, stack)) {
+                    return true;
                 }
-                continue;
             }
 
-            if (stack == null) {
-                continue;
-            }
-
-            if (stack.getItem() instanceof ItemStackUpgrade up) {
-                result += up.multiplier(stack);
-            }
-        }
-        return result == 0 ? 1 : result;
-    }
-
-    public boolean canAddStackUpgrade(int newMultiplier) {
-        long result = (long) getTotalStackMultiplier() * 64L * newMultiplier;
-        return result == (int) result;
-    }
-
-    public boolean canReplaceStackUpgrade(int slotIndex, ItemStack replacement) {
-        ItemStack old = upgradeHandler.getStacks()
-            .get(slotIndex);
-
-        if (old != null && replacement != null
-            && old.getItem() instanceof ItemStackUpgrade oldUp
-            && replacement.getItem() instanceof ItemStackUpgrade newUp
-            && oldUp.multiplier(old) == newUp.multiplier(replacement)) {
-            return true;
+            return false;
         }
 
-        int newStackMultiplier = getStackMultiplierExcluding(slotIndex, replacement);
-
-        for (ItemStack stack : backpackHandler.getStacks()) {
-            if (stack == null) continue;
-
-            if (stack.stackSize > stack.getMaxStackSize() * newStackMultiplier) {
-                return false;
-            }
+        for (ISlotModifiable mod : gathered.values()) {
+            if (!mod.canAddStack(slot, stack)) return false;
         }
 
         return true;
     }
 
-    public boolean canNestBackpack() {
-        for (ItemStack stack : upgradeHandler.getStacks()) {
-            if (stack != null && stack.getItem() instanceof ItemInceptionUpgrade) {
-                return true;
-            }
+    @Override
+    public boolean canRemoveUpgrade(int slot) {
+        Map<Integer, ISlotModifiable> gathered = gatherCapabilityUpgrades(ISlotModifiable.class);
+        if (gathered.isEmpty()) return true;
+        for (ISlotModifiable mod : gathered.values()) {
+            if (!mod.canRemoveUpgrade(slot)) return false;
         }
-        return false;
+        return true;
     }
 
-    public boolean canRemoveInceptionUpgrade() {
-        boolean containsBackpack = false;
-        for (ItemStack stack : backpackHandler.getStacks()) {
-            if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
-                containsBackpack = true;
-                break;
-            }
+    @Override
+    public boolean canReplaceUpgrade(int slot, ItemStack replacement) {
+        Map<Integer, ISlotModifiable> gathered = gatherCapabilityUpgrades(ISlotModifiable.class);
+        if (gathered.isEmpty()) return true;
+        for (ISlotModifiable mod : gathered.values()) {
+            if (!mod.canReplaceUpgrade(slot, replacement)) return false;
         }
-
-        if (!containsBackpack) {
-            return true;
-        }
-
-        int inceptionCount = 0;
-        for (ItemStack stack : upgradeHandler.getStacks()) {
-            if (stack != null && stack.getItem() instanceof ItemInceptionUpgrade) {
-                inceptionCount++;
-            }
-        }
-
-        return inceptionCount > 1;
+        return true;
     }
 
-    public boolean feed(EntityPlayer player, IItemHandler handler) {
-        for (IFeedingUpgrade upgrade : gatherCapabilityUpgrades(IFeedingUpgrade.class).values()) {
-            if (upgrade.feed(player, handler)) {
-                return true;
-            }
+    @Override
+    public boolean tick(EntityPlayer player) {
+
+        Map<Integer, ITickable> gathered = gatherCapabilityUpgrades(ITickable.class);
+        if (gathered.isEmpty()) return false;
+
+        boolean dirty = false;
+
+        for (ITickable wrapper : gathered.values()) {
+            dirty |= wrapper.tick(player);
         }
-        return false;
+
+        return dirty;
     }
 
-    public List<Entity> getMagnetEntities(World world, AxisAlignedBB aabb) {
-        Set<Entity> result = new HashSet<>();
+    @Override
+    public boolean tick(World world, BlockPos pos) {
+        Map<Integer, ITickable> gathered = gatherCapabilityUpgrades(ITickable.class);
+        if (gathered.isEmpty()) return false;
 
-        List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, aabb);
-        List<EntityXPOrb> xps = world.getEntitiesWithinAABB(EntityXPOrb.class, aabb);
+        boolean dirty = false;
 
-        for (IMagnetUpgrade upgrade : gatherCapabilityUpgrades(IMagnetUpgrade.class).values()) {
-            if (upgrade.isCollectItem()) {
-                for (EntityItem item : items) {
-                    if (upgrade.canCollectItem(item.getEntityItem())) {
-                        result.add(item);
-                    }
-                }
-            }
-            if (upgrade.isCollectExp()) {
-                result.addAll(xps);
-            }
+        for (ITickable wrapper : gathered.values()) {
+            dirty |= wrapper.tick(world, pos);
         }
-
-        return new ArrayList<>(result);
+        return dirty;
     }
 
-    public boolean canInsert(ItemStack stack) {
-        Map<Integer, IFilterUpgrade> upgrades = gatherCapabilityUpgrades(IFilterUpgrade.class);
-
-        if (upgrades.isEmpty()) {
-            return true;
-        }
-
-        for (IFilterUpgrade upgrade : upgrades.values()) {
-            if (upgrade.canInsert(stack)) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public InventoryType getType() {
+        return type;
     }
 
-    public boolean canExtract(ItemStack stack) {
-        Map<Integer, IFilterUpgrade> upgrades = gatherCapabilityUpgrades(IFilterUpgrade.class);
+    @Override
+    public void setType(InventoryType type) {
+        this.type = type;
+    }
 
-        if (upgrades.isEmpty()) {
-            return true;
-        }
+    @Override
+    public int getSlotIndex() {
+        return slotIndex;
+    }
 
-        for (IFilterUpgrade upgrade : upgrades.values()) {
-            if (upgrade.canExtract(stack)) {
-                return true;
-            }
+    @Override
+    public void setSlotIndex(int slotIndex) {
+        this.slotIndex = slotIndex;
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack) {
+        Map<Integer, IFilterUpgrade> gathered = gatherCapabilityUpgrades(IFilterUpgrade.class);
+        if (gathered.isEmpty()) return true;
+        for (IFilterUpgrade mod : gathered.values()) {
+            if (!mod.canInsert(slot, stack)) return false;
         }
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack) {
+        Map<Integer, IFilterUpgrade> gathered = gatherCapabilityUpgrades(IFilterUpgrade.class);
+        if (gathered.isEmpty()) return true;
+        for (IFilterUpgrade mod : gathered.values()) {
+            if (!mod.canExtract(slot, stack)) return false;
+        }
+        return true;
     }
 
     public boolean canPickupItem(ItemStack stack) {
-
-        for (IPickupUpgrade upgrade : gatherCapabilityUpgrades(IPickupUpgrade.class).values()) {
+        Map<Integer, IPickupUpgrade> gathered = gatherCapabilityUpgrades(IPickupUpgrade.class);
+        if (gathered.isEmpty()) return false;
+        for (IPickupUpgrade upgrade : gathered.values()) {
             if (upgrade.canPickup(stack)) {
                 return true;
             }
@@ -522,58 +496,42 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         return false;
     }
 
-    public boolean canVoid(ItemStack newStack, IVoidUpgrade.VoidType type, IVoidUpgrade.VoidInput input) {
-
-        for (IVoidUpgrade upgrade : gatherCapabilityUpgrades(IVoidUpgrade.class).values()) {
-            if (upgrade.canVoid(newStack) && upgrade.getVoidType() == type
-                && (upgrade.getVoidInput() == input || input == IVoidUpgrade.VoidInput.AUTOMATION)) {
-                return true;
-            }
+    @Override
+    public void applyContainerEntity(World world, Entity selfEntity) {
+        Map<Integer, IEntityApplicable> gathered = gatherCapabilityUpgrades(IEntityApplicable.class);
+        if (gathered.isEmpty()) return;
+        for (IEntityApplicable mod : gathered.values()) {
+            mod.applyContainerEntity(world, selfEntity);
         }
-        return false;
-    }
-
-    public boolean canImportant() {
-
-        for (ItemStack stack : upgradeHandler.getStacks()) {
-            if (stack != null && stack.getItem() instanceof ItemEverlastingUpgrade) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean canPlayerAccess(UUID playerUUID) {
-        return !isLockBackpack() || playerUUID.equals(UUID.fromString(getUuid()));
+        if (!lockBackpack) return true;
+        if (playerUUID == null || playerUuid == null || playerUuid.isEmpty()) return false;
+        return playerUUID.equals(UUID.fromString(playerUuid));
     }
 
     public boolean hasCustomInventoryName() {
         return this.customName != null && !this.customName.isEmpty();
     }
 
-    // ---------- ITEM STACK ----------
-    public NBTTagCompound getTagCompound() {
-        if (backpack == null) {
-            return null;
-        }
-        return backpack.getTagCompound();
-    }
-
-    public ItemStack findActualStack(EntityPlayer player) {
-        if (player == null || uuid == null) return backpack;
+    public ItemStack findStackByUUID(EntityPlayer player) {
+        if (player == null || uuid == null || type == null) return backpack;
 
         // Check held item first (fastest)
         ItemStack held = player.getHeldItem();
         if (isSameBackpack(held)) return held;
 
         // Check player inventory
-        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-            ItemStack stack = player.inventory.getStackInSlot(i);
-            if (isSameBackpack(stack)) return stack;
+        if (type == InventoryTypes.PLAYER) {
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                ItemStack stack = player.inventory.getStackInSlot(i);
+                if (isSameBackpack(stack)) return stack;
+            }
         }
 
         // Check Baubles if loaded
-        if (LibMods.Baubles.isLoaded()) {
+        if (type == InventoryTypes.BAUBLES) {
             IInventory baubles = BaublesApi.getBaubles(player);
             if (baubles != null) {
                 for (int i = 0; i < baubles.getSizeInventory(); i++) {
@@ -591,35 +549,60 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         return tag != null && uuid.equals(tag.getString(UUID_TAG));
     }
 
+    @Override
+    public IBackpackWrapper setBackpackStack(ItemStack backpackStack) {
+        backpack = backpackStack;
+        return this;
+    }
+
+    @Override
+    public ItemStack getBackpack() {
+        return backpack;
+    }
+
+    @Override
+    public NBTTagCompound getBackpackNBT() {
+        return backpack.getTagCompound();
+    }
+
+    @Override
     public void writeToItem() {
         if (backpack == null) return;
-        NBTTagCompound tag = backpack.getTagCompound();
+        NBTTagCompound tag = getBackpackNBT();
         if (tag == null) {
             tag = new NBTTagCompound();
             backpack.setTagCompound(tag);
         }
         writeToNBT(tag);
+        backpack.setTagCompound(tag);
     }
 
+    @Override
     public void writeToItem(EntityPlayer player) {
-        this.backpack = findActualStack(player);
+        this.backpack = findStackByUUID(player);
         writeToItem();
     }
 
+    @Override
     public void readFromItem() {
-        if (backpack == null) {
-            return;
-        }
+        if (backpack == null) return;
         NBTTagCompound tag = ItemNBTHelpers.getNBT(backpack);
         readFromNBT(tag);
     }
 
     // ---------- TILE ENTITY ----------
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setInteger(BACKPACK_SLOTS, getBackpackSlots());
-        tag.setInteger(UPGRADE_SLOTS, getUpgradeSlots());
-        tag.setInteger(MAIN_COLOR, getMainColor());
-        tag.setInteger(ACCENT_COLOR, getAccentColor());
+        if (backpackHandler.isSizeInconsistent(backpackSlots)) {
+            backpackHandler.resize(backpackSlots);
+        }
+        if (upgradeHandler.isSizeInconsistent(upgradeSlots)) {
+            upgradeHandler.resize(upgradeSlots);
+        }
+
+        tag.setInteger(BACKPACK_SLOTS, backpackSlots);
+        tag.setInteger(UPGRADE_SLOTS, upgradeSlots);
+        tag.setInteger(MAIN_COLOR, mainColor);
+        tag.setInteger(ACCENT_COLOR, accentColor);
 
         tag.setTag(BACKPACK_INV, backpackHandler.serializeNBT());
         tag.setTag(UPGRADE_INV, upgradeHandler.serializeNBT());
@@ -629,16 +612,18 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         tag.setTag(MEMORY_STACK_ITEMS_TAG, memoryTag);
 
         List<Boolean> respectList = backpackHandler.memorizedSlotRespectNbtList;
-        byte[] respectBytes = new byte[respectList.size()];
-        for (int i = 0; i < respectList.size(); i++) {
-            respectBytes[i] = (byte) (respectList.get(i) ? 1 : 0);
+        byte[] respectBytes = new byte[backpackSlots];
+        for (int i = 0; i < backpackSlots; i++) {
+            boolean val = i < respectList.size() && respectList.get(i);
+            respectBytes[i] = (byte) (val ? 1 : 0);
         }
         tag.setByteArray(MEMORY_STACK_RESPECT_NBT_TAG, respectBytes);
 
         List<Boolean> locked = backpackHandler.sortLockedSlots;
-        byte[] lockedBytes = new byte[locked.size()];
-        for (int i = 0; i < locked.size(); i++) {
-            lockedBytes[i] = (byte) (locked.get(i) ? 1 : 0);
+        byte[] lockedBytes = new byte[backpackSlots];
+        for (int i = 0; i < backpackSlots; i++) {
+            boolean val = i < locked.size() && locked.get(i);
+            lockedBytes[i] = (byte) (val ? 1 : 0);
         }
         tag.setByteArray(LOCKED_SLOTS_TAG, lockedBytes);
 
@@ -650,7 +635,11 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
         tag.setString(UUID_TAG, uuid);
 
-        if (hasCustomInventoryName()) {
+        if (lockBackpack && playerUuid != null) {
+            tag.setString(PLAYER_UUID_TAG, playerUuid);
+        }
+
+        if (hasCustomInventoryName() && this.customName != null) {
             tag.setString(CUSTOM_NAME_TAG, this.customName);
         }
 
@@ -661,99 +650,86 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     }
 
     public void readFromNBT(NBTTagCompound tag) {
-
-        if (tag.hasKey(BACKPACK_SLOTS)) {
-            backpackSlots = tag.getInteger(BACKPACK_SLOTS);
+        if (tag == null) return;
+        if (tag.hasKey(BACKPACK_SLOTS, 3)) {
+            this.backpackSlots = tag.getInteger(BACKPACK_SLOTS);
         }
-        if (tag.hasKey(UPGRADE_SLOTS)) {
-            upgradeSlots = tag.getInteger(UPGRADE_SLOTS);
-        }
-
-        if (tag.hasKey(MAIN_COLOR)) {
-            mainColor = tag.getInteger(MAIN_COLOR);
-        }
-        if (tag.hasKey(ACCENT_COLOR)) {
-            accentColor = tag.getInteger(ACCENT_COLOR);
+        if (tag.hasKey(UPGRADE_SLOTS, 3)) {
+            this.upgradeSlots = tag.getInteger(UPGRADE_SLOTS);
         }
 
-        if (tag.hasKey(BACKPACK_INV)) {
+        if (tag.hasKey(MAIN_COLOR, 3)) this.mainColor = tag.getInteger(MAIN_COLOR);
+        if (tag.hasKey(ACCENT_COLOR, 3)) this.accentColor = tag.getInteger(ACCENT_COLOR);
+
+        if (tag.hasKey(BACKPACK_INV, 10)) {
             backpackHandler.deserializeNBT(tag.getCompoundTag(BACKPACK_INV));
 
+            if (backpackHandler.isSizeInconsistent(this.backpackSlots)) {
+                backpackHandler.resize(this.backpackSlots);
+            }
+
             ItemStackHelpers.loadAllItemsExtended(tag.getCompoundTag(BACKPACK_INV), backpackHandler.getStacks());
-            if (backpackHandler.getSlots() != backpackSlots) {
-                backpackHandler.resize(backpackSlots);
-            }
-        }
-        if (tag.hasKey(UPGRADE_INV)) {
-            upgradeHandler.deserializeNBT(tag.getCompoundTag(UPGRADE_INV));
-            if (upgradeHandler.getSlots() != upgradeSlots) {
-                upgradeHandler.resize(upgradeSlots);
-            }
         }
 
-        if (tag.hasKey(MEMORY_STACK_ITEMS_TAG)) {
+        if (tag.hasKey(MEMORY_STACK_ITEMS_TAG, 10)) {
             ItemStackHelpers
                 .loadAllItemsExtended(tag.getCompoundTag(MEMORY_STACK_ITEMS_TAG), backpackHandler.memorizedSlotStack);
         }
 
-        byte[] respectArr = tag.getByteArray(MEMORY_STACK_RESPECT_NBT_TAG);
-        int maxRespect = backpackHandler.memorizedSlotRespectNbtList.size();
-        for (int i = 0; i < respectArr.length && i < maxRespect; i++) {
-            setMemoryStackRespectNBT(i, respectArr[i] != 0);
+        if (tag.hasKey(MEMORY_STACK_RESPECT_NBT_TAG, 7)) {
+            byte[] respectArr = tag.getByteArray(MEMORY_STACK_RESPECT_NBT_TAG);
+            for (int i = 0; i < respectArr.length && i < this.backpackSlots; i++) {
+                setMemoryStackRespectNBT(i, respectArr[i] != 0);
+            }
         }
 
-        byte[] lockedArr = tag.getByteArray(LOCKED_SLOTS_TAG);
-        int maxLocked = backpackHandler.sortLockedSlots.size();
-        for (int i = 0; i < lockedArr.length && i < maxLocked; i++) {
-            setSlotLocked(i, lockedArr[i] != 0);
+        if (tag.hasKey(LOCKED_SLOTS_TAG, 7)) {
+            byte[] lockedArr = tag.getByteArray(LOCKED_SLOTS_TAG);
+            for (int i = 0; i < lockedArr.length && i < this.backpackSlots; i++) {
+                setSlotLocked(i, lockedArr[i] != 0);
+            }
         }
 
-        if (tag.hasKey(SORT_TYPE_TAG)) {
-            sortType = SortType.values()[tag.getByte(SORT_TYPE_TAG)];
+        if (tag.hasKey(UPGRADE_INV, 10)) {
+            upgradeHandler.deserializeNBT(tag.getCompoundTag(UPGRADE_INV));
+            if (upgradeHandler.isSizeInconsistent(this.upgradeSlots)) {
+                upgradeHandler.resize(this.upgradeSlots);
+            }
         }
 
-        if (tag.hasKey(LOCKED_BACKPACK_TAG)) {
-            lockBackpack = tag.getBoolean(LOCKED_BACKPACK_TAG);
+        if (tag.hasKey(SORT_TYPE_TAG, 1)) {
+            byte type = tag.getByte(SORT_TYPE_TAG);
+            if (type >= 0 && type < SortType.values().length) {
+                this.sortType = SortType.values()[type];
+            }
         }
 
-        if (tag.hasKey(KEEP_TAB_TAG)) {
-            keepTab = tag.getBoolean(KEEP_TAB_TAG);
+        if (tag.hasKey(LOCKED_BACKPACK_TAG, 1)) this.lockBackpack = tag.getBoolean(LOCKED_BACKPACK_TAG);
+        if (tag.hasKey(KEEP_TAB_TAG, 1)) this.keepTab = tag.getBoolean(KEEP_TAB_TAG);
+
+        if (tag.hasKey(UUID_TAG, 8)) {
+            this.uuid = tag.getString(UUID_TAG);
         }
 
-        if (tag.hasKey(UUID_TAG)) {
-            uuid = tag.getString(UUID_TAG);
-        } else {
-            uuid = UUID.randomUUID()
-                .toString();
-            markDirty();
+        if (tag.hasKey(PLAYER_UUID_TAG, 8)) {
+            this.playerUuid = tag.getString(PLAYER_UUID_TAG);
         }
 
         if (tag.hasKey("display", 10)) {
             NBTTagCompound display = tag.getCompoundTag("display");
-            if (display.hasKey("Name", 8)) {
-                customName = display.getString("Name");
-            }
-        } else {
-            customName = tag.getString(CUSTOM_NAME_TAG);
+            if (display.hasKey("Name", 8)) this.customName = display.getString("Name");
+        } else if (tag.hasKey(CUSTOM_NAME_TAG, 8)) {
+            this.customName = tag.getString(CUSTOM_NAME_TAG);
         }
 
-        if (tag.hasKey(SLEEPING_BAG_DEPLOYED_TAG)) {
-            sleepingBagDeployed = tag.getBoolean(SLEEPING_BAG_DEPLOYED_TAG);
-        }
-
-        if (tag.hasKey(SLEEPING_BAG_X)) {
-            sleepingBagX = tag.getInteger(SLEEPING_BAG_X);
-        }
-
-        if (tag.hasKey(SLEEPING_BAG_Y)) {
-            sleepingBagY = tag.getInteger(SLEEPING_BAG_Y);
-        }
-
-        if (tag.hasKey(SLEEPING_BAG_Z)) {
-            sleepingBagZ = tag.getInteger(SLEEPING_BAG_Z);
-        }
+        if (tag.hasKey(SLEEPING_BAG_DEPLOYED_TAG, 1))
+            this.sleepingBagDeployed = tag.getBoolean(SLEEPING_BAG_DEPLOYED_TAG);
+        if (tag.hasKey(SLEEPING_BAG_X, 3)) this.sleepingBagX = tag.getInteger(SLEEPING_BAG_X);
+        if (tag.hasKey(SLEEPING_BAG_Y, 3)) this.sleepingBagY = tag.getInteger(SLEEPING_BAG_Y);
+        if (tag.hasKey(SLEEPING_BAG_Z, 3)) this.sleepingBagZ = tag.getInteger(SLEEPING_BAG_Z);
     }
 
+    @Override
     public <T> Map<Integer, T> gatherCapabilityUpgrades(Class<T> capabilityClass) {
         Map<Integer, T> result = new HashMap<>();
 
@@ -761,7 +737,7 @@ public class BackpackWrapper implements IItemHandlerModifiable {
             ItemStack stack = upgradeHandler.getStackInSlot(i);
             if (stack == null) continue;
 
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this);
             if (wrapper == null) continue;
 
             if (capabilityClass.isAssignableFrom(wrapper.getClass())) {
@@ -772,12 +748,45 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         return result;
     }
 
+    @Override
+    public void setSortType(SortType sortType) {
+        this.sortType = sortType;
+    }
+
+    @Override
+    public SortType getSortType() {
+        return sortType;
+    }
+
+    @Override
+    public boolean isDirty() {
+        return isDirty;
+    }
+
     public void syncToServer() {
         writeToItem();
-        if (type != null) {
+        if (getType() != null) {
             OmoshiroiKamo.instance.getPacketHandler()
-                .sendToServer(new PacketBackpackNBT(slotIndex, getTagCompound(), type));
+                .sendToServer(new PacketBackpackNBT(getSlotIndex(), getBackpackNBT(), getType()));
         }
+    }
+
+    @Override
+    public void markDirty() {
+        this.isDirty = true;
+        if (contentsChangeHandler != null) {
+            contentsChangeHandler.run();
+        }
+    }
+
+    @Override
+    public void markClean() {
+        this.isDirty = false;
+    }
+
+    @Override
+    public void setInventorySlotChangeHandler(Runnable contentsChangeHandler) {
+        this.contentsChangeHandler = contentsChangeHandler;
     }
 
     public boolean deploySleepingBag(EntityPlayer player, World world, int meta, int cX, int cY, int cZ) {
@@ -802,5 +811,31 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         }
         this.sleepingBagDeployed = false;
         writeToItem();
+    }
+
+    @Override
+    public int getAccentColor() {
+        return accentColor;
+    }
+
+    @Override
+    public int getMainColor() {
+        return mainColor;
+    }
+
+    @Override
+    public void setColors(int mainColor, int accentColor) {
+        this.mainColor = mainColor;
+        this.accentColor = accentColor;
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        return null;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound tag) {
+
     }
 }

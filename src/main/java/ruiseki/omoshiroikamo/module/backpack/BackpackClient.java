@@ -6,11 +6,15 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.client.key.IKeyRegistry;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.core.proxy.CommonProxyComponent;
+import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackGuiOpener;
 
 @SideOnly(Side.CLIENT)
-public class BackpackClient extends CommonProxyComponent {
+public class BackpackClient extends ClientProxyComponent {
+
+    public BackpackClient() {
+        super(new BackpackCommon());
+    }
 
     @Override
     public ModBase getMod() {

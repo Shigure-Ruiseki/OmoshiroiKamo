@@ -6,8 +6,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.syncHandler.DelegatedCraftingStackHandlerSH;
+import ruiseki.omoshiroikamo.api.storage.widget.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CraftingUpgradeWidget;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
 
 public class ItemCraftingUpgrade extends ItemUpgrade<CraftingUpgradeWrapper> {
@@ -29,7 +35,21 @@ public class ItemCraftingUpgrade extends ItemUpgrade<CraftingUpgradeWrapper> {
     }
 
     @Override
-    public CraftingUpgradeWrapper createWrapper(ItemStack stack) {
-        return new CraftingUpgradeWrapper(stack);
+    public CraftingUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper storage) {
+        return new CraftingUpgradeWrapper(stack, storage);
+    }
+
+    @Override
+    public void updateWidgetDelegates(CraftingUpgradeWrapper wrapper, UpgradeSlotUpdateGroup group) {
+        DelegatedCraftingStackHandlerSH handler = group.get("crafting_handler");
+        if (handler == null) return;
+        handler.setDelegatedStackHandler(wrapper::getStorage);
+        handler.syncToServer(DelegatedCraftingStackHandlerSH.UPDATE_CRAFTING);
+    }
+
+    @Override
+    public ExpandedTabWidget getExpandedTabWidget(int slotIndex, CraftingUpgradeWrapper wrapper, ItemStack stack,
+        BackpackPanel panel, String titleKey) {
+        return new CraftingUpgradeWidget(slotIndex, wrapper, stack, panel, titleKey);
     }
 }

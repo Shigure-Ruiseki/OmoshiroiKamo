@@ -6,12 +6,12 @@ import com.cleanroommc.modularui.widgets.slot.ModularCraftingSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
+import ruiseki.omoshiroikamo.api.storage.syncHandler.DelegatedFloatSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.CraftingSlotInfo;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.IndexedModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.IndexedModularCraftingSlot;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.DelegatedCraftingStackHandlerSH;
-import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.DelegatedFloatSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.DelegatedStackHandlerSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.FilterSlotSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.FoodFilterSlotSH;

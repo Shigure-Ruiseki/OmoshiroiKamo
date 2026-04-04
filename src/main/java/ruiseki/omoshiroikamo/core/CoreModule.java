@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.storage.widget.UpgradeSlotGroupRegisters;
 import ruiseki.omoshiroikamo.core.capabilities.energy.CapabilityEnergy;
 import ruiseki.omoshiroikamo.core.capabilities.fluid.CapabilityFluidHandler;
 import ruiseki.omoshiroikamo.core.capabilities.item.CapabilityItemHandler;
@@ -26,6 +27,7 @@ public class CoreModule extends ModModuleBase {
 
     public CoreModule() {
         super(OmoshiroiKamo.instance);
+        addInitListener(new UpgradeSlotGroupRegisters());
     }
 
     @Override

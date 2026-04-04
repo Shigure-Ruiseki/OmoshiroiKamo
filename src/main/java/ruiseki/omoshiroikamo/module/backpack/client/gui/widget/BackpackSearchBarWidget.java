@@ -25,12 +25,11 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
     }
 
     private void cacheOriginalOrder() {
-        Column backpackSlots = panel.getBackpackInvCol();
+        Column backpackSlots = panel.backpackInvCol;
         if (backpackSlots == null) return;
 
         originalOrder = new ArrayList<>();
-        for (IWidget child : panel.getBackpackInvCol()
-            .getChildren()) {
+        for (IWidget child : panel.backpackInvCol.getChildren()) {
             if (child instanceof BackpackSlot slot) {
                 originalOrder.add(slot);
             }
@@ -45,13 +44,13 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
 
     @Override
     public void doSearch(String search) {
-        Column backpackSlots = panel.getBackpackInvCol();
+        Column backpackSlots = panel.backpackInvCol;
         if (backpackSlots == null) return;
 
         IWidget parent = backpackSlots.getParent();
         if (!(parent instanceof BackpackList backpackList)) return;
 
-        int columns = panel.getRowSize();
+        int columns = panel.rowSize;
         int slotSize = BackpackSlot.SIZE;
 
         compiledSearch = search.isEmpty() ? null : SearchParser.parse(search);

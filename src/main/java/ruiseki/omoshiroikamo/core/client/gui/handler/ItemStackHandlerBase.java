@@ -198,6 +198,22 @@ public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerial
         this.stacks = newStacks;
     }
 
+    public boolean isSizeInconsistent(int newSize) {
+        return newSize != stacks.size();
+    }
+
+    public static <T> void syncListSize(List<T> list, int newSize, T defaultValue) {
+        int currentSize = list.size();
+        if (newSize < currentSize) {
+            list.subList(newSize, currentSize)
+                .clear();
+        } else {
+            for (int i = currentSize; i < newSize; i++) {
+                list.add(defaultValue);
+            }
+        }
+    }
+
     public void dropAll(World world, int x, int y, int z) {
         for (int i = 0; i < getSlots(); i++) {
             ItemStack stack = getStackInSlot(i);

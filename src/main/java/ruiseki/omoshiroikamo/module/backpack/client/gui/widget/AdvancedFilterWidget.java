@@ -17,6 +17,7 @@ import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.drawable.text.TextRenderer;
+import com.cleanroommc.modularui.network.NetworkUtils;
 import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
@@ -31,12 +32,12 @@ import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import lombok.Getter;
+import ruiseki.omoshiroikamo.api.storage.syncHandler.UpgradeSlotSH;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.drawble.Outline;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.FilterSlot;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IAdvancedFilterable;
 
 public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
 
@@ -238,12 +239,8 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
     private void updateWrapper() {
         if (slotSyncHandler != null) {
             slotSyncHandler.syncToServer(UpgradeSlotSH.UPDATE_ADVANCED_FILTERABLE, writer -> {
-                writer.writeInt(
-                    filterableWrapper.getFilterType()
-                        .ordinal());
-                writer.writeInt(
-                    filterableWrapper.getMatchType()
-                        .ordinal());
+                NetworkUtils.writeEnumValue(writer, filterableWrapper.getFilterType());
+                NetworkUtils.writeEnumValue(writer, filterableWrapper.getMatchType());
                 writer.writeBoolean(filterableWrapper.isIgnoreDurability());
                 writer.writeBoolean(filterableWrapper.isIgnoreNBT());
 

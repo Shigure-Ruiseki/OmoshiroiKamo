@@ -2,10 +2,13 @@ package ruiseki.omoshiroikamo.module.backpack.common.item.wrapper;
 
 import net.minecraft.item.ItemStack;
 
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IPickupUpgrade;
+
 public class PickupUpgradeWrapper extends BasicUpgradeWrapper implements IPickupUpgrade {
 
-    public PickupUpgradeWrapper(ItemStack upgrade) {
-        super(upgrade);
+    public PickupUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
+        super(upgrade, storage);
     }
 
     @Override

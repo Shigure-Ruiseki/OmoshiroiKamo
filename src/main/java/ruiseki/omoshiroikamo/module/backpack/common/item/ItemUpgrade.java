@@ -6,13 +6,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
+import ruiseki.omoshiroikamo.api.storage.widget.UpgradeSlotUpdateGroup;
+import ruiseki.omoshiroikamo.api.storage.wrapper.IUpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IUpgradeWrapperFactory;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 
-public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUpgradeWrapperFactory<T> {
+public class ItemUpgrade<T extends UpgradeWrapperBase> extends ItemOK implements IUpgradeWrapperFactory<T> {
 
     public ItemUpgrade(String name) {
         super(name);
@@ -35,7 +39,18 @@ public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUp
 
     @SuppressWarnings("unchecked")
     @Override
-    public T createWrapper(ItemStack stack) {
-        return (T) new UpgradeWrapper(stack);
+    public T createWrapper(ItemStack stack, IStorageWrapper storage) {
+        return (T) new UpgradeWrapperBase(stack, storage);
+    }
+
+    @Override
+    public void updateWidgetDelegates(T wrapper, UpgradeSlotUpdateGroup group) {
+
+    }
+
+    @Override
+    public ExpandedTabWidget getExpandedTabWidget(int slotIndex, T wrapper, ItemStack stack, BackpackPanel panel,
+        String titleKey) {
+        return null;
     }
 }

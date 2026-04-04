@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.network.packet.PacketQuickDraw;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
-import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
+import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryHelpers;
 
 public class KeyHandler {
 
@@ -73,17 +73,6 @@ public class KeyHandler {
         if (keyOpenBackpack.isPressed() && BackportConfigs.enableBackpack) {
             EntityPlayer player = Platform.getClientPlayer();
 
-            for (int armorIndex = 0; armorIndex < 4; armorIndex++) {
-                int slot = player.inventory.getSizeInventory() - 1 - armorIndex;
-                ItemStack stack = player.inventory.getStackInSlot(slot);
-                if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
-
-                    GuiFactories.playerInventory()
-                        .openFromPlayerInventoryClient(slot);
-                    return;
-                }
-            }
-
             if (LibMods.Baubles.isLoaded()) {
                 InventoryTypes.BAUBLES.visitAll(player, (type, index, stack) -> {
                     if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
@@ -93,6 +82,17 @@ public class KeyHandler {
                     }
                     return false;
                 });
+            }
+
+            for (int armorIndex = 0; armorIndex < 4; armorIndex++) {
+                int slot = player.inventory.getSizeInventory() - 1 - armorIndex;
+                ItemStack stack = player.inventory.getStackInSlot(slot);
+                if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
+
+                    GuiFactories.playerInventory()
+                        .openFromPlayerInventoryClient(slot);
+                    return;
+                }
             }
         }
     }
@@ -131,11 +131,11 @@ public class KeyHandler {
         ItemStack result = null;
         if (LibMods.Baubles.isLoaded()) {
             IInventory baublesInventory = BaublesApi.getBaubles(player);
-            result = BackpackInventoryUtils.getQuickDrawStack(baublesInventory, wanted, InventoryTypes.BAUBLES);
+            result = BackpackInventoryHelpers.getQuickDrawStack(baublesInventory, wanted, InventoryTypes.BAUBLES);
         }
 
         if (result == null) {
-            result = BackpackInventoryUtils.getQuickDrawStack(player.inventory, wanted, InventoryTypes.PLAYER);
+            result = BackpackInventoryHelpers.getQuickDrawStack(player.inventory, wanted, InventoryTypes.PLAYER);
         }
 
         if (result != null && mc.theWorld.isRemote) {

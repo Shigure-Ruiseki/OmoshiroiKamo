@@ -12,12 +12,13 @@ import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.StackUpgradeWrapper;
 
-public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
+public class ItemStackUpgrade extends ItemUpgrade<StackUpgradeWrapper> {
 
     @SideOnly(Side.CLIENT)
     protected IIcon tier1, tier2, tier3, tier4, tierOmega;
@@ -81,21 +82,21 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
 
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LangHelpers.localize(LibResources.TOOLTIP + "backpack.stack_upgrade", multiplier(itemstack)));
+        list.add(LangHelpers.localize("tooltip.backpack.stack_upgrade", multiplier(itemstack)));
     }
 
-    public int multiplier(ItemStack stack) {
-        switch (stack.getItemDamage()) {
-            case 1:
-                return BackpackConfig.stackUpgradeTier2Mul;
-            case 2:
-                return BackpackConfig.stackUpgradeTier3Mul;
-            case 3:
-                return BackpackConfig.stackUpgradeTier4Mul;
-            case 4:
-                return BackpackConfig.stackUpgradeTierOmegaMul;
-            default:
-                return BackpackConfig.stackUpgradeTier1Mul;
-        }
+    @Override
+    public StackUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper storage) {
+        return new StackUpgradeWrapper(stack, storage);
+    }
+
+    public static int multiplier(ItemStack stack) {
+        return switch (stack.getItemDamage()) {
+            case 1 -> BackpackConfig.stackUpgradeTier2Mul;
+            case 2 -> BackpackConfig.stackUpgradeTier3Mul;
+            case 3 -> BackpackConfig.stackUpgradeTier4Mul;
+            case 4 -> BackpackConfig.stackUpgradeTierOmegaMul;
+            default -> BackpackConfig.stackUpgradeTier1Mul;
+        };
     }
 }
