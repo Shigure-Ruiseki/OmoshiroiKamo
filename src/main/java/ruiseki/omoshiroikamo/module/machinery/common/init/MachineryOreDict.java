@@ -19,7 +19,7 @@ public class MachineryOreDict {
                 .registerOre("plate" + material.getOreName(), MachineryItems.PLATE.newItemStack(1, material.getMeta()));
 
             OreDictionary
-                .registerOre("gear" + material.getOreName(), MachineryItems.GEAR.newItemStack(1, material.getMeta()));
+                .registerOre("dust" + material.getOreName(), MachineryItems.DUST.newItemStack(1, material.getMeta()));
         }
     }
 }
