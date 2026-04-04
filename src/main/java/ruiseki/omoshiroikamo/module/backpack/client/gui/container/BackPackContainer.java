@@ -114,7 +114,10 @@ public class BackPackContainer extends ModularContainer {
                 // Clear dirty flag
                 wrapper.markClean();
 
-                OmoshiroiKamo.instance.getPacketHandler().sendToAllAround(new PacketBackpackNBT(backpackSlotIndex, wrapper.getBackpackNBT(), wrapper.getType()), playerMP);
+                OmoshiroiKamo.instance.getPacketHandler()
+                    .sendToAllAround(
+                        new PacketBackpackNBT(backpackSlotIndex, wrapper.getBackpackNBT(), wrapper.getType()),
+                        playerMP);
             }
         }
     }

@@ -75,10 +75,9 @@ public class PacketHandler {
     public void register(Class<? extends PacketBase> packetType) {
         int id = getNewId(mod.getModId(), IDType.PACKET);
 
-        System.out.println("[PacketHandler] REGISTER "
-            + packetType.getSimpleName()
-            + " -> ID=" + id
-            + " SIDE=" + (MinecraftHelpers.isClientSide() ? "CLIENT" : "SERVER"));
+        System.out.println(
+            "[PacketHandler] REGISTER " + packetType
+                .getSimpleName() + " -> ID=" + id + " SIDE=" + (MinecraftHelpers.isClientSide() ? "CLIENT" : "SERVER"));
 
         if (MinecraftHelpers.isClientSide()) {
             networkWrapper.registerMessage(handlerClient, packetType, id, Side.CLIENT);
