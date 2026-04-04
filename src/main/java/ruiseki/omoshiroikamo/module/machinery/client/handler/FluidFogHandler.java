@@ -8,6 +8,8 @@ import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -76,7 +78,23 @@ public class FluidFogHandler {
         Block block = entity.worldObj.getBlock(x, y, z);
         EnumFluidMaterial mat = getMaterialForBlock(block);
         if (mat != null) {
-            event.density = mat.isGaseous() ? 0.05F : 0.15F;
+            event.density = mat.isGaseous() ? 0.06F : 0.15F;
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+        Entity entity = event.entity;
+        double eyeY = entity.posY + (double) entity.getEyeHeight();
+        int x = MathHelper.floor_double(entity.posX);
+        int y = MathHelper.floor_double(eyeY);
+        int z = MathHelper.floor_double(entity.posZ);
+
+        Block block = entity.worldObj.getBlock(x, y, z);
+        EnumFluidMaterial mat = getMaterialForBlock(block);
+        if (mat != null) {
+            // Set fog mode to EXP for all custom fluids to ensure density is correctly rendered
+            GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
         }
     }
 }
