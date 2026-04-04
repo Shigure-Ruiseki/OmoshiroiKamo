@@ -1362,28 +1362,52 @@ tooltip.machinery.mana_transfer=転送量: %s /t
 
 # Gas/Fluid
 tile.gas.helium.name=ヘリウム
+fluid.helium.name=ヘリウム
+fluid.helium=ヘリウム
 tile.gas.neon.name=ネオン
+fluid.neon=ネオン
 tile.gas.argon.name=アルゴン
+fluid.argon=アルゴン
 tile.gas.krypton.name=クリプトン
+fluid.krypton=クリプトン
 tile.gas.xenon.name=キセノン
+fluid.xenon=キセノン
 tile.gas.radon.name=ラドン
+fluid.radon=ラドン
 tile.gas.oganesson.name=オガネソン
+fluid.oganesson=オガネソン
 tile.gas.fluorine.name=フッ素
+fluid.fluorine=フッ素
 tile.gas.chlorine.name=塩素
+fluid.chlorine=塩素
 tile.gas.hydrogen.name=水素
+fluid.hydrogen=水素
 tile.gas.oxygen.name=酸素
+fluid.oxygen=酸素
 tile.gas.nitrogen.name=窒素
+fluid.nitrogen=窒素
 tile.gas.carbon_dioxide.name=二酸化炭素
+fluid.carbon_dioxide=二酸化炭素
 tile.gas.steam.name=蒸気
+fluid.steam=蒸気
 tile.liquid.bromine.name=臭素
+fluid.bromine=臭素
 tile.liquid.iodine.name=ヨウ素
+fluid.iodine=ヨウ素
 tile.liquid.astatine.name=アスタチン
+fluid.astatine=アスタチン
 tile.liquid.tennessine.name=テネシン
+fluid.tennessine.name=テネシン
 tile.liquid.oil.name=石油
+fluid.oil.name=石油
 tile.liquid.fuel.name=燃料
+fluid.fuel.name=燃料
 tile.liquid.biofuel.name=バイオ燃料
+fluid.biofuel.name=バイオ燃料
 tile.liquid.ethanol.name=エタノール
+fluid.ethanol.name=エタノール
 tile.liquid.mana.name=マナ
+fluid.mana.name=マナ
 
 
 # Material Parts

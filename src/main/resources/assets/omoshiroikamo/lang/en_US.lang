@@ -1365,28 +1365,51 @@ tooltip.machinery.deprecated.hint=§7This block uses the legacy system.
 
 # Gas/Fluid
 tile.gas.helium.name=Helium
+fluid.helium=Helium
 tile.gas.neon.name=Neon
+fluid.neon=Neon
 tile.gas.argon.name=Argon
+fluid.argon=Argon
 tile.gas.krypton.name=Krypton
+fluid.krypton=Krypton
 tile.gas.xenon.name=Xenon
+fluid.xenon=Xenon
 tile.gas.radon.name=Radon
+fluid.radon=Radon
 tile.gas.oganesson.name=Oganesson
+fluid.oganesson=Oganesson
 tile.gas.fluorine.name=Fluorine
+fluid.fluorine=Fluorine
 tile.gas.chlorine.name=Chlorine
+fluid.chlorine=Chlorine
 tile.gas.hydrogen.name=Hydrogen
+fluid.hydrogen=Hydrogen
 tile.gas.oxygen.name=Oxygen
+fluid.oxygen=Oxygen
 tile.gas.nitrogen.name=Nitrogen
+fluid.nitrogen=Nitrogen
 tile.gas.carbon_dioxide.name=Carbon Dioxide
+fluid.carbon_dioxide=Carbon Dioxide
 tile.gas.steam.name=Steam
+fluid.steam=Steam
 tile.liquid.bromine.name=Bromine
+fluid.bromine.name=Bromine
 tile.liquid.iodine.name=Iodine
+fluid.iodine.name=Iodine
 tile.liquid.astatine.name=Astatine
+fluid.astatine.name=Astatine
 tile.liquid.tennessine.name=Tennessine
+fluid.tennessine.name=Tennessine
 tile.liquid.oil.name=Oil
+fluid.oil.name=Oil
 tile.liquid.fuel.name=Fuel
+fluid.fuel.name=Fuel
 tile.liquid.biofuel.name=Biofuel
+fluid.biofuel.name=Biofuel
 tile.liquid.ethanol.name=Ethanol
+fluid.ethanol.name=Ethanol
 tile.liquid.mana.name=Mana
+fluid.mana.name=Mana
 
 
 # Material Parts

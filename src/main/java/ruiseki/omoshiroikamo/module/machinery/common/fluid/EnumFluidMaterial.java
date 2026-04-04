@@ -22,36 +22,36 @@ public enum EnumFluidMaterial {
     // Ar(1.78), Kr(3.75), Xe(5.9), Rn(9.7), Og(predicted ~40) > air → DOWN
     // -------------------------------------------------------------------------
     // name color density temp gas visc quanta drag
-    HELIUM("helium", 0xCEF4FB, -1000, 300, true, 200, 8, 0.01f),
-    NEON("neon", 0xFF6600, -300, 300, true, 250, 8, 0.02f),
-    ARGON("argon", 0x9933FF, 300, 300, true, 300, 7, 0.03f),
-    KRYPTON("krypton", 0xC0C0C0, 600, 300, true, 350, 7, 0.04f),
-    XENON("xenon", 0x66CCFF, 900, 300, true, 400, 6, 0.05f),
-    RADON("radon", 0xFF00FF, 1500, 300, true, 500, 6, 0.05f),
-    OGANESSON("oganesson", 0x333333, 2000, 300, true, 600, 4, 0.06f),
+    HELIUM("helium", 0xf5ffa6, -1000, 300, true, 200, 8, 0.01f),
+    NEON("neon", 0x11e8f7, -300, 300, true, 250, 8, 0.02f),
+    ARGON("argon", 0xe1f731, 300, 300, true, 300, 7, 0.03f),
+    KRYPTON("krypton", 0xd66f09, 600, 300, true, 350, 7, 0.04f),
+    XENON("xenon", 0x3029f2, 900, 300, true, 400, 6, 0.05f),
+    RADON("radon", 0xff26d4, 1500, 300, true, 500, 6, 0.05f),
+    OGANESSON("oganesson", 0x0d0085, 2000, 300, true, 600, 4, 0.06f),
 
     // -------------------------------------------------------------------------
     // Halogens
     // F2(1.70), Cl2(3.21) > air → DOWN (gases)
     // Br2: liquid (3120 kg/m³), I2: solid (~4930 kg/m³), At/Ts: solid (estimated)
     // -------------------------------------------------------------------------
-    FLUORINE("fluorine", 0xFFFF99, 200, 300, true, 300, 8, 0.03f),
-    CHLORINE("chlorine", 0xCCFF33, 800, 300, true, 400, 6, 0.05f),
-    BROMINE("bromine", 0x990000, 3000, 300, false, 2000, 6, 0.65f),
-    IODINE("iodine", 0x660066, 4000, 300, false, 4000, 4, 0.70f),
-    ASTATINE("astatine", 0x330033, 6000, 300, false, 5000, 3, 0.75f),
-    TENNESSINE("tennessine", 0x110011, 7000, 300, false, 6000, 3, 0.80f),
+    FLUORINE("fluorine", 0x5ccbed, 200, 300, true, 300, 8, 0.03f),
+    CHLORINE("chlorine", 0x265a5a, 800, 300, true, 400, 6, 0.05f),
+    BROMINE("bromine", 0x472216, 3000, 300, false, 2000, 6, 0.65f),
+    IODINE("iodine", 0x1e0d45, 4000, 300, false, 4000, 4, 0.70f),
+    ASTATINE("astatine", 0x4a871e, 6000, 300, false, 5000, 3, 0.75f),
+    TENNESSINE("tennessine", 0xab9715, 7000, 300, false, 6000, 3, 0.80f),
 
     // -------------------------------------------------------------------------
     // Industrial gases
     // H2(0.09), steam(~0.8) < air → UP
     // O2(1.43), N2(1.25), CO2(1.98) > air → DOWN
     // -------------------------------------------------------------------------
-    HYDROGEN("hydrogen", 0xFFFFFF, -1200, 300, true, 100, 8, 0.01f),
-    OXYGEN("oxygen", 0x6080FF, 150, 300, true, 250, 8, 0.02f),
-    NITROGEN("nitrogen", 0xCCFFFF, 50, 300, true, 200, 8, 0.02f),
-    CARBON_DIOXIDE("carbon_dioxide", 0x444444, 500, 300, true, 300, 6, 0.03f),
-    STEAM("steam", 0xBBBBBB, -200, 600, true, 150, 8, 0.02f),
+    HYDROGEN("hydrogen", 0xb56d92, -1200, 300, true, 100, 8, 0.01f),
+    OXYGEN("oxygen", 0x2f5f77, 150, 300, true, 250, 8, 0.02f),
+    NITROGEN("nitrogen", 0xb5a979, 50, 300, true, 200, 8, 0.02f),
+    CARBON_DIOXIDE("carbon_dioxide", 0x969696, 500, 300, true, 300, 6, 0.03f),
+    STEAM("steam", 0xd9d9d9, -200, 600, true, 150, 8, 0.02f),
 
     // -------------------------------------------------------------------------
     // Industrial liquids
