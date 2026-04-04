@@ -1362,7 +1362,6 @@ tooltip.machinery.mana_transfer=転送量: %s /t
 
 # Gas/Fluid
 tile.gas.helium.name=ヘリウム
-fluid.helium.name=ヘリウム
 fluid.helium=ヘリウム
 tile.gas.neon.name=ネオン
 fluid.neon=ネオン
@@ -1397,17 +1396,17 @@ fluid.iodine=ヨウ素
 tile.liquid.astatine.name=アスタチン
 fluid.astatine=アスタチン
 tile.liquid.tennessine.name=テネシン
-fluid.tennessine.name=テネシン
+fluid.tennessine=テネシン
 tile.liquid.oil.name=石油
-fluid.oil.name=石油
+fluid.oil=石油
 tile.liquid.fuel.name=燃料
-fluid.fuel.name=燃料
+fluid.fuel=燃料
 tile.liquid.biofuel.name=バイオ燃料
-fluid.biofuel.name=バイオ燃料
+fluid.biofuel=バイオ燃料
 tile.liquid.ethanol.name=エタノール
-fluid.ethanol.name=エタノール
+fluid.ethanol=エタノール
 tile.liquid.mana.name=マナ
-fluid.mana.name=マナ
+fluid.mana=マナ
 
 
 # Material Parts

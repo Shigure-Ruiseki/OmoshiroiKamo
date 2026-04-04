@@ -1393,23 +1393,23 @@ fluid.carbon_dioxide=Carbon Dioxide
 tile.gas.steam.name=Steam
 fluid.steam=Steam
 tile.liquid.bromine.name=Bromine
-fluid.bromine.name=Bromine
+fluid.bromine=Bromine
 tile.liquid.iodine.name=Iodine
-fluid.iodine.name=Iodine
+fluid.iodine=Iodine
 tile.liquid.astatine.name=Astatine
-fluid.astatine.name=Astatine
+fluid.astatine=Astatine
 tile.liquid.tennessine.name=Tennessine
-fluid.tennessine.name=Tennessine
+fluid.tennessine=Tennessine
 tile.liquid.oil.name=Oil
-fluid.oil.name=Oil
+fluid.oil=Oil
 tile.liquid.fuel.name=Fuel
-fluid.fuel.name=Fuel
+fluid.fuel=Fuel
 tile.liquid.biofuel.name=Biofuel
-fluid.biofuel.name=Biofuel
+fluid.biofuel=Biofuel
 tile.liquid.ethanol.name=Ethanol
-fluid.ethanol.name=Ethanol
+fluid.ethanol=Ethanol
 tile.liquid.mana.name=Mana
-fluid.mana.name=Mana
+fluid.mana=Mana
 
 
 # Material Parts
