@@ -29,6 +29,10 @@ public class BlockLiquidBase extends BlockFluidBase {
     public static final Material materialLiquid = new MaterialLiquid(MapColor.brownColor);
 
     private EnumFluidMaterial material;
+    @SideOnly(Side.CLIENT)
+    private IIcon stillIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon flowingIcon;
 
     public BlockLiquidBase(Fluid fluid, Material ignored) {
         super(fluid, materialLiquid);
@@ -73,14 +77,16 @@ public class BlockLiquidBase extends BlockFluidBase {
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
-        return getFluid().getStillIcon();
+        return side <= 1 ? stillIcon : flowingIcon;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister register) {
-        IIcon still = register.registerIcon(LibResources.PREFIX_MOD + "modular/fluid_still");
-        IIcon flowing = register.registerIcon(LibResources.PREFIX_MOD + "modular/fluid_flow");
-        getFluid().setIcons(still, flowing);
+        stillIcon = register.registerIcon(LibResources.PREFIX_MOD + "modular/fluid_still");
+        flowingIcon = register.registerIcon(LibResources.PREFIX_MOD + "modular/fluid_flow");
+
+        // We still set them on the fluid object just in case other things like buckets use them
+        getFluid().setIcons(stillIcon, flowingIcon);
     }
 }

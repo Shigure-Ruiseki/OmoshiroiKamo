@@ -11,11 +11,11 @@ import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.world.gen.SimpleMinableWorldGenerator;
 import ruiseki.omoshiroikamo.core.world.gen.WorldGenMinableExtended;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidBase;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockLiquidBase;
+import ruiseki.omoshiroikamo.module.machinery.common.item.ItemBlockFluid;
 import ruiseki.omoshiroikamo.module.machinery.common.world.gen.WorldGenGasPocket;
 
 /**
@@ -49,7 +49,7 @@ public class ModFluidGases {
                 .setDrag(mat.getDrag())
                 .setBlockName(blockName);
 
-            GameRegistry.registerBlock(block, ItemBlockOK.class, block.getUnlocalizedName());
+            GameRegistry.registerBlock(block, ItemBlockFluid.class, block.getUnlocalizedName());
             BLOCKS.put(mat, block);
 
             // 3. Associate block with fluid (skip if another mod already claimed it)
