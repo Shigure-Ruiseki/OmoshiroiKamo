@@ -16,7 +16,6 @@ import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import vazkii.botania.client.lib.LibResources;
 
 /**
  * Loads and manages tier display names from JSON config.
@@ -28,7 +27,7 @@ public class TierConfigLoader {
     public static final TierConfigLoader INSTANCE = new TierConfigLoader();
 
     private static final String DEFAULT_LOCALE = "en_US";
-    private static final String CONFIG_RELATIVE_PATH = LibResources.PREFIX_MOD + "modular/tiers.json";
+    private static final String CONFIG_RELATIVE_PATH = LibMisc.MOD_ID + "/modular/tiers.json";
 
     // tierID -> locale -> displayName
     private final Map<Integer, Map<String, String>> tierNames = new HashMap<>();

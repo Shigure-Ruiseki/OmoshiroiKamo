@@ -6,8 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 
 import com.gtnewhorizon.gtnhlib.blockstate.core.BlockProperty;
+import com.gtnewhorizon.gtnhlib.blockstate.core.BlockPropertyTrait;
 import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
 
 public class BlockPropertyProviderComponent implements IBlockPropertyProvider {
@@ -63,6 +65,12 @@ public class BlockPropertyProviderComponent implements IBlockPropertyProvider {
     }
 
     private void register(BlockProperty<?> property) {
-        BlockPropertyRegistry.registerBlockItemProperty(block, property);
+        BlockPropertyRegistry.registerProperty(block, property);
+        if (property.hasTrait(BlockPropertyTrait.SupportsStacks)) {
+            Item item = Item.getItemFromBlock(block);
+            if (item != null) {
+                BlockPropertyRegistry.registerProperty(item, property);
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
+import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
@@ -23,7 +24,7 @@ import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
-public class BlockSolarCell extends BlockOK implements IMBBlock {
+public class BlockSolarCell extends BlockOK implements IMBBlock, IJsonModelBlock {
 
     protected BlockSolarCell() {
         super(ModObject.SOLAR_CELL.name);
@@ -33,6 +34,11 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
 
     public static BlockSolarCell create() {
         return new BlockSolarCell();
+    }
+
+    @Override
+    public String getTextureName() {
+        return "multiblock/solar_tex";
     }
 
     @Override

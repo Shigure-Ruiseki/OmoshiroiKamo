@@ -35,6 +35,14 @@ public class JsonModelISBRH extends ModelISBRH {
     public JsonModelISBRH() {}
 
     public void renderToEntity(ItemStack stack) {
+        renderItem(stack, true);
+    }
+
+    public void renderInventory(ItemStack stack) {
+        renderItem(stack, false);
+    }
+
+    public void renderItem(ItemStack stack, boolean isEntity) {
         Block block = Block.getBlockFromItem(stack.getItem());
         if (block == null) return;
         int meta = stack.getItemDamage();
@@ -45,11 +53,15 @@ public class JsonModelISBRH extends ModelISBRH {
         itemContext.random = RAND;
 
         BakedModel model = ModelRegistry.getBakedModel(itemContext);
+        if (model == null) return;
+
         RenderHelpers.bindTexture(TextureMap.locationBlocksTexture);
 
         GL11.glPushMatrix();
 
-        GL11.glRotatef(180f, 0f, 0f, 1f);
+        if (isEntity) {
+            GL11.glRotatef(180f, 0f, 0f, 1f);
+        }
 
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
