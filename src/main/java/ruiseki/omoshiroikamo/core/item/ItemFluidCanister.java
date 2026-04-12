@@ -11,7 +11,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
@@ -100,166 +99,141 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
         // Bucket-like behavior
         MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, player, true);
 
-        if (mop == null) {
-            return stack;
-        } else {
-            if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                int x = mop.blockX;
-                int y = mop.blockY;
-                int z = mop.blockZ;
+        if (mop == null || mop.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) return stack;
 
-                if (!world.canMineBlock(player, x, y, z)) {
-                    return stack;
-                }
+        int x = mop.blockX;
+        int y = mop.blockY;
+        int z = mop.blockZ;
 
-                FluidStack containerFluid = getFluid(stack);
+        if (!world.canMineBlock(player, x, y, z)) return stack;
 
-                if (containerFluid == null || containerFluid.amount < 1000) {
-                    // Try to pick up fluid
-                    if (!player.canPlayerEdit(x, y, z, mop.sideHit, stack)) {
-                        return stack;
-                    }
+        FluidStack containerFluid = getFluid(stack);
 
-                    Block block = world.getBlock(x, y, z);
-                    int meta = world.getBlockMetadata(x, y, z);
-                    Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
+        if (containerFluid == null || containerFluid.amount < 1000) {
+            // Try to pick up fluid
+            if (!player.canPlayerEdit(x, y, z, mop.sideHit, stack)) return stack;
 
-                    if (fluid != null) {
-                        // Check if it's a source block
-                        boolean isSource = false;
-                        if (block instanceof IFluidBlock fluidBlock) {
-                            if (fluidBlock.canDrain(world, x, y, z)) {
-                                isSource = true;
-                            }
-                        } else if (meta == 0) {
-                            isSource = true;
-                        }
+            Block block = world.getBlock(x, y, z);
+            int meta = world.getBlockMetadata(x, y, z);
+            Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
 
-                        if (isSource) {
-                            FluidStack pickedUp = new FluidStack(fluid, 1000);
-                            if (fill(stack, pickedUp, false) == 1000) {
-                                fill(stack, pickedUp, true);
-                                world.setBlockToAir(x, y, z);
-                                return stack;
-                            }
-                        }
-                    }
-                } else {
-                    // Try to place fluid
-                    ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[mop.sideHit];
-                    int tx = x + dir.offsetX;
-                    int ty = y + dir.offsetY;
-                    int tz = z + dir.offsetZ;
+            if (fluid == null) return stack;
 
-                    if (!player.canPlayerEdit(tx, ty, tz, mop.sideHit, stack)) {
-                        return stack;
-                    }
-
-                    if (this.tryPlaceContainedFluid(world, tx, ty, tz, containerFluid.getFluid())) {
-                        drain(stack, 1000, true);
-                        return stack;
-                    }
-                }
+            boolean isSource;
+            if (block instanceof IFluidBlock fluidBlock) {
+                isSource = fluidBlock.canDrain(world, x, y, z);
+            } else {
+                isSource = (meta == 0);
             }
 
-            return stack;
+            if (isSource) {
+                FluidStack pickedUp = new FluidStack(fluid, 1000);
+                if (fill(stack, pickedUp, false) == 1000) {
+                    fill(stack, pickedUp, true);
+                    world.setBlockToAir(x, y, z);
+                }
+            }
+        } else {
+            // Try to place fluid
+            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[mop.sideHit];
+            int tx = x + dir.offsetX;
+            int ty = y + dir.offsetY;
+            int tz = z + dir.offsetZ;
+
+            if (!player.canPlayerEdit(tx, ty, tz, mop.sideHit, stack)) return stack;
+
+            if (this.tryPlaceContainedFluid(world, tx, ty, tz, containerFluid.getFluid())) {
+                drain(stack, 1000, true);
+            }
         }
+
+        return stack;
     }
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof IFluidHandler tank) {
-            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
-            FluidStack containerFluid = getFluid(stack);
+        if (!(world.getTileEntity(x, y, z) instanceof IFluidHandler tank)) return false;
 
-            if (containerFluid == null || containerFluid.amount < 1000) {
-                // Try to fill canister from tank
-                FluidStack available = tank.drain(dir, 1000, false);
-                if (available != null && available.amount > 0) {
-                    int filled = fill(stack, available, false);
-                    if (filled > 0) {
-                        FluidStack drained = tank.drain(dir, filled, true);
-                        fill(stack, drained, true);
-                        world.playSoundAtEntity(player, "game.neutral.swim.splash", 0.5F, 1.0F);
-                        return true;
-                    }
-                }
-            } else {
-                // Try to fill tank from canister
-                int filled = tank.fill(dir, containerFluid, false);
-                if (filled > 0) {
-                    FluidStack drained = drain(stack, filled, false);
-                    if (drained != null && drained.amount > 0) {
-                        tank.fill(dir, drained, true);
-                        drain(stack, drained.amount, true);
-                        world.playSoundAtEntity(player, "game.neutral.swim.splash", 0.5F, 1.0F);
-                        return true;
-                    }
-                }
-            }
+        ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
+        FluidStack containerFluid = getFluid(stack);
+
+        if (containerFluid == null || containerFluid.amount < 1000) {
+            // Try to fill canister from tank
+            FluidStack available = tank.drain(dir, 1000, false);
+            if (available == null || available.amount <= 0) return false;
+
+            int filled = fill(stack, available, false);
+            if (filled <= 0) return false;
+
+            fill(stack, tank.drain(dir, filled, true), true);
+            world.playSoundAtEntity(player, "game.neutral.swim.splash", 0.5F, 1.0F);
+            return true;
+        } else {
+            // Try to fill tank from canister
+            int filled = tank.fill(dir, containerFluid, false);
+            if (filled <= 0) return false;
+
+            FluidStack drained = drain(stack, filled, false);
+            if (drained == null || drained.amount <= 0) return false;
+
+            tank.fill(dir, drained, true);
+            drain(stack, drained.amount, true);
+            world.playSoundAtEntity(player, "game.neutral.swim.splash", 0.5F, 1.0F);
+            return true;
         }
-        return false;
     }
 
     private boolean tryPlaceContainedFluid(World world, int x, int y, int z, Fluid fluid) {
-        if (fluid == null || !fluid.canBePlacedInWorld()) {
-            return false;
-        } else {
-            Material material = world.getBlock(x, y, z)
-                .getMaterial();
-            boolean isNotSolid = !material.isSolid();
+        if (fluid == null || !fluid.canBePlacedInWorld()) return false;
 
-            if (!world.isAirBlock(x, y, z) && !isNotSolid) {
-                return false;
-            } else {
-                if (!world.isRemote && isNotSolid && !material.isLiquid()) {
-                    world.func_147480_a(x, y, z, true);
-                }
+        Material material = world.getBlock(x, y, z)
+            .getMaterial();
+        boolean isNotSolid = !material.isSolid();
 
-                Block block = fluid.getBlock();
-                if (block == null || block == Blocks.water) {
-                    if (fluid == FluidRegistry.WATER) block = Blocks.flowing_water;
-                }
-                if (block == null || block == Blocks.lava) {
-                    if (fluid == FluidRegistry.LAVA) block = Blocks.flowing_lava;
-                }
+        if (!world.isAirBlock(x, y, z) && !isNotSolid) return false;
 
-                if (block != null) {
-                    int meta = 0; // Source block
-                    world.setBlock(x, y, z, block, meta, 3);
-                    return true;
-                }
-                return false;
-            }
+        if (!world.isRemote && isNotSolid && !material.isLiquid()) {
+            world.func_147480_a(x, y, z, true);
         }
+
+        Block block = fluid.getBlock();
+        if ((block == null || block == Blocks.water) && fluid == FluidRegistry.WATER) {
+            block = Blocks.flowing_water;
+        }
+        if ((block == null || block == Blocks.lava) && fluid == FluidRegistry.LAVA) {
+            block = Blocks.flowing_lava;
+        }
+
+        if (block == null) return false;
+
+        world.setBlock(x, y, z, block, 0, 3);
+        return true;
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         FluidStack fluid = getFluid(stack);
-        if (fluid != null && fluid.getFluid() != null) {
-            String fluidName = fluid.getFluid()
-                .getLocalizedName(fluid);
+        if (fluid == null || fluid.getFluid() == null) return super.getItemStackDisplayName(stack);
 
-            // Try to find if we have a custom name for this fluid in our Enum
-            String registryName = FluidRegistry.getFluidName(fluid);
-            for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
-                if (mat.getName()
-                    .equalsIgnoreCase(registryName)) {
-                    // Force our mod's localized name if it match our material
-                    String local = StatCollector.translateToLocal("fluid." + mat.getName());
-                    if (local != null && !local.equals("fluid." + mat.getName())) {
-                        fluidName = local;
-                    }
-                    break;
-                }
+        String fluidName = fluid.getFluid()
+            .getLocalizedName(fluid);
+
+        // Try to find if we have a custom name for this fluid in our Enum
+        String registryName = FluidRegistry.getFluidName(fluid);
+        for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
+            if (!mat.getName()
+                .equalsIgnoreCase(registryName)) continue;
+
+            // Force our mod's localized name if it match our material
+            String local = StatCollector.translateToLocal("fluid." + mat.getName());
+            if (local != null && !local.equals("fluid." + mat.getName())) {
+                fluidName = local;
             }
-
-            return super.getItemStackDisplayName(stack) + " (" + fluidName + ")";
+            break;
         }
-        return super.getItemStackDisplayName(stack);
+
+        return super.getItemStackDisplayName(stack) + " (" + fluidName + ")";
     }
 
     @Override
@@ -300,9 +274,7 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
 
     @Override
     public FluidStack getFluid(ItemStack container) {
-        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("Fluid")) {
-            return null;
-        }
+        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("Fluid")) return null;
         return FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("Fluid"));
     }
 
