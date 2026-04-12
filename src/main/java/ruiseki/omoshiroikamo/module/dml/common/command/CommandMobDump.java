@@ -77,7 +77,7 @@ public class CommandMobDump extends CommandMod {
             targetClasses.add((Class<? extends EntityLivingBase>) clazz);
         }
 
-        File baseDir = new File("dump/OmoshiroiKamo/Mobs");
+        File baseDir = new File("dumps/OmoshiroiKamo/Mobs");
         MobDataWriter writer = new MobDataWriter(baseDir);
 
         int count = 0;
