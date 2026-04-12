@@ -72,6 +72,11 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IOKEn
     }
 
     @Override
+    protected boolean shouldSyncCraftingStateToBlock() {
+        return false;
+    }
+
+    @Override
     public boolean canStartCrafting() {
         List<IModifierBlock> mods = new ArrayList<>();
 
