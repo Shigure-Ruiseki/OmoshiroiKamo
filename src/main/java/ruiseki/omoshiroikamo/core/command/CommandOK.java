@@ -5,11 +5,9 @@ import java.util.Map;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.utils.CommandUtils;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 
 /**
@@ -30,14 +28,15 @@ public class CommandOK extends CommandMod {
 
     @Override
     public void processCommandHelp(ICommandSender sender, String[] args) throws CommandException {
-        sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.YELLOW + LangHelpers.localize("command.ok.main_usage_title")));
-        sender.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.WHITE + "  " + LangHelpers.localize("command.ok.main_usage_multiblock")));
-        sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.WHITE + "  /ok multiblock reload - Reload multiblock data"));
-        sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.WHITE + "  /ok modular reload - Reload modular data"));
+        sendLocalizedMessage(sender, "command.ok.main_usage_title", EnumChatFormatting.YELLOW);
+        sendLocalizedMessage(sender, "command.ok.main_usage_multiblock", EnumChatFormatting.WHITE.toString() + "  ");
+        sendLocalizedMessage(
+            sender,
+            "command.ok.main_usage_multiblock_reload",
+            EnumChatFormatting.WHITE.toString() + "  ");
+        sendLocalizedMessage(
+            sender,
+            "command.ok.main_usage_modular_reload",
+            EnumChatFormatting.WHITE.toString() + "  ");
     }
 }

@@ -142,12 +142,26 @@ command.ok.noConfigsFound=There were no config values found that can be set
 
 command.ok.main_usage_title=Usage:
 command.ok.main_usage_multiblock=/ok multiblock - Multiblock management commands
+command.ok.main_usage_multiblock_reload=/ok multiblock reload - Reload multiblock data
+command.ok.main_usage_modular_reload=/ok modular reload - Reload modular data
 
 command.ok.reloading=[OmoshiroiKamo] Reloading configurations...
 command.ok.reload_success=[OmoshiroiKamo] Configurations reloaded successfully!
+command.ok.reload_all=[OmoshiroiKamo] Reloading all modules...
+command.ok.reload_all_success=[OmoshiroiKamo] All modules reloaded!
 command.ok.reload_errors=[OmoshiroiKamo] Reload completed with %d error(s)!
 command.ok.reload_check_file=Check: config/omoshiroikamo/json_errors.txt
 command.ok.reload_failed=[OmoshiroiKamo] Reload failed: %s
+
+command.ok.dml_mobdump_usage=Usage: /ok utils dump mobs <EntityID|EntityName|all>
+command.ok.dml_mobdump_not_found=Entity not found or not a living entity: %s
+command.ok.dml_mobdump_failed=Failed to dump %s: %s
+command.ok.dml_mobdump_success=Successfully dumped %d mob(s) to %s
+
+command.ok.multiblock_reloading=[OmoshiroiKamo] Reloading multiblock...
+command.ok.multiblock_disabled=[Multiblock] Module is disabled.
+command.ok.multiblock_reload_failed=[Multiblock] Reload failed: %s
+command.ok.multiblock_reload_success=[OmoshiroiKamo] Multiblock reload completed!
 
 command.ok.status_header=== OmoshiroiKamo Multiblock Status ===
 command.ok.status_initialized=Initialized: 
@@ -162,7 +176,8 @@ command.ok.scan_invalid_coords=Invalid coordinates: %s
 command.ok.scan_no_world=Could not get world instance
 command.ok.scan_area_too_large=Area too large! Max %d blocks, got %d
 command.ok.scan_scanning=Scanning %dx%dx%d area...
-command.ok.scan_file=File: config/omoshiroikamo/structures/custom/%s.json
+command.ok.scan_success=[OmoshiroiKamo] %s
+command.ok.scan_file=File: %s
 command.ok.scan_failed=[OmoshiroiKamo] Scan failed: %s
 
 command.ok.usage_title=Usage:

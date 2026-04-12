@@ -142,14 +142,28 @@ command.ok.invalidPlayer=プレイヤー '%s' は見つかりませんでした
 command.ok.ignitedPlayer=プレイヤー '%s' は%s秒間燃焼しました
 command.ok.noConfigsFound=設定可能なコンフィグ値は見つかりませんでした
 
-command.ok.main_usage_title=使用法:
+command.ok.main_usage_title=使い方:
 command.ok.main_usage_multiblock=/ok multiblock - マルチブロック管理コマンド
+command.ok.main_usage_multiblock_reload=/ok multiblock reload - マルチブロックデータを再読み込み
+command.ok.main_usage_modular_reload=/ok modular reload - モジュラーデータを再読み込み
 
 command.ok.reloading=[OmoshiroiKamo] 設定を再読み込み中...
 command.ok.reload_success=[OmoshiroiKamo] 設定の再読み込みに成功しました!
+command.ok.reload_all=[OmoshiroiKamo] 全てのモジュールを再読み込み中...
+command.ok.reload_all_success=[OmoshiroiKamo] 全てのモジュールの再読み込みが完了しました!
 command.ok.reload_errors=[OmoshiroiKamo] 再読み込み完了 (%d エラー)!
 command.ok.reload_check_file=確認: config/omoshiroikamo/json_errors.txt
 command.ok.reload_failed=[OmoshiroiKamo] 再読み込み失敗: %s
+
+command.ok.dml_mobdump_usage=使い方: /ok utils dump mobs <EntityID|EntityName|all>
+command.ok.dml_mobdump_not_found=エンティティが見つからないか、LivingEntityではありません: %s
+command.ok.dml_mobdump_failed=%s のダンプに失敗しました: %s
+command.ok.dml_mobdump_success=%d 体のモブデータを %s に出力しました
+
+command.ok.multiblock_reloading=[OmoshiroiKamo] マルチブロックの設定を再読み込み中...
+command.ok.multiblock_disabled=[Multiblock] モジュールが無効です。
+command.ok.multiblock_reload_failed=[Multiblock] 再読み込み失敗: %s
+command.ok.multiblock_reload_success=[OmoshiroiKamo] マルチブロックの再読み込みが完了しました!
 
 command.ok.status_header=== OmoshiroiKamo マルチブロックステータス ===
 command.ok.status_initialized=初期化済み:
@@ -158,23 +172,24 @@ command.ok.status_no=いいえ
 command.ok.status_errors=エラー:
 command.ok.status_none=なし
 
-command.ok.scan_usage=使用法: /ok multiblock scan <名前> <x1> <y1> <z1> <x2> <y2> <z2>
+command.ok.scan_usage=使い方: /ok multiblock scan <名前> <x1> <y1> <z1> <x2> <y2> <z2>
 command.ok.scan_example=例: /ok multiblock scan myStructure 0 64 0 10 70 10
 command.ok.scan_invalid_coords=無効な座標: %s
 command.ok.scan_no_world=ワールドインスタンスを取得できませんでした
 command.ok.scan_area_too_large=範囲が広すぎます! 最大 %d ブロック, 現在 %d
 command.ok.scan_scanning=%dx%dx%d の範囲をスキャン中...
-command.ok.scan_file=ファイル: config/omoshiroikamo/structures/custom/%s.json
+command.ok.scan_success=[OmoshiroiKamo] %s
+command.ok.scan_file=ファイル: %s
 command.ok.scan_failed=[OmoshiroiKamo] スキャン失敗: %s
 
-command.ok.usage_title=使用法:
+command.ok.usage_title=使い方:
 command.ok.usage_reload=/ok multiblock reload - 設定を再読み込み
 command.ok.usage_status=/ok multiblock status - 現在のステータスを表示
 command.ok.usage_scan=/ok multiblock scan <名前> <x1> <y1> <z1> <x2> <y2> <z2> - 範囲をスキャンしてJSONに保存
 command.ok.usage_wand_save=/ok multiblock wand save <名前> - ワンドの選択範囲をJSONに保存
 
 command.ok.wand_players_only=[OmoshiroiKamo] このコマンドはプレイヤーのみ使用可能です!
-command.ok.wand_usage=使用法: /ok wand save <名前>
+command.ok.wand_usage=使い方: /ok wand save <名前>
 command.ok.wand_no_pending=[OmoshiroiKamo] 保留中のスキャンがありません! 先にストラクチャーワンドを使用してください。
 command.ok.wand_different_dimension=[OmoshiroiKamo] 選択範囲が異なるディメンションにあります!
 command.ok.wand_scanning=[OmoshiroiKamo] %d ブロックをスキャン中...

@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.core.command.multiblock;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
@@ -20,13 +19,12 @@ public class CommandMultiblockReload extends CommandMod {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Reloading multiblock..."));
+        sendLocalizedMessage(sender, "command.ok.multiblock_reloading", EnumChatFormatting.YELLOW);
 
         MultiBlockModule multiblockModule = getMod().getModuleManager()
             .getModuleByType(MultiBlockModule.class);
         if (multiblockModule == null || !multiblockModule.isEnable()) {
-            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "[Multiblock] Module is disabled."));
+            sendLocalizedMessage(sender, "command.ok.multiblock_disabled", EnumChatFormatting.RED);
             return;
         }
 
@@ -36,15 +34,16 @@ public class CommandMultiblockReload extends CommandMod {
                 .reload(sender);
             multiblockModule.reload(sender);
         } catch (Exception e) {
-            sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "[Multiblock] Reload failed: " + e.getMessage()));
+            sendLocalizedMessage(
+                sender,
+                "command.ok.multiblock_reload_failed",
+                EnumChatFormatting.RED.toString() + e.getMessage());
             return;
         }
 
         if (!JsonErrorCollector.getInstance()
             .hasErrors()) {
-            sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] Multiblock reload completed!"));
+            sendLocalizedMessage(sender, "command.ok.multiblock_reload_success", EnumChatFormatting.GREEN);
         }
     }
 }

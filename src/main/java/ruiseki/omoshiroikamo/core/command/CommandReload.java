@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.core.command;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.init.ModBase;
@@ -23,8 +22,7 @@ public class CommandReload extends CommandMod {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         JsonErrorCollector.getInstance()
             .clear();
-        sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Reloading all modules..."));
+        sendLocalizedMessage(sender, "command.ok.reload_all", EnumChatFormatting.YELLOW);
 
         getMod().getModuleManager()
             .reloadAll(sender);
@@ -36,8 +34,7 @@ public class CommandReload extends CommandMod {
             JsonErrorCollector.getInstance()
                 .reportToChat(sender);
         } else {
-            sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] All modules reloaded!"));
+            sendLocalizedMessage(sender, "command.ok.reload_all_success", EnumChatFormatting.GREEN);
         }
     }
 }

@@ -18,13 +18,13 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.module.dml.common.writer.MobDataWriter;
 
@@ -39,7 +39,7 @@ public class CommandMobDump extends CommandMod {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (args.length < 1) {
-            throw new CommandException("Usage: /ok utils dump mobs <EntityID|EntityName|all>");
+            throw new CommandException(LangHelpers.localize("command.ok.dml_mobdump_usage"));
         }
 
         String target = args[0].toLowerCase();
@@ -72,7 +72,7 @@ public class CommandMobDump extends CommandMod {
             }
 
             if (clazz == null || !EntityLivingBase.class.isAssignableFrom(clazz)) {
-                throw new CommandException("Entity not found or not a living entity: " + args[0]);
+                throw new CommandException(LangHelpers.localize("command.ok.dml_mobdump_not_found", args[0]));
             }
             targetClasses.add((Class<? extends EntityLivingBase>) clazz);
         }
@@ -103,16 +103,20 @@ public class CommandMobDump extends CommandMod {
                 dumpMob(clazz, mobWriter, world, entityName);
                 count++;
             } catch (Exception e) {
-                sender.addChatMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.RED + "Failed to dump " + clazz.getSimpleName() + ": " + e.getMessage()));
+                sendLocalizedMessage(
+                    sender,
+                    "command.ok.dml_mobdump_failed",
+                    EnumChatFormatting.RED.toString() + clazz.getSimpleName(),
+                    e.getMessage());
                 Logger.error("Failed to dump " + clazz.getSimpleName(), e);
             }
         }
 
-        sender.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.GREEN + "Successfully dumped " + count + " mob(s) to " + baseDir.getPath()));
+        sendLocalizedMessage(
+            sender,
+            "command.ok.dml_mobdump_success",
+            EnumChatFormatting.GREEN.toString() + count,
+            baseDir.getPath());
     }
 
     private void dumpMob(Class<? extends EntityLivingBase> clazz, MobDataWriter writer, World world, String name)
