@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.machinery;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -11,6 +12,7 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
+import ruiseki.omoshiroikamo.module.machinery.client.handler.FluidFogHandler;
 import ruiseki.omoshiroikamo.module.machinery.client.render.ItemPortRenderer;
 import ruiseki.omoshiroikamo.module.machinery.client.render.PortOverlayISBRH;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
@@ -51,5 +53,11 @@ public class MachineryClient extends ClientProxyComponent {
                 }
             }
         }
+    }
+
+    @Override
+    public void registerEventHooks() {
+        super.registerEventHooks();
+        MinecraftForge.EVENT_BUS.register(new FluidFogHandler());
     }
 }

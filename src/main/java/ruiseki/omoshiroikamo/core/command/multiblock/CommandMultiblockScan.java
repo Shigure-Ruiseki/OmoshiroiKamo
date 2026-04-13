@@ -5,7 +5,6 @@ import java.io.File;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
@@ -13,7 +12,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.core.common.structure.StructureScanner;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -28,10 +26,8 @@ public class CommandMultiblockScan extends CommandMod {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (args.length < 7) {
-            sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + LangHelpers.localize("command.ok.scan_usage")));
-            sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GRAY + LangHelpers.localize("command.ok.scan_example")));
+            sendLocalizedMessage(sender, "command.ok.scan_usage", EnumChatFormatting.RED);
+            sendLocalizedMessage(sender, "command.ok.scan_example", EnumChatFormatting.GRAY);
             return;
         }
 
@@ -46,9 +42,11 @@ public class CommandMultiblockScan extends CommandMod {
             y2 = parseInt(sender, args[5]);
             z2 = parseInt(sender, args[6]);
         } catch (Exception e) {
-            sender.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED + LangHelpers.localize("command.ok.scan_invalid_coords", e.getMessage())));
+            sendLocalizedMessage(
+                sender,
+                "command.ok.scan_invalid_coords",
+                EnumChatFormatting.RED.toString(),
+                e.getMessage());
             return;
         }
 
@@ -62,8 +60,7 @@ public class CommandMultiblockScan extends CommandMod {
         }
 
         if (world == null) {
-            sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + LangHelpers.localize("command.ok.scan_no_world")));
+            sendLocalizedMessage(sender, "command.ok.scan_no_world", EnumChatFormatting.RED);
             return;
         }
 
@@ -73,18 +70,22 @@ public class CommandMultiblockScan extends CommandMod {
         int totalBlocks = sizeX * sizeY * sizeZ;
 
         if (totalBlocks > StructureConstants.MAX_COMMAND_SCAN_BLOCKS) {
-            sender.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED + LangHelpers.localize(
-                        "command.ok.scan_area_too_large",
-                        StructureConstants.MAX_COMMAND_SCAN_BLOCKS,
-                        totalBlocks)));
+            sendLocalizedMessage(
+                sender,
+                "command.ok.scan_area_too_large",
+                EnumChatFormatting.RED.toString(),
+                StructureConstants.MAX_COMMAND_SCAN_BLOCKS,
+                totalBlocks);
             return;
         }
 
-        sender.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.YELLOW + LangHelpers.localize("command.ok.scan_scanning", sizeX, sizeY, sizeZ)));
+        sendLocalizedMessage(
+            sender,
+            "command.ok.scan_scanning",
+            EnumChatFormatting.YELLOW.toString(),
+            sizeX,
+            sizeY,
+            sizeZ);
 
         File configDir = new File(
             FMLCommonHandler.instance()
@@ -95,14 +96,10 @@ public class CommandMultiblockScan extends CommandMod {
         StructureScanner.ScanResult result = StructureScanner.scan(world, name, x1, y1, z1, x2, y2, z2, configDir);
 
         if (result.success) {
-            sender
-                .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] " + result.message));
-            sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GRAY + LangHelpers.localize("command.ok.scan_file", name)));
+            sendLocalizedMessage(sender, "command.ok.scan_success", EnumChatFormatting.GREEN + result.message);
+            sendLocalizedMessage(sender, "command.ok.scan_file", EnumChatFormatting.GRAY.toString() + name);
         } else {
-            sender.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED + LangHelpers.localize("command.ok.scan_failed", result.message)));
+            sendLocalizedMessage(sender, "command.ok.scan_failed", EnumChatFormatting.RED + result.message);
         }
     }
 

@@ -51,7 +51,7 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
             public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
                 if (tintIndex == 0 && world != null) {
                     int meta = world.getBlockMetadata(x, y, z);
-                    return EnumDye.values()[meta].dyeToAbgr();
+                    return EnumDye.values()[meta].dyeToRgb();
                 }
                 return -1;
             }
@@ -60,7 +60,7 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
             public int colorMultiplier(@Nullable ItemStack stack, int tintIndex) {
                 if (tintIndex == 0 && stack != null) {
                     int meta = stack.getItemDamage();
-                    return EnumDye.values()[meta].dyeToAbgr();
+                    return EnumDye.values()[meta].dyeToRgb();
                 }
                 return -1;
             }

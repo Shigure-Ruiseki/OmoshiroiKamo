@@ -50,6 +50,14 @@ public class TEStorage extends TileEntityOK
         super.doUpdate();
     }
 
+    @Override
+    public void onLoad() {
+        allSlots = new int[wrapper.getSlots()];
+        for (int i = 0; i < allSlots.length; i++) {
+            allSlots[i] = i;
+        }
+    }
+
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
         float hitY, float hitZ) {
         if (!world.isRemote) {

@@ -33,7 +33,7 @@ public class CommandBackpack extends CommandMod {
 
     public CommandBackpack(ModBase mod) {
         super(mod, NAME);
-        this.backpackDir = new File("config/omoshiroikamo/backpack/dump");
+        this.backpackDir = new File("config/omoshiroikamo/backpack/dumps");
         if (!backpackDir.exists()) {
             backpackDir.mkdirs();
         }

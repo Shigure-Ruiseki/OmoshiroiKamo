@@ -34,6 +34,7 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
+import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.block.property.BlockPropertyReg;
 import ruiseki.omoshiroikamo.core.client.render.JsonModelISBRH;
@@ -48,7 +49,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
-public class BlockBackpack extends BlockOK implements IBlockColor {
+public class BlockBackpack extends BlockOK implements IBlockColor, IJsonModelBlock {
 
     @Getter
     private final int backpackSlots;

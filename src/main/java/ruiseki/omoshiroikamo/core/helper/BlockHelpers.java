@@ -122,9 +122,11 @@ public final class BlockHelpers {
      * @return If it has a solid top surface.
      */
     public static boolean doesBlockHaveSolidTopSurface(IBlockAccess world, BlockPos blockPos) {
-        return BlockPropertyRegistry.getBlockState(world, blockPos.getX(), blockPos.getY() - 1, blockPos.getZ())
-            .getBlock()
-            .isOpaqueCube();
+        try (BlockState state = BlockPropertyRegistry
+            .getBlockState(world, blockPos.getX(), blockPos.getY() - 1, blockPos.getZ())) {
+            return state.getBlock()
+                .isOpaqueCube();
+        }
     }
 
     /**

@@ -117,7 +117,7 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
         if (craftingState != newState) {
             craftingState = newState;
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (worldObj != null && !worldObj.isRemote && shouldSyncCraftingStateToBlock()) {
                 BlockStateHelpers.setCraftingState(worldObj, xCoord, yCoord, zCoord, craftingState);
             }
 
@@ -193,6 +193,14 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
 
     /** Determines the current crafting state for syncing. */
     protected abstract CraftingState updateCraftingState();
+
+    /**
+     * Returns false to skip writing crafting state to block metadata. Override in subclasses where the block lacks a
+     * CRAFTING_STATE property.
+     */
+    protected boolean shouldSyncCraftingStateToBlock() {
+        return true;
+    }
 
     /** Sets the current crafting state manually. */
     public void setCraftingState(CraftingState newState) {

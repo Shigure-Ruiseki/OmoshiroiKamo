@@ -35,56 +35,74 @@ public class JsonModelISBRH extends ModelISBRH {
     public JsonModelISBRH() {}
 
     public void renderToEntity(ItemStack stack) {
+        renderItem(stack, true);
+    }
+
+    public void renderInventory(ItemStack stack) {
+        renderItem(stack, false);
+    }
+
+    public void renderItem(ItemStack stack, boolean isEntity) {
         Block block = Block.getBlockFromItem(stack.getItem());
         if (block == null) return;
         int meta = stack.getItemDamage();
 
         Tessellator tessellator = TessellatorManager.get();
         itemContext.stack = stack;
-        itemContext.blockState = BlockPropertyRegistry.getBlockState(stack);
-        itemContext.random = RAND;
+        try {
+            itemContext.blockState = BlockPropertyRegistry.getBlockState(stack);
+            itemContext.random = RAND;
 
-        BakedModel model = ModelRegistry.getBakedModel(itemContext);
-        RenderHelpers.bindTexture(TextureMap.locationBlocksTexture);
+            BakedModel model = ModelRegistry.getBakedModel(itemContext);
+            if (model == null) return;
 
-        GL11.glPushMatrix();
+            RenderHelpers.bindTexture(TextureMap.locationBlocksTexture);
 
-        GL11.glRotatef(180f, 0f, 0f, 1f);
+            GL11.glPushMatrix();
 
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glDisable(GL11.GL_LIGHTING);
-
-        tessellator.startDrawingQuads();
-
-        int color = model.getColor(null, 0, 0, 0, block, meta, RAND);
-
-        for (ModelQuadFacing dir : VALUES) {
-            itemContext.quadFacing = dir;
-
-            final var quads = model.getQuads(itemContext);
-            if (quads.isEmpty()) continue;
-
-            for (ModelQuadView quad : quads) {
-                int quadColor = color;
-                if (stack.getItem() != null && quad.getColorIndex() != -1) {
-                    quadColor = BlockColor.getColor(block, stack, quad.getColorIndex());
-                }
-
-                final float r = (quadColor >> 16 & 255) / 255f;
-                final float g = (quadColor >> 8 & 255) / 255f;
-                final float b = (quadColor & 255) / 255f;
-
-                final float shade = diffuseLight(quad.getComputedFaceNormal());
-                tessellator.setColorOpaque_F(r * shade, g * shade, b * shade);
-                renderQuad(quad, -0.5f, -0.5f, -0.5f, tessellator, null);
+            if (isEntity) {
+                GL11.glRotatef(180f, 0f, 0f, 1f);
             }
-        }
 
-        tessellator.draw();
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glPopMatrix();
-        itemContext.reset();
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glDisable(GL11.GL_LIGHTING);
+
+            tessellator.startDrawingQuads();
+
+            int color = model.getColor(null, 0, 0, 0, block, meta, RAND);
+
+            for (ModelQuadFacing dir : VALUES) {
+                itemContext.quadFacing = dir;
+
+                final var quads = model.getQuads(itemContext);
+                if (quads.isEmpty()) continue;
+
+                for (ModelQuadView quad : quads) {
+                    int quadColor = color;
+                    if (stack.getItem() != null && quad.getColorIndex() != -1) {
+                        quadColor = BlockColor.getColor(block, stack, quad.getColorIndex());
+                    }
+
+                    final float r = (quadColor >> 16 & 255) / 255f;
+                    final float g = (quadColor >> 8 & 255) / 255f;
+                    final float b = (quadColor & 255) / 255f;
+
+                    final float shade = diffuseLight(quad.getComputedFaceNormal());
+                    tessellator.setColorOpaque_F(r * shade, g * shade, b * shade);
+                    renderQuad(quad, -0.5f, -0.5f, -0.5f, tessellator, null);
+                }
+            }
+
+            tessellator.draw();
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glPopMatrix();
+        } finally {
+            if (itemContext.blockState != null) {
+                itemContext.blockState.close();
+            }
+            itemContext.reset();
+        }
     }
 }

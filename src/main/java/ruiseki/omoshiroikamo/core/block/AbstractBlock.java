@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.core.block;
 
+import static com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry.registerProperty;
 import static net.minecraftforge.common.util.ForgeDirection.EAST;
 import static net.minecraftforge.common.util.ForgeDirection.NORTH;
 import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
@@ -21,7 +22,6 @@ import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
 
 import ruiseki.omoshiroikamo.core.block.orientable.IOrientableBlock;
 import ruiseki.omoshiroikamo.core.block.orientable.MetaRotation;
-import ruiseki.omoshiroikamo.core.block.property.BlockPropertyReg;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
@@ -31,7 +31,6 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
     implements IWailaBlockInfoProvider, IOrientableBlock {
     // TODO: Change block meta to extendedFacing for all the tileentities
 
-    @BlockPropertyReg
     public static final DirectionBlockProperty FACING = DirectionBlockProperty.facing(0b0011, dir -> switch (dir) {
         case SOUTH -> 0;
         case EAST -> 1;
@@ -46,6 +45,19 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
         default -> NORTH;
     });
 
+    @Override
+    public void registerProperties() {
+        super.registerProperties();
+        if (!isHasSubtypes()) {
+            registerProperty(this, FACING);
+        }
+    }
+
+    @Override
+    public boolean usesMetadata() {
+        return !isHasSubtypes();
+    }
+
     protected AbstractBlock(String name, Class<T> teClass, Material mat) {
         super(name, teClass, mat);
         setHardness(2.0F);
@@ -57,7 +69,7 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
 
     @Override
     public int damageDropped(int meta) {
-        return 0;
+        return meta;
     }
 
     @Override
@@ -127,8 +139,4 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
         return new MetaRotation(world, x, y, z);
     }
 
-    @Override
-    public boolean usesMetadata() {
-        return true;
-    }
 }

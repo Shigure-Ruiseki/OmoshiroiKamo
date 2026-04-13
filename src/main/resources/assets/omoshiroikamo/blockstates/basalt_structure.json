@@ -1,6 +1,21 @@
 {
   "variants": {
-    "": {
+    "tier=0": {
+      "model": "omoshiroikamo:block/multiblock/basalt_structure"
+    },
+    "tier=1": {
+      "model": "omoshiroikamo:block/multiblock/basalt_structure"
+    },
+    "tier=2": {
+      "model": "omoshiroikamo:block/multiblock/basalt_structure"
+    },
+    "tier=3": {
+      "model": "omoshiroikamo:block/multiblock/basalt_structure"
+    },
+    "tier=4": {
+      "model": "omoshiroikamo:block/multiblock/basalt_structure"
+    },
+    "tier=5": {
       "model": "omoshiroikamo:block/multiblock/basalt_structure"
     }
   }

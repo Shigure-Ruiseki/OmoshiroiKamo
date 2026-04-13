@@ -15,7 +15,8 @@ public enum MachineryItems {
     MACHINE_BLUEPRINT(new ItemMachineBlueprint()),
     INGOT(new ItemMaterialPart("ingot")),
     PLATE(new ItemMaterialPart("plate")),
-    GEAR(new ItemMaterialPart("gear")),;
+    // GEAR(new ItemMaterialPart("gear")),
+    DUST(new ItemMaterialPart("dust")),;
     // spotless: on
 
     public static final MachineryItems[] VALUES = values();

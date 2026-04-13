@@ -11,17 +11,23 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
-public class BlockLens extends BlockOK implements IMBBlock {
+public class BlockLens extends BlockOK implements IMBBlock, IJsonModelBlock {
 
     protected BlockLens() {
         super(ModObject.LENS.name, Material.glass);
         hasSubtypes = true;
         isFullSize = isOpaque = false;
+    }
+
+    @Override
+    public String getTextureName() {
+        return "multiblock/lens_side";
     }
 
     public static BlockLens create() {

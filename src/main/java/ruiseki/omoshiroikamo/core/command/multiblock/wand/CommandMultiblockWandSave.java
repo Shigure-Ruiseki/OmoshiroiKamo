@@ -5,7 +5,6 @@ import java.io.File;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -13,7 +12,6 @@ import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.core.common.structure.StructureScanner;
 import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -29,8 +27,7 @@ public class CommandMultiblockWandSave extends CommandMod {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         EntityPlayer player = (EntityPlayer) sender;
         if (args.length < 1) {
-            player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + LangHelpers.localize("command.ok.wand_usage")));
+            sendLocalizedMessage(player, "command.ok.wand_usage", EnumChatFormatting.RED);
             return;
         }
 
@@ -40,32 +37,27 @@ public class CommandMultiblockWandSave extends CommandMod {
             .getPendingScan(player.getUniqueID());
 
         if (pending == null) {
-            player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + LangHelpers.localize("command.ok.wand_no_pending")));
+            sendLocalizedMessage(player, "command.ok.wand_no_pending", EnumChatFormatting.RED);
             return;
         }
 
         if (pending.dimensionId != player.worldObj.provider.dimensionId) {
-            player.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED + LangHelpers.localize("command.ok.wand_different_dimension")));
+            sendLocalizedMessage(player, "command.ok.wand_different_dimension", EnumChatFormatting.RED);
             return;
         }
 
         int blockCount = pending.getBlockCount();
         if (blockCount > StructureConstants.MAX_WAND_SCAN_BLOCKS) {
-            player.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED + LangHelpers.localize(
-                        "chat.wand.area_too_large",
-                        String.format("%,d", StructureConstants.MAX_WAND_SCAN_BLOCKS),
-                        String.format("%,d", blockCount))));
+            sendLocalizedMessage(
+                player,
+                "chat.wand.area_too_large",
+                EnumChatFormatting.RED.toString(),
+                String.format("%,d", StructureConstants.MAX_WAND_SCAN_BLOCKS),
+                String.format("%,d", blockCount));
             return;
         }
 
-        player.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.YELLOW + LangHelpers.localize("command.ok.wand_scanning", blockCount)));
+        sendLocalizedMessage(player, "command.ok.wand_scanning", EnumChatFormatting.YELLOW, blockCount);
 
         File configDir = new File(
             FMLCommonHandler.instance()
@@ -85,21 +77,13 @@ public class CommandMultiblockWandSave extends CommandMod {
             configDir);
 
         if (result.success) {
-            player
-                .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] " + result.message));
-            player.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.GRAY + "File: config/"
-                        + LibMisc.MOD_ID
-                        + "/structures/custom/"
-                        + name
-                        + ".json"));
+            sendLocalizedMessage(player, "command.ok.scan_success", EnumChatFormatting.GREEN + result.message);
+            sendLocalizedMessage(player, "command.ok.scan_file", EnumChatFormatting.GRAY.toString() + name);
 
             WandSelectionManager.getInstance()
                 .clearPendingScan(player.getUniqueID());
         } else {
-            player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "[OmoshiroiKamo] Scan failed: " + result.message));
+            sendLocalizedMessage(player, "command.ok.scan_failed", EnumChatFormatting.RED + result.message);
         }
     }
 }

@@ -84,6 +84,10 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     public void readCommon(NBTTagCompound tag) {
         super.readCommon(tag);
         wrapper.readFromNBT(tag);
+        allSlots = new int[wrapper.getSlots()];
+        for (int i = 0; i < allSlots.length; i++) {
+            allSlots[i] = i;
+        }
     }
 
     @Override

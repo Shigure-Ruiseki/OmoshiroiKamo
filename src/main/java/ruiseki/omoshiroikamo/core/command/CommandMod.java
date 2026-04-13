@@ -200,4 +200,8 @@ public class CommandMod implements ICommand {
     protected void printLineToChat(ICommandSender sender, String line) {
         sender.addChatMessage(new ChatComponentText(line));
     }
+
+    protected void sendLocalizedMessage(ICommandSender sender, String key, Object... params) {
+        printLineToChat(sender, LangHelpers.localize(key, params));
+    }
 }

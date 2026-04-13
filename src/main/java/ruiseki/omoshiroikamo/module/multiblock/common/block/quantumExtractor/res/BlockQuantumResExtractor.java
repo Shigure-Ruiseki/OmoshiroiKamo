@@ -65,6 +65,11 @@ public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExt
         }
     }
 
+    @Override
+    public boolean isKeepNBTOnDrop() {
+        return false;
+    }
+
     public static class ItemBlockQuantumResExtractor extends ItemBlockOK {
 
         public ItemBlockQuantumResExtractor(Block block) {

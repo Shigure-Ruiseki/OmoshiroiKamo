@@ -50,6 +50,10 @@ public class ModelRegistry {
         return null;
     }
 
+    public void clear() {
+        items.clear();
+    }
+
     public Collection<ModelRegistryItem> getItems() {
         List<ModelRegistryItem> result = new ArrayList<>();
         for (ModelRegistryItem t : items.values()) {

@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -22,8 +23,10 @@ import ruiseki.omoshiroikamo.api.modular.ModularTier;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierConfigLoader;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
@@ -174,7 +177,8 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
 
             // Format: %s (Tier) %s (Design)
             // e.g. "Revolutionary" "Machine Casing"
-            String tier = LangHelpers.localize("machinery.tier." + modularTier.getUnlocalizedName());
+            String locale = MinecraftHelpers.isClientSide() ? Minecraft.getMinecraft().gameSettings.language : "en_US";
+            String tier = TierConfigLoader.INSTANCE.getTierName(modularTier.getMeta(), locale);
 
             // Handle backward compatibility: MACHINE_CASING has no design name
             if (block.designName.isEmpty()) {
