@@ -136,6 +136,14 @@ public class BlockCable extends BlockOK
     }
 
     @Override
+    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 origin, Vec3 direction) {
+        MovingObjectPosition result = collision.collisionRayTrace(world, x, y, z, origin, direction);
+        if (result != null) return result;
+        // Fallback: use full-block ray trace so an isolated cable core can always be targeted
+        return collisionRayTraceParent(world, x, y, z, origin, direction);
+    }
+
+    @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
         if (world.isRemote) return false;
         RayTraceResult<ForgeDirection> result = doRayTrace(world, x, y, z, player);
@@ -144,7 +152,11 @@ public class BlockCable extends BlockOK
                 .destroy(world, x, y, z, result.getPositionHit(), player)) {
             return true;
         }
-        return result != null && super.removedByPlayer(world, player, x, y, z, willHarvest);
+        // Fallback: no specific component was targeted; treat it as breaking the whole cable
+        if (CENTER_COMPONENT.destroy(world, x, y, z, null, player)) {
+            return true;
+        }
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
 
     @Override
