@@ -31,7 +31,10 @@ public abstract class AbstractTieredMBBlock<T extends AbstractMBModifierTE> exte
     public void registerProperties() {
         super.registerProperties();
         registerProperty(this, TIER);
-        registerProperty(Item.getItemFromBlock(this), TIER);
+        Item item = Item.getItemFromBlock(this);
+        if (item != null) {
+            registerProperty(item, TIER);
+        }
     }
 
     @Override

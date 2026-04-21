@@ -29,9 +29,6 @@ public class JsonModelISBRH extends ModelISBRH {
 
     public static final JsonModelISBRH INSTANCE = new JsonModelISBRH();
 
-    private final ItemContext itemContext = new ItemContext();
-    public final Random RAND = new Random();
-
     public JsonModelISBRH() {}
 
     public void renderToEntity(ItemStack stack) {
@@ -48,10 +45,15 @@ public class JsonModelISBRH extends ModelISBRH {
         int meta = stack.getItemDamage();
 
         Tessellator tessellator = TessellatorManager.get();
+        ItemContext itemContext = new ItemContext();
+        Random rand = new Random();
+
         itemContext.stack = stack;
         try {
             itemContext.blockState = BlockPropertyRegistry.getBlockState(stack);
-            itemContext.random = RAND;
+            if (itemContext.blockState == null) return;
+
+            itemContext.random = rand;
 
             BakedModel model = ModelRegistry.getBakedModel(itemContext);
             if (model == null) return;
@@ -70,7 +72,7 @@ public class JsonModelISBRH extends ModelISBRH {
 
             tessellator.startDrawingQuads();
 
-            int color = model.getColor(null, 0, 0, 0, block, meta, RAND);
+            int color = model.getColor(null, 0, 0, 0, block, meta, rand);
 
             for (ModelQuadFacing dir : VALUES) {
                 itemContext.quadFacing = dir;
