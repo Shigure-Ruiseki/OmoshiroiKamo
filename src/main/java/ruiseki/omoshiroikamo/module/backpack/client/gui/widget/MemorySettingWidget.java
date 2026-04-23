@@ -8,9 +8,10 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.api.storage.syncHandler.StorageSlotSH;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget.ExpandDirection;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.upgrade.ExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;
 
@@ -48,9 +49,9 @@ public class MemorySettingWidget extends ExpandedTabWidget {
                         wrapper.setMemoryStack(i, panel.shouldMemorizeRespectNBT);
                     }
 
-                    for (StorageSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
+                    for (BackpackSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
                         syncHandler.syncToServer(
-                            StorageSlotSH.UPDATE_SET_MEMORY_STACK,
+                            BackpackSlotSH.UPDATE_SET_MEMORY_STACK,
                             buf -> buf.writeBoolean(panel.isMemorySettingTabOpened));
                     }
 
@@ -72,8 +73,8 @@ public class MemorySettingWidget extends ExpandedTabWidget {
                         wrapper.unsetMemoryStack(i);
                     }
 
-                    for (StorageSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
-                        syncHandler.syncToServer(StorageSlotSH.UPDATE_UNSET_MEMORY_STACK);
+                    for (BackpackSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
+                        syncHandler.syncToServer(BackpackSlotSH.UPDATE_UNSET_MEMORY_STACK);
                     }
 
                     return true;

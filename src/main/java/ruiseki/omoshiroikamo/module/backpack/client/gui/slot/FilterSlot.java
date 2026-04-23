@@ -8,7 +8,7 @@ import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.integration.recipeviewer.RecipeViewerGhostIngredientSlot;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
-import ruiseki.omoshiroikamo.api.storage.syncHandler.FilterSlotSH;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.FilterSlotSH;
 
 public class FilterSlot extends ItemSlot implements RecipeViewerGhostIngredientSlot<ItemStack> {
 

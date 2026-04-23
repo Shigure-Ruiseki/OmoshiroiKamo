@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
 import ruiseki.omoshiroikamo.api.storage.wrapper.ISlotModifiable;
-import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 
 public class InceptionUpgradeWrapper extends UpgradeWrapperBase implements ISlotModifiable {

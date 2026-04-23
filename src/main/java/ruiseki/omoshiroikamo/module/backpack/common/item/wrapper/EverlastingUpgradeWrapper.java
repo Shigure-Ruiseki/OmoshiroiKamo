@@ -6,7 +6,6 @@ import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IEntityApplicable;
-import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 
 public class EverlastingUpgradeWrapper extends UpgradeWrapperBase implements IEntityApplicable {

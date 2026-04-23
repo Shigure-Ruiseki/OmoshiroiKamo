@@ -36,7 +36,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.storage.IStoragePanel;
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
-import ruiseki.omoshiroikamo.api.storage.syncHandler.StorageSlotSH;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
@@ -137,13 +137,13 @@ public class BackpackSlot extends ItemSlot {
 
             if (isMemorySet && mouseButton == 1) {
                 wrapper.unsetMemoryStack(index);
-                getSyncHandler().syncToServer(StorageSlotSH.UPDATE_UNSET_MEMORY_STACK);
+                getSyncHandler().syncToServer(BackpackSlotSH.UPDATE_UNSET_MEMORY_STACK);
                 return Result.SUCCESS;
 
             } else if (!isMemorySet && mouseButton == 0) {
                 wrapper.setMemoryStack(index, panel.shouldMemorizeRespectNBT());
                 getSyncHandler().syncToServer(
-                    StorageSlotSH.UPDATE_SET_MEMORY_STACK,
+                    BackpackSlotSH.UPDATE_SET_MEMORY_STACK,
                     buf -> buf.writeBoolean(panel.shouldMemorizeRespectNBT()));
                 return Result.SUCCESS;
 
@@ -155,11 +155,11 @@ public class BackpackSlot extends ItemSlot {
 
             if (locked && mouseButton == 1) {
                 wrapper.setSlotLocked(index, false);
-                getSyncHandler().syncToServer(StorageSlotSH.UPDATE_UNSET_SLOT_LOCK);
+                getSyncHandler().syncToServer(BackpackSlotSH.UPDATE_UNSET_SLOT_LOCK);
                 return Result.SUCCESS;
             } else if (!locked && mouseButton == 0) {
                 wrapper.setSlotLocked(index, true);
-                getSyncHandler().syncToServer(StorageSlotSH.UPDATE_SET_SLOT_LOCK);
+                getSyncHandler().syncToServer(BackpackSlotSH.UPDATE_SET_SLOT_LOCK);
                 return Result.SUCCESS;
             } else return Result.STOP;
         }

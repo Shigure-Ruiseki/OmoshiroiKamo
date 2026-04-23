@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IBasicFilterable;
 import ruiseki.omoshiroikamo.api.storage.wrapper.ICraftingUpgrade;
-import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 

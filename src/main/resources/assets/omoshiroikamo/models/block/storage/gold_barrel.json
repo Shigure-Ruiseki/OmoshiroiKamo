@@ -1,8 +1,0 @@
-{
-  "parent": "omoshiroikamo:block/storage/iron_barrel",
-  "textures": {
-    "upgrade_bottom": "omoshiroikamo:block/storage/gold_barrel_bottom",
-    "upgrade_side": "omoshiroikamo:block/storage/gold_barrel_side",
-    "upgrade_top": "omoshiroikamo:block/storage/gold_barrel_top"
-  }
-}

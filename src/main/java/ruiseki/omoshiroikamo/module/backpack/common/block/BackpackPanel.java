@@ -35,11 +35,11 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.api.storage.IStoragePanel;
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
-import ruiseki.omoshiroikamo.api.storage.syncHandler.StorageSH;
-import ruiseki.omoshiroikamo.api.storage.widget.UpgradeSlotUpdateGroup;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.updateGroup.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IToggleable;
-import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
-import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.helper.ItemStackHelpers;
@@ -56,11 +56,11 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlot
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.BackpackList;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.BackpackSearchBarWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.upgrade.ExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.SettingTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ShiftButtonWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.UpgradeSlotGroupWidget;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.updateGroup.UpgradeSlotGroupWidget;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
@@ -88,7 +88,7 @@ public class BackpackPanel extends ModularPanel implements IStoragePanel {
     public final BackpackWrapper wrapper;
     public final TileEntity tile;
 
-    public final StorageSH backpackSyncHandler;
+    public final BackpackSH backpackSyncHandler;
     public final BackpackSlotSH[] backpackSlotSyncHandlers;
     public final BUpgradeSLotSH[] upgradeSlotSyncHandlers;
     public final UpgradeSlotUpdateGroup[] upgradeSlotGroups;
@@ -122,7 +122,7 @@ public class BackpackPanel extends ModularPanel implements IStoragePanel {
         int calculated = (width - 14) / ItemSlot.SIZE;
         this.rowSize = Math.max(9, Math.min(12, calculated));
 
-        this.backpackSyncHandler = new StorageSH(new PlayerMainInvWrapper(player.inventory), this.wrapper, this);
+        this.backpackSyncHandler = new BackpackSH(new PlayerMainInvWrapper(player.inventory), this.wrapper, this);
         this.syncManager.syncValue("backpack_wrapper", this.backpackSyncHandler);
 
         this.backpackSlotSyncHandlers = new BackpackSlotSH[this.wrapper.backpackSlots];
@@ -247,7 +247,7 @@ public class BackpackPanel extends ModularPanel implements IStoragePanel {
 
                         BackpackInventoryHelpers.sortInventory(wrapper, reverse);
 
-                        backpackSyncHandler.syncToServer(StorageSH.UPDATE_SORT_INV, buf -> {
+                        backpackSyncHandler.syncToServer(BackpackSH.UPDATE_SORT_INV, buf -> {
                             for (int i = 0; i < wrapper.getSlots(); i++) {
                                 buf.writeItemStackToBuffer(wrapper.getStackInSlot(i));
                             }
@@ -272,7 +272,7 @@ public class BackpackPanel extends ModularPanel implements IStoragePanel {
                 backpackSyncHandler.setSortType(nextSortType);
 
                 backpackSyncHandler
-                    .syncToServer(StorageSH.UPDATE_SET_SORT_TYPE, buf -> buf.writeInt(nextSortType.ordinal()));
+                    .syncToServer(BackpackSH.UPDATE_SET_SORT_TYPE, buf -> buf.writeInt(nextSortType.ordinal()));
 
             }).setEnabledIf(cyclicVariantButtonWidget -> !settingPanel.isPanelOpen())
                 .top(4)
@@ -295,7 +295,7 @@ public class BackpackPanel extends ModularPanel implements IStoragePanel {
                         Interactable.playButtonClickSound();
                         backpackSyncHandler.transferToPlayerInventory(transferMatched);
                         backpackSyncHandler.syncToServer(
-                            StorageSH.UPDATE_TRANSFER_TO_PLAYER_INV,
+                            BackpackSH.UPDATE_TRANSFER_TO_PLAYER_INV,
                             buf -> buf.writeBoolean(transferMatched));
                         return true;
                     }
@@ -328,7 +328,7 @@ public class BackpackPanel extends ModularPanel implements IStoragePanel {
                         Interactable.playButtonClickSound();
                         backpackSyncHandler.transferToBackpack(transferMatched);
                         backpackSyncHandler.syncToServer(
-                            StorageSH.UPDATE_TRANSFER_TO_BACKPACK_INV,
+                            BackpackSH.UPDATE_TRANSFER_TO_BACKPACK_INV,
                             buf -> buf.writeBoolean(transferMatched));
                         return true;
                     }
@@ -354,7 +354,7 @@ public class BackpackPanel extends ModularPanel implements IStoragePanel {
             .setEnabledIf(shiftButtonWidget -> !settingPanel.isPanelOpen())
             .onMousePressed(mouseButton -> {
                 if (mouseButton == 0) {
-                    backpackSyncHandler.syncToServer(StorageSH.DEPLOY_SLEEPING_BAG);
+                    backpackSyncHandler.syncToServer(BackpackSH.DEPLOY_SLEEPING_BAG);
                     return true;
                 }
                 return false;

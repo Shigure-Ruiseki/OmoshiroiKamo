@@ -5,9 +5,10 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.api.storage.syncHandler.StorageSlotSH;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget.ExpandDirection;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.upgrade.ExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
@@ -40,8 +41,8 @@ public class SortingSettingWidget extends ExpandedTabWidget {
                         wrapper.setSlotLocked(i, true);
                     }
 
-                    for (StorageSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
-                        syncHandler.syncToServer(StorageSlotSH.UPDATE_SET_SLOT_LOCK);
+                    for (BackpackSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
+                        syncHandler.syncToServer(BackpackSlotSH.UPDATE_SET_SLOT_LOCK);
                     }
 
                     return true;
@@ -62,8 +63,8 @@ public class SortingSettingWidget extends ExpandedTabWidget {
                         wrapper.setSlotLocked(i, false);
                     }
 
-                    for (StorageSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
-                        syncHandler.syncToServer(StorageSlotSH.UPDATE_UNSET_SLOT_LOCK);
+                    for (BackpackSlotSH syncHandler : panel.backpackSlotSyncHandlers) {
+                        syncHandler.syncToServer(BackpackSlotSH.UPDATE_UNSET_SLOT_LOCK);
                     }
 
                     return true;

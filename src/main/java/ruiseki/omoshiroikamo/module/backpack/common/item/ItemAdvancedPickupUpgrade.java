@@ -7,12 +7,12 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
-import ruiseki.omoshiroikamo.api.storage.syncHandler.DelegatedStackHandlerSH;
-import ruiseki.omoshiroikamo.api.storage.widget.UpgradeSlotUpdateGroup;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.DelegatedStackHandlerSH;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.updateGroup.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.AdvancedExpandedTabWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.upgrade.AdvancedExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.upgrade.ExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedPickupUpgradeWrapper;
 

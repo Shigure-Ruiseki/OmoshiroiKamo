@@ -34,10 +34,6 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean enableStorage;
-
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
     public static boolean enableDML;
 
     @Config.DefaultBoolean(true)

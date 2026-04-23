@@ -26,9 +26,9 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.storage.handler.IndexedInventoryCraftingWrapper;
-import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
-import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.IndexedInventoryCraftingWrapper;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.core.helper.TinkersHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingMatrixSlot;

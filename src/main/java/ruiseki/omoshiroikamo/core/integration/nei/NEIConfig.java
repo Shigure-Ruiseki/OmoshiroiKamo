@@ -216,12 +216,6 @@ public class NEIConfig implements IConfigureNEI {
             API.addRecipeCatalyst(BackpackItems.CRAFTING_UPGRADE.newItemStack(), "crafting");
         }
 
-        if (BackportConfigs.enableStorage) {
-            API.registerGuiOverlay(StorageGuiContainer.class, "crafting", new StoragePositioner());
-            API.registerGuiOverlayHandler(StorageGuiContainer.class, new StorageOverlay(), "crafting");
-            API.addRecipeCatalyst(BackpackItems.CRAFTING_UPGRADE.newItemStack(), "crafting");
-        }
-
         if (BackportConfigs.enableIDs) {
             API.registerGuiOverlay(TerminalGuiContainer.class, "crafting", new TerminalPositioner());
             API.registerGuiOverlayHandler(TerminalGuiContainer.class, new TerminalOverlay(), "crafting");

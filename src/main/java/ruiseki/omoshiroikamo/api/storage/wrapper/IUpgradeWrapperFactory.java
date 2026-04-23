@@ -3,9 +3,10 @@ package ruiseki.omoshiroikamo.api.storage.wrapper;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
-import ruiseki.omoshiroikamo.api.storage.widget.UpgradeSlotUpdateGroup;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.updateGroup.UpgradeSlotUpdateGroup;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.upgrade.ExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
 
 public interface IUpgradeWrapperFactory<W extends UpgradeWrapperBase> {
 

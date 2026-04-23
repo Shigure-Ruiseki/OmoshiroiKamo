@@ -1,6 +1,0 @@
-{
-  "parent": "omoshiroikamo:block/storage/diamond_barrel",
-  "textures": {
-    "top": "omoshiroikamo:block/storage/oak_barrel_top_open"
-  }
-}

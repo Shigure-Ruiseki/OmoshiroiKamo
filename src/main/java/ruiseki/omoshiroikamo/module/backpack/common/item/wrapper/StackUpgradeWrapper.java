@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IStackSizeUpgrade;
-import ruiseki.omoshiroikamo.api.storage.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
 
 public class StackUpgradeWrapper extends UpgradeWrapperBase implements IStackSizeUpgrade {
