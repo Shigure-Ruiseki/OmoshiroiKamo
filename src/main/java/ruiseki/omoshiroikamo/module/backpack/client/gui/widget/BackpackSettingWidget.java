@@ -6,8 +6,8 @@ import java.util.List;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.upgrade.ExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;

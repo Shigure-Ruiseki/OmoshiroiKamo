@@ -32,12 +32,12 @@ import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.drawble.Outline;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.FilterSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
 
 public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {

@@ -5,8 +5,8 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget.ExpandDirection;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.upgrade.ExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;

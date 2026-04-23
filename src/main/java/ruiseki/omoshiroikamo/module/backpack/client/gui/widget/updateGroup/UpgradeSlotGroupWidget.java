@@ -20,12 +20,12 @@ import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widget.Widget;
 
 import lombok.Setter;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IToggleable;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 
 public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget> {
 

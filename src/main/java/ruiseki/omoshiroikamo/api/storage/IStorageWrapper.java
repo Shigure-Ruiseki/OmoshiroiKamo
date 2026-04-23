@@ -12,9 +12,9 @@ import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
 public interface IStorageWrapper
     extends IItemHandlerModifiable, IItemHandler, ITintable, INBTSerializable, IMemoryStorage, ILockedStorage {

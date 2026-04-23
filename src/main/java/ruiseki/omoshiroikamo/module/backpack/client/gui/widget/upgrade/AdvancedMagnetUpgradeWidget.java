@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedMagnetUpgradeWrapper;

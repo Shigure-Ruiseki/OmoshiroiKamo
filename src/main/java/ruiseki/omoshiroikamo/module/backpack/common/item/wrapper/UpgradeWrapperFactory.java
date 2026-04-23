@@ -13,7 +13,7 @@ public class UpgradeWrapperFactory {
     @SuppressWarnings("unchecked")
     public static <W extends UpgradeWrapperBase> W createWrapper(ItemStack stack, IStorageWrapper storage) {
         if (stack == null || stack.getItem() == null) return null;
-        if (!(stack.getItem() instanceof IUpgradeWrapperFactory<?> factory)) return null;
+        if (!(stack.getItem() instanceof IUpgradeWrapperFactory<?>factory)) return null;
         return (W) factory.createWrapper(stack, storage);
     }
 

@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler;
 
-import net.minecraft.network.PacketBuffer;
-
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.storage.IStoragePanel;

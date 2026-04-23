@@ -26,17 +26,17 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.IndexedInventoryCraftingWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.core.helper.TinkersHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.IndexedInventoryCraftingWrapper;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 public class BackPackContainer extends ModularContainer {

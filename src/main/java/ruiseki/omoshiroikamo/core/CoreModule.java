@@ -8,7 +8,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.updateGroup.UpgradeSlotGroupRegisters;
 import ruiseki.omoshiroikamo.core.capabilities.energy.CapabilityEnergy;
 import ruiseki.omoshiroikamo.core.capabilities.fluid.CapabilityFluidHandler;
 import ruiseki.omoshiroikamo.core.capabilities.item.CapabilityItemHandler;
@@ -22,6 +21,7 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.updateGroup.UpgradeSlotGroupRegisters;
 
 public class CoreModule extends ModModuleBase {
 

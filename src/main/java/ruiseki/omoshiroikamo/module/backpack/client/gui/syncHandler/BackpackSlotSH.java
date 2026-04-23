@@ -1,12 +1,13 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler;
 
+import java.io.IOException;
+
+import net.minecraft.network.PacketBuffer;
+
 import com.cleanroommc.modularui.value.sync.ItemSlotSH;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import net.minecraft.network.PacketBuffer;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
-
-import java.io.IOException;
 
 public class BackpackSlotSH extends ItemSlotSH {
 

@@ -9,8 +9,8 @@ import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.widgets.slot.ModularCraftingSlot;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.InventoryCraftingWrapper;
 import ruiseki.omoshiroikamo.api.storage.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.InventoryCraftingWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class IndexedModularCraftingSlot extends ModularCraftingSlot {

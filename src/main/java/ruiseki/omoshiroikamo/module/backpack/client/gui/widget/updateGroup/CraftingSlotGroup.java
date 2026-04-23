@@ -6,10 +6,10 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.api.storage.widget.IUpgradeSlotGroupFactory;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.DelegatedCraftingStackHandlerSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.CraftingSlotInfo;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.DelegatedCraftingStackHandlerSH;
 
 public class CraftingSlotGroup implements IUpgradeSlotGroupFactory {
 

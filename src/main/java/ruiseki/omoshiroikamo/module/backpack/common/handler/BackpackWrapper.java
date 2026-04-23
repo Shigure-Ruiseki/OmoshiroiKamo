@@ -24,23 +24,23 @@ import baubles.api.BaublesApi;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.api.storage.IBackpackWrapper;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IEntityApplicable;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IFilterUpgrade;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IInventoryModifiable;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IPickupUpgrade;
 import ruiseki.omoshiroikamo.api.storage.wrapper.ISlotModifiable;
 import ruiseki.omoshiroikamo.api.storage.wrapper.ITickable;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockSleepingBag;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 public class BackpackWrapper implements IBackpackWrapper {

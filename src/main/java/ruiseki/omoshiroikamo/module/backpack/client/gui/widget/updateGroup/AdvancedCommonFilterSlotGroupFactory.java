@@ -3,9 +3,9 @@ package ruiseki.omoshiroikamo.module.backpack.client.gui.widget.updateGroup;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.api.storage.widget.IUpgradeSlotGroupFactory;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.DelegatedStackHandlerSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.FilterSlotSH;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
 
 public class AdvancedCommonFilterSlotGroupFactory implements IUpgradeSlotGroupFactory {
 

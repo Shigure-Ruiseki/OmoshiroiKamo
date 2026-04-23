@@ -36,8 +36,8 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.storage.IStoragePanel;
 import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 

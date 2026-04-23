@@ -11,7 +11,6 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.storage.IBackpackWrapper;
 import ruiseki.omoshiroikamo.api.storage.IStoragePanel;
-import ruiseki.omoshiroikamo.api.storage.IStorageWrapper;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IBasicFilterable;
 import ruiseki.omoshiroikamo.api.storage.wrapper.ICraftingUpgrade;
@@ -19,9 +18,9 @@ import ruiseki.omoshiroikamo.api.storage.wrapper.IFilterUpgrade;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IMagnetUpgrade;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IToggleable;
 import ruiseki.omoshiroikamo.api.storage.wrapper.IVoidUpgrade;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryHelpers;
 
 public class UpgradeSlotSH extends ItemSlotSH {

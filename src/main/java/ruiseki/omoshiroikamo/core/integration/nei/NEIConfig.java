@@ -56,9 +56,6 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfig;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumResExtractorRecipeHandler;
-import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageGuiContainer;
-import ruiseki.omoshiroikamo.module.storage.integration.nei.StorageOverlay;
-import ruiseki.omoshiroikamo.module.storage.integration.nei.StoragePositioner;
 
 public class NEIConfig implements IConfigureNEI {
 
