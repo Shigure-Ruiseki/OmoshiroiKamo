@@ -39,6 +39,7 @@ import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
@@ -215,14 +216,14 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         StringValue searchValue = new StringValue("");
 
-        Column col = new Column();
+        Flow col = Flow.column();
         TextFieldWidget searchWidget = new TextFieldWidget().value(searchValue)
             .width(162)
             .height(10)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         // List
-        ListWidget<Row, ?> list = new ListWidget<>();
+        ListWidget<Flow, ?> list = new ListWidget<>();
         list.width(162)
             .height(72)
             .maxSize(72);

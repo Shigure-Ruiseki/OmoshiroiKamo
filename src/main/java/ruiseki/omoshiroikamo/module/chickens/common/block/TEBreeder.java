@@ -248,7 +248,7 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
                     IKey.str(getLocalizedName())
                         .asWidget()
                         .margin(6, 0, 5, 0)
-                        .align(Alignment.TopLeft))
+                        .posRel(Alignment.TopLeft))
                 .child(
                     SlotGroupWidget.builder()
                         .matrix("S+II  OOO")
@@ -272,7 +272,7 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
                             index -> new ItemSlot().slot(new ModularSlot(inv, index + 3).accessibility(false, true)))
                         .build()
                         .topRel(0.25f)
-                        .alignX(Alignment.CENTER))
+                        .leftRel(0.5f))
                 .child(
                     new ProgressWidget().value(new DoubleSyncValue(this::getProgress))
                         .tooltipDynamic(richTooltip -> {

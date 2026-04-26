@@ -20,7 +20,7 @@ import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
-import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
@@ -61,33 +61,35 @@ public class GuiManager {
         panel.child(new TileWidget(title));
 
         // Info Display (Black Rectangle)
-        panel.child(new Column().background(new IDrawable() {
+        panel.child(
+            Flow.column()
+                .background(new IDrawable() {
 
-            @Override
-            public void draw(GuiContext context, int x, int y, int width, int height, WidgetTheme widgetTheme) {
-                GuiDraw.drawRect(x, y, width, height, 0xFF000000);
-            }
-        })
-            .pos(7, 6)
-            .size(137, 72)
-            .padding(4)
-            .child(IKey.dynamic(() -> {
-                String name = this.getRecipeNameText();
-                if (name.isEmpty()) return EnumChatFormatting.WHITE + LangHelpers.localize("gui.status.idle");
-                return EnumChatFormatting.GOLD + name;
-            })
-                .asWidget()
-                .alignX(0f)
-                .marginBottom(2))
-            .child(
-                IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStatusText())
+                    @Override
+                    public void draw(GuiContext context, int x, int y, int width, int height, WidgetTheme widgetTheme) {
+                        GuiDraw.drawRect(x, y, width, height, 0xFF000000);
+                    }
+                })
+                .pos(7, 6)
+                .size(137, 72)
+                .padding(4)
+                .child(IKey.dynamic(() -> {
+                    String name = this.getRecipeNameText();
+                    if (name.isEmpty()) return EnumChatFormatting.WHITE + LangHelpers.localize("gui.status.idle");
+                    return EnumChatFormatting.GOLD + name;
+                })
                     .asWidget()
-                    .alignX(0f)
+                    .leftRel(0f)
                     .marginBottom(2))
-            .child(
-                IKey.dynamic(() -> EnumChatFormatting.RED + this.getValidationErrorText())
-                    .asWidget()
-                    .alignX(0f)));
+                .child(
+                    IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStatusText())
+                        .asWidget()
+                        .leftRel(0f)
+                        .marginBottom(2))
+                .child(
+                    IKey.dynamic(() -> EnumChatFormatting.RED + this.getValidationErrorText())
+                        .asWidget()
+                        .leftRel(0f)));
 
         // Blueprint slot
         addBlueprintSlot(panel, 151, 8);

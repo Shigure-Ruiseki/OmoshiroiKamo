@@ -33,8 +33,7 @@ import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
@@ -165,14 +164,14 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         StringValue searchValue = new StringValue("");
 
-        Column col = new Column();
+        Flow col = Flow.column();
         TextFieldWidget searchWidget = new TextFieldWidget().value(searchValue)
             .width(162)
             .height(10)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         // List
-        ListWidget<Row, ?> list = new ListWidget<>();
+        ListWidget<Flow, ?> list = new ListWidget<>();
         list.width(162)
             .height(72)
             .maxSize(72);
@@ -240,9 +239,9 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
             .setDisablePanelsBelow(false)
             .setCloseOnOutOfBoundsClick(false);
 
-        Column col = new Column();
+        Flow col = Flow.column();
 
-        Row slot = new Row();
+        Flow slot = Flow.row();
         slot.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.id")).width(162))
             .child(
@@ -253,7 +252,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
                     .setDefaultNumber(-1)
                     .setFormatAsInteger(true));
 
-        Row transferLimit = new Row();
+        Flow transferLimit = Flow.row();
         transferLimit.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.transferLimit")).width(162))
             .child(
@@ -264,7 +263,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
                     .setDefaultNumber(1)
                     .setFormatAsInteger(true));
 
-        Row roundRobin = new Row();
+        Flow roundRobin = Flow.row();
         roundRobin.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.roundRobin")).width(162))
             .child(
@@ -273,7 +272,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
                     .size(12)
                     .value(new BooleanSyncValue(this::isRoundRobin, this::setRoundRobin)));
 
-        Row blackList = new Row();
+        Flow blackList = Flow.row();
         blackList.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.blackList")).width(162))
             .child(
@@ -282,7 +281,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
                     .size(12)
                     .value(new BooleanSyncValue(this::isBlackList, this::setBlackList)));
 
-        Row nbt = new Row();
+        Flow nbt = Flow.row();
         nbt.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.nbt")).width(162))
             .child(
@@ -291,7 +290,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
                     .size(12)
                     .value(new BooleanSyncValue(this::isNbt, this::setNbt)));
 
-        Row stackSize = new Row();
+        Flow stackSize = Flow.row();
         stackSize.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.stackSize")).width(162))
             .child(

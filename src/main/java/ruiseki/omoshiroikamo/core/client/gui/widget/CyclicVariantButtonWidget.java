@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.storage.client.gui.widget;
+package ruiseki.omoshiroikamo.core.client.gui.widget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +92,12 @@ public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonW
         if (updater != null && !this.mousePressedUpdaters.contains(updater)) {
             this.mousePressedUpdaters.add(updater);
         }
+        return this;
+    }
+
+    public CyclicVariantButtonWidget setIndex(int index) {
+        this.index = Math.floorMod(index, variants.size());
+        markTooltipDirty();
         return this;
     }
 

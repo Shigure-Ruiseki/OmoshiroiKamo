@@ -25,8 +25,7 @@ import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.ListWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
@@ -145,14 +144,14 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
         // Search
         StringValue searchValue = new StringValue("");
 
-        Column col = new Column();
+        Flow col = Flow.column();
         TextFieldWidget searchWidget = new TextFieldWidget().value(searchValue)
             .width(162)
             .height(10)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         // List
-        ListWidget<Row, ?> list = new ListWidget<>();
+        ListWidget<Flow, ?> list = new ListWidget<>();
         list.width(162)
             .maxSize(85);
 

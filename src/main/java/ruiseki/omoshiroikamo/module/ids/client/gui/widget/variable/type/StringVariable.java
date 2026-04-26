@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.type;
 
 import com.cleanroommc.modularui.value.StringValue;
-import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
@@ -15,7 +15,7 @@ public class StringVariable extends BaseVariableWidget {
     public StringVariable(ProgrammerPanel panel) {
         super(panel);
 
-        Column col = new Column();
+        Flow col = Flow.column();
         col.coverChildren()
             .childPadding(2);
 

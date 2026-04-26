@@ -5,8 +5,7 @@ import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.VANILLA_SEARCH
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
@@ -18,30 +17,30 @@ public class IfVariable extends BaseVariableWidget {
     public IfVariable(ProgrammerPanel panel) {
         super(panel);
 
-        Column col = new Column();
+        Flow col = Flow.column();
         col.coverChildren()
             .childPadding(2);
 
-        Row row = new Row();
+        Flow row = Flow.row();
         row.coverChildren()
             .padding(2)
             .background(VANILLA_SEARCH_BACKGROUND)
             .childPadding(2);
         row.child(
             new TextWidget<>(IKey.str("IF")).size(18)
-                .alignment(Alignment.CENTER));
+                .posRel(Alignment.CENTER));
         row.child(
             new ItemSlot().name("cond")
                 .syncHandler(panel.slots[1]));
         row.child(
             new TextWidget<>(IKey.str("THEN")).size(24, 18)
-                .alignment(Alignment.CENTER));
+                .posRel(Alignment.CENTER));
         row.child(
             new ItemSlot().name("then")
                 .syncHandler(panel.slots[2]));
         row.child(
             new TextWidget<>(IKey.str("ELSE")).size(24, 18)
-                .alignment(Alignment.CENTER));
+                .posRel(Alignment.CENTER));
         row.child(
             new ItemSlot().name("else")
                 .syncHandler(panel.slots[3]));

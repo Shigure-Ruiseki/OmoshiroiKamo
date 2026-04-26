@@ -33,8 +33,7 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
@@ -175,14 +174,14 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         // Search
         StringValue searchValue = new StringValue("");
 
-        Column col = new Column();
+        Flow col = Flow.column();
         TextFieldWidget searchWidget = new TextFieldWidget().value(searchValue)
             .width(162)
             .height(10)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         // List
-        ListWidget<Row, ?> list = new ListWidget<>();
+        ListWidget<Flow, ?> list = new ListWidget<>();
         list.width(162)
             .maxSize(85);
 
@@ -339,10 +338,10 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
             .setDisablePanelsBelow(false)
             .setCloseOnOutOfBoundsClick(false);
 
-        Column col = new Column();
+        Flow col = Flow.column();
 
-        Row selectSlot = new Row();
-        selectSlot.coverChildren()
+        Flow slot = Flow.row();
+        slot.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.id")).width(162))
             .child(
                 new TextFieldWidget().value(new IntSyncValue(this::getSelectedSlot, this::setSelectedSlot))
@@ -356,7 +355,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
             .marginTop(16)
             .left(6)
             .childPadding(2)
-            .child(selectSlot);
+            .child(slot);
         panel.child(ButtonWidget.panelCloseButton())
             .child(col);
 

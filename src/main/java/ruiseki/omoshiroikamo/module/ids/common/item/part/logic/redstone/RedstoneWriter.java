@@ -30,8 +30,7 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
@@ -154,14 +153,14 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         StringValue searchValue = new StringValue("");
 
-        Column col = new Column();
+        Flow col = Flow.column();
         TextFieldWidget searchWidget = new TextFieldWidget().value(searchValue)
             .width(162)
             .height(10)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         // List
-        ListWidget<Row, ?> list = new ListWidget<>();
+        ListWidget<Flow, ?> list = new ListWidget<>();
         list.width(162)
             .maxSize(72);
 
@@ -229,10 +228,10 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
             .setDisablePanelsBelow(false)
             .setCloseOnOutOfBoundsClick(false);
 
-        Column col = new Column();
+        Flow col = Flow.column();
 
-        Row selectTank = new Row();
-        selectTank.coverChildren()
+        Flow slot = Flow.row();
+        slot.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.length")).width(162))
             .child(
                 new TextFieldWidget().value(value)
@@ -246,7 +245,7 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
             .marginTop(16)
             .left(6)
             .childPadding(2)
-            .child(selectTank);
+            .child(slot);
 
         panel.child(ButtonWidget.panelCloseButton())
             .child(col);

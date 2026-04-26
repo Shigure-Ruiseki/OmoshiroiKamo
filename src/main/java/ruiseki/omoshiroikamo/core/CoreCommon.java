@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.core.network.packet.PacketEnergy;
 import ruiseki.omoshiroikamo.core.network.packet.PacketFluidTanks;
 import ruiseki.omoshiroikamo.core.network.packet.PacketProgress;
 import ruiseki.omoshiroikamo.core.network.packet.PacketQuickDraw;
+import ruiseki.omoshiroikamo.core.network.packet.PacketReloadNEI;
 import ruiseki.omoshiroikamo.core.network.packet.PacketSound;
 import ruiseki.omoshiroikamo.core.network.packet.PacketSyncCarriedItem;
 import ruiseki.omoshiroikamo.core.proxy.CommonProxyComponent;
@@ -40,6 +41,8 @@ public class CoreCommon extends CommonProxyComponent {
         packetHandler.register(PacketSyncCarriedItem.class);
 
         packetHandler.register(PacketSound.class);
+
+        packetHandler.register(PacketReloadNEI.class);
     }
 
     @Override

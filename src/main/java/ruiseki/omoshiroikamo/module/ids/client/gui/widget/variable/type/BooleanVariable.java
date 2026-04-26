@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.type;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.value.BoolValue;
 import com.cleanroommc.modularui.widgets.ToggleButton;
-import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.BaseVariableWidget;
@@ -18,7 +18,7 @@ public class BooleanVariable extends BaseVariableWidget {
 
         booleanValue = new BoolValue(false);
 
-        Column col = new Column();
+        Flow col = Flow.column();
         col.coverChildren()
             .childPadding(2);
 

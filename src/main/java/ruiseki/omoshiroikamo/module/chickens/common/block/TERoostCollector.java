@@ -15,7 +15,6 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
@@ -113,7 +112,7 @@ public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<Po
                     IKey.str(getLocalizedName())
                         .asWidget()
                         .margin(6, 0, 5, 0)
-                        .align(Alignment.TopLeft))
+                        .posRel(Alignment.TopLeft))
                 .child(
                     SlotGroupWidget.builder()
                         .row("OOOOOOOOO")
@@ -122,9 +121,11 @@ public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<Po
                         .key('O', index -> new ItemSlot().slot(new ModularSlot(inv, index).accessibility(false, true)))
                         .build()
                         .topRel(0.15f)
-                        .alignX(Alignment.CENTER)));
+                        .leftRel(0.5f)));
 
-        panel.child(new Column().coverChildren());
+        panel.child(
+            Flow.column()
+                .coverChildren());
 
         return panel;
     }

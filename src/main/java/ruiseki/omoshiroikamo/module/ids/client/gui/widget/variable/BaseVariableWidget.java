@@ -11,8 +11,8 @@ public abstract class BaseVariableWidget extends ParentWidget<BaseVariableWidget
     public BaseVariableWidget(ProgrammerPanel panel) {
         this.panel = panel;
         coverChildren();
-        alignY(0.5f);
-        alignX(0.5f);
+        leftRel(0.5f);
+        topRel(0.5f);
     }
 
     public abstract void writeLogicNBT();

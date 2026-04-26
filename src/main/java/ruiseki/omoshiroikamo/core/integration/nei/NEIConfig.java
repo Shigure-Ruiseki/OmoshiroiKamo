@@ -30,10 +30,6 @@ import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularRecipeNEIHandle
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
-import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackOverlay;
-import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackPositioner;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
@@ -56,9 +52,6 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfig;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumResExtractorRecipeHandler;
-import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageGuiContainer;
-import ruiseki.omoshiroikamo.module.storage.integration.nei.StorageOverlay;
-import ruiseki.omoshiroikamo.module.storage.integration.nei.StoragePositioner;
 
 public class NEIConfig implements IConfigureNEI {
 
@@ -208,18 +201,6 @@ public class NEIConfig implements IConfigureNEI {
         if (BackportConfigs.enableCows) {
             registerHandler(new CowBreedingRecipeHandler());
             registerHandler(new CowMilkingRecipeHandler());
-        }
-
-        if (BackportConfigs.enableBackpack) {
-            API.registerGuiOverlay(BackpackGuiContainer.class, "crafting", new BackpackPositioner());
-            API.registerGuiOverlayHandler(BackpackGuiContainer.class, new BackpackOverlay(), "crafting");
-            API.addRecipeCatalyst(BackpackItems.CRAFTING_UPGRADE.newItemStack(), "crafting");
-        }
-
-        if (BackportConfigs.enableStorage) {
-            API.registerGuiOverlay(StorageGuiContainer.class, "crafting", new StoragePositioner());
-            API.registerGuiOverlayHandler(StorageGuiContainer.class, new StorageOverlay(), "crafting");
-            API.addRecipeCatalyst(BackpackItems.CRAFTING_UPGRADE.newItemStack(), "crafting");
         }
 
         if (BackportConfigs.enableIDs) {

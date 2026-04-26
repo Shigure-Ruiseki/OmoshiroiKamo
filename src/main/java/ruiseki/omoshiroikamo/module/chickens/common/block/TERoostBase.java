@@ -36,12 +36,6 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         this.inv = new ItemStackHandlerBase(slotDefinition.getItemSlots()) {
 
             @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                onContentsChange(slot);
-            }
-
-            @Override
             public int getSlotLimit(int slot) {
                 if (slot < getSizeChickenInventory()) {
                     return getChickenStackLimit();
@@ -49,6 +43,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
                 return super.getSlotLimit(slot);
             }
         };
+        inv.setOnSlotChanged((slot, stack) -> { onContentsChange(slot); });
 
         chickenCache = new DataChicken[getSizeChickenInventory()];
     }

@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.core.client.gui.handler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,8 @@ import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerializable {
+
+    private BiConsumer<Integer, ItemStack> onSlotChanged;
 
     public ItemStackHandlerBase() {
         super(1);
@@ -195,6 +198,22 @@ public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerial
         this.stacks = newStacks;
     }
 
+    public boolean isSizeInconsistent(int newSize) {
+        return newSize != stacks.size();
+    }
+
+    public static <T> void syncListSize(List<T> list, int newSize, T defaultValue) {
+        int currentSize = list.size();
+        if (newSize < currentSize) {
+            list.subList(newSize, currentSize)
+                .clear();
+        } else {
+            for (int i = currentSize; i < newSize; i++) {
+                list.add(defaultValue);
+            }
+        }
+    }
+
     public void dropAll(World world, int x, int y, int z) {
         for (int i = 0; i < getSlots(); i++) {
             ItemStack stack = getStackInSlot(i);
@@ -272,5 +291,16 @@ public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerial
         }
 
         this.onLoad();
+    }
+
+    public void setOnSlotChanged(BiConsumer<Integer, ItemStack> onSlotChanged) {
+        this.onSlotChanged = onSlotChanged;
+    }
+
+    @Override
+    protected void onContentsChanged(int slot) {
+        if (onSlotChanged != null) {
+            onSlotChanged.accept(slot, getStackInSlot(slot));
+        }
     }
 }

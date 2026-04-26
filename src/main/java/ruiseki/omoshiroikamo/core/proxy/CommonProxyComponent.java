@@ -13,7 +13,6 @@ import ruiseki.omoshiroikamo.core.client.key.IKeyRegistry;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.network.PacketHandler;
-import ruiseki.omoshiroikamo.core.network.packet.PacketReloadNEI;
 import ruiseki.omoshiroikamo.core.network.packet.PacketSound;
 import ruiseki.omoshiroikamo.core.world.gen.IRetroGenRegistry;
 
@@ -49,7 +48,7 @@ public abstract class CommonProxyComponent implements ICommonProxy {
 
     @Override
     public void registerPacketHandlers(PacketHandler packetHandler) {
-        packetHandler.register(PacketReloadNEI.class);
+
     }
 
     @Override

@@ -15,8 +15,7 @@ import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
@@ -77,7 +76,7 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
         .name("partInfoBg")
         .build();
 
-    public void addSearchableRow(ListWidget<Row, ?> list, String searchKey, Row row, StringValue searchValue) {
+    public void addSearchableRow(ListWidget<Flow, ?> list, String searchKey, Flow row, StringValue searchValue) {
         row.setEnabledIf(
             w -> searchKey.toLowerCase()
                 .contains(
@@ -86,18 +85,19 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
         list.child(row);
     }
 
-    public Row infoRow(String label, IKey valueKey, int slot, LogicKey key) {
+    public Flow infoRow(String label, IKey valueKey, int slot, LogicKey key) {
         return infoRow(label, valueKey, slot, key, null);
     }
 
-    public Row infoRow(String label, IKey valueKey, int slot, LogicKey key, IPanelHandler settingPanel) {
-        Row row = (Row) new Row().coverChildrenHeight()
+    public Flow infoRow(String label, IKey valueKey, int slot, LogicKey key, IPanelHandler settingPanel) {
+        Flow row = Flow.row()
+            .coverChildrenHeight()
             .width(162)
             .childPadding(4)
             .background(INFO_BG);
 
-        Column textCol = new Column();
-        Row tile = new Row();
+        Flow textCol = Flow.column();
+        Flow tile = Flow.row();
         tile.coverChildren()
             .child(
                 IKey.str(label)
