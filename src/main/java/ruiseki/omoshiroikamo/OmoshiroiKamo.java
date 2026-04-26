@@ -44,9 +44,6 @@ import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
-import ruiseki.omoshiroikamo.module.backpack.BackpackModule;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.chickens.ChickensModule;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
@@ -200,29 +197,6 @@ public class OmoshiroiKamo extends ModBase {
     private static final Map<String, Object> REMAPS = new HashMap<>();
 
     static {
-        REMAPS.put("omoshiroikamo:backpackLeather", BackpackBlocks.BACKPACK_BASE.getBlock());
-        REMAPS.put("omoshiroikamo:backpackIron", BackpackBlocks.BACKPACK_IRON.getBlock());
-        REMAPS.put("omoshiroikamo:backpackGold", BackpackBlocks.BACKPACK_GOLD.getBlock());
-        REMAPS.put("omoshiroikamo:backpackDiamond", BackpackBlocks.BACKPACK_DIAMOND.getBlock());
-        REMAPS.put("omoshiroikamo:backpackObsidian", BackpackBlocks.BACKPACK_OBSIDIAN.getBlock());
-        REMAPS.put("omoshiroikamo:sleepingBag", BackpackBlocks.SLEEPING_BAG.getBlock());
-
-        REMAPS.put("omoshiroikamo:upgrade", BackpackItems.BASE_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:stackUpgrade", BackpackItems.STACK_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:craftingUpgrade", BackpackItems.CRAFTING_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:magnetUpgrade", BackpackItems.MAGNET_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:advancedMagnetUpgrade", BackpackItems.ADVANCED_MAGNET_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:everlastingUpgrade", BackpackItems.EVERLASTING_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:inceptionUpgrade", BackpackItems.INCEPTION_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:feedingUpgrade", BackpackItems.FEEDING_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:advancedFeedingUpgrade", BackpackItems.ADVANCED_FEEDING_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:pickupUpgrade", BackpackItems.PICKUP_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:advancedPickupUpgrade", BackpackItems.ADVANCED_PICKUP_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:filterUpgrade", BackpackItems.FILTER_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:advancedFilterUpgrade", BackpackItems.ADVANCED_FILTER_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:voidUpgrade", BackpackItems.VOID_UPGRADE.getItem());
-        REMAPS.put("omoshiroikamo:advancedVoidUpgrade", BackpackItems.ADVANCED_VOID_UPGRADE.getItem());
-
         REMAPS.put("omoshiroikamo:roostCollector", ChickensBlocks.ROOST_COLLECTOR.getBlock());
 
         REMAPS.put("omoshiroikamo:chickenCatcher", ChickensItems.CHICKEN_CATCHER.getItem());
