@@ -42,6 +42,7 @@ import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.core.IMachineState;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
 import ruiseki.omoshiroikamo.api.recipe.error.ErrorReason;
@@ -52,11 +53,13 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.agent.MachineStateAgent;
 
 /**
  * Corresponds to the 'Q' symbol in structure definitions.
@@ -119,6 +122,17 @@ public class TEMachineController extends AbstractMBModifierTE
 
     // External Port Error Cache (Persistent state for transient proxies)
     private final Set<ChunkCoordinates> reportedErrorPorts = new HashSet<>();
+
+    @NBTPersist
+    private long timePlacedCount = 0;
+    @NBTPersist
+    private long timeContinuousCount = 0;
+    @NBTPersist
+    private long currentRecipeSeed = 0;
+    @NBTPersist
+    private long currentRecipeStartTick = 0;
+
+    private final MachineStateAgent machineStateAgent = new MachineStateAgent(this);
 
     // External Port Configurations
     private final Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> externalPortConfigs = new HashMap<>();
@@ -386,8 +400,60 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     @Override
-    public float getSpeedMultiplier() {
-        return 1.0f;
+    public double getSpeedMultiplier() {
+        if (worldObj == null || !isFormed) return 1.0;
+        String name = getCustomStructureName();
+        if (name == null) return 1.0;
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(name);
+        if (entry == null) return 1.0;
+        return entry.evaluateSpeedMultiplier(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    @Override
+    public double getEnergyMultiplier() {
+        if (worldObj == null || !isFormed) return 1.0;
+        String name = getCustomStructureName();
+        if (name == null) return 1.0;
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(name);
+        if (entry == null) return 1.0;
+        return entry.evaluateEnergyMultiplier(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    @Override
+    public int getBatchMin() {
+        if (worldObj == null || !isFormed) return 1;
+        String name = getCustomStructureName();
+        if (name == null) return 1;
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(name);
+        if (entry == null) return 1;
+        return entry.evaluateBatchMin(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    @Override
+    public int getBatchMax() {
+        if (worldObj == null || !isFormed) return 1;
+        String name = getCustomStructureName();
+        if (name == null) return 1;
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(name);
+        if (entry == null) return 1;
+        return entry.evaluateBatchMax(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    @Override
+    public IStructureEntry getStructureEntry() {
+        if (worldObj == null || !isFormed) return null;
+        String name = getCustomStructureName();
+        if (name == null) return null;
+        return StructureManager.getInstance()
+            .getCustomStructure(name);
+    }
+
+    public String getCustomStructureName() {
+        return structureAgent.getCustomStructureName();
     }
 
     @Override
@@ -449,6 +515,12 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // Process recipes when formed
         if (isFormed) {
+            if (!worldObj.isRemote) {
+                timePlacedCount++;
+                if (processAgent.isRunning()) {
+                    timeContinuousCount++;
+                }
+            }
             processRecipe();
         }
     }
@@ -461,13 +533,17 @@ public class TEMachineController extends AbstractMBModifierTE
     private void processRecipe() {
         // Try to output if waiting
         if (processAgent.isWaitingForOutput()) {
-            if (processAgent.diagnoseBlockOutputFull(getOutputPorts())) {
+            ConditionContext context = new ConditionContext(worldObj, xCoord, yCoord, zCoord);
+            if (processAgent.diagnoseBlockOutputFull(getOutputPorts(), context)) {
                 lastProcessErrorReason = ErrorReason.BLOCK_OUTPUT_FULL;
             } else {
                 lastProcessErrorReason = ErrorReason.WAITING_OUTPUT;
             }
-            if (processAgent.tryOutput(getOutputPorts())) {
+            if (processAgent.tryOutput(getOutputPorts(), context)) {
                 lastProcessErrorReason = ErrorReason.NONE;
+                if (!worldObj.isRemote) {
+                    machineStateAgent.recordRecipeCompletion(processAgent.getCurrentRecipe());
+                }
                 // Output succeeded, try to start next recipe immediately
                 startNextRecipe();
             }
@@ -512,8 +588,11 @@ public class TEMachineController extends AbstractMBModifierTE
 
             // If complete, immediately try to output and start next
             if (result == ProcessAgent.TickResult.READY_OUTPUT) {
-                if (processAgent.tryOutput(getContextualOutputPorts())) {
+                if (processAgent.tryOutput(getContextualOutputPorts(), context)) {
                     lastProcessErrorReason = ErrorReason.NONE;
+                    if (!worldObj.isRemote) {
+                        machineStateAgent.recordRecipeCompletion(processAgent.getCurrentRecipe());
+                    }
                     startNextRecipe();
                 }
             }
@@ -565,7 +644,11 @@ public class TEMachineController extends AbstractMBModifierTE
                 return;
             }
 
-            if (processAgent.startRecipe(recipe, getContextualInputPorts(), getContextualOutputPorts()))
+            currentRecipeSeed = worldObj.getTotalWorldTime() ^ worldObj.getSeed()
+                ^ ((long) xCoord << 32 | (zCoord & 0xFFFFFFFFL));
+            currentRecipeStartTick = worldObj.getTotalWorldTime();
+            ConditionContext context = getConditionContext();
+            if (processAgent.startRecipe(recipe, getContextualInputPorts(), getContextualOutputPorts(), context))
                 lastProcessErrorReason = ErrorReason.NONE;
             else lastProcessErrorReason = ErrorReason.NO_INPUT;
         } else {
@@ -747,11 +830,45 @@ public class TEMachineController extends AbstractMBModifierTE
         return portManager.validPorts(ports);
     }
 
-    // ========== NBT Persistence ==========
+    // ========== IMachineState Integration ==========
+
+    @Override
+    public IMachineState getMachineState() {
+        return machineStateAgent;
+    }
+
+    public long getTimePlaced() {
+        return timePlacedCount;
+    }
+
+    public long getTimeContinuous() {
+        return timeContinuousCount;
+    }
+
+    public double getProgressPercent() {
+        return processAgent.getProgressPercent();
+    }
+
+    public boolean isRunning() {
+        return processAgent.isRunning();
+    }
+
+    public boolean isWaitingForOutput() {
+        return processAgent.isWaitingForOutput();
+    }
+
+    public int getEnergyPerTick() {
+        return processAgent.getEnergyPerTick();
+    }
+
+    public int getBatchSize() {
+        return processAgent.getBatchSize();
+    }
 
     @Override
     public void writeCommon(NBTTagCompound nbt) {
         super.writeCommon(nbt);
+        machineStateAgent.writeToNBT(nbt);
 
         NBTTagList groupList = new NBTTagList();
         for (String group : recipeGroups) {
@@ -767,34 +884,6 @@ public class TEMachineController extends AbstractMBModifierTE
         nbt.setTag("processAgent", agentNbt);
         // Save ExtendedFacing
         nbt.setByte("extendedFacing", (byte) extendedFacing.ordinal());
-        // Save External Port Configs
-        if (!externalPortConfigs.isEmpty()) {
-            NBTTagList portList = new NBTTagList();
-            for (Map.Entry<ChunkCoordinates, Map<IPortType.Type, EnumIO>> entry : externalPortConfigs.entrySet()) {
-                NBTTagCompound portTag = new NBTTagCompound();
-                portTag.setInteger("x", entry.getKey().posX);
-                portTag.setInteger("y", entry.getKey().posY);
-                portTag.setInteger("z", entry.getKey().posZ);
-
-                NBTTagList typeList = new NBTTagList();
-                for (Map.Entry<IPortType.Type, EnumIO> typeEntry : entry.getValue()
-                    .entrySet()) {
-                    NBTTagCompound typeTag = new NBTTagCompound();
-                    typeTag.setByte(
-                        "type",
-                        (byte) typeEntry.getKey()
-                            .ordinal());
-                    typeTag.setByte(
-                        "io",
-                        (byte) typeEntry.getValue()
-                            .ordinal());
-                    typeList.appendTag(typeTag);
-                }
-                portTag.setTag("types", typeList);
-                portList.appendTag(portTag);
-            }
-            nbt.setTag("externalPortConfigs", portList);
-        }
     }
 
     @Override
@@ -803,6 +892,7 @@ public class TEMachineController extends AbstractMBModifierTE
             return;
         }
         super.readCommon(nbt);
+        machineStateAgent.readFromNBT(nbt);
 
         recipeGroups = new ArrayList<>();
         if (nbt.hasKey("recipeGroups", 9)) {
@@ -816,9 +906,6 @@ public class TEMachineController extends AbstractMBModifierTE
         }
         if (recipeGroups.isEmpty()) recipeGroups.add("default");
         // Load blueprint inventory
-        if (nbt.hasKey("inventory")) {
-            inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
-        }
         if (nbt.hasKey("inventory")) {
             inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
         }
@@ -918,13 +1005,6 @@ public class TEMachineController extends AbstractMBModifierTE
         // Notify client
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-
-    /**
-     * Get the custom structure name.
-     */
-    public String getCustomStructureName() {
-        return structureAgent.getCustomStructureName();
     }
 
     /**
@@ -1140,8 +1220,22 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     @Override
+    public long getRecipeStartTick() {
+        return currentRecipeStartTick;
+    }
+
+    @Override
+    public int getRedstoneLevel() {
+        return redstoneLevel;
+    }
+
+    @Override
     public ConditionContext getConditionContext() {
-        return new ConditionContext(worldObj, xCoord, yCoord, zCoord, this);
+        long seed = (long) xCoord ^ ((long) zCoord << 32)
+            ^ worldObj.getSeed()
+            ^ ((long) machineStateAgent.getRecipeProcessedCount() << 16)
+            ^ currentRecipeSeed;
+        return new ConditionContext(worldObj, xCoord, yCoord, zCoord, this, seed);
     }
 
     // ========== ISidedTexture Implementation ==========

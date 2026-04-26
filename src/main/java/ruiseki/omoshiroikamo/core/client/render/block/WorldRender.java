@@ -25,8 +25,10 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
+import ruiseki.omoshiroikamo.core.client.render.JsonModelISBRH;
 
 @SideOnly(Side.CLIENT)
 @ThreadSafeISBRH(perThread = true)
@@ -70,6 +72,11 @@ public final class WorldRender implements ISimpleBlockRenderingHandler {
     public void renderItemBlock(final ItemStack item, final IItemRenderer.ItemRenderType type, final Object[] data) {
         final Block blk = Block.getBlockFromItem(item.getItem());
         if (blk instanceof BlockOK block) {
+            if (isJsonModel(item)) {
+                JsonModelISBRH.INSTANCE.renderInventory(item);
+                return;
+            }
+
             this.renderer.setRenderBoundsFromBlock(block);
 
             this.renderer.uvRotateBottom = this.renderer.uvRotateEast = this.renderer.uvRotateNorth = this.renderer.uvRotateSouth = this.renderer.uvRotateTop = this.renderer.uvRotateWest = 0;
@@ -84,5 +91,10 @@ public final class WorldRender implements ISimpleBlockRenderingHandler {
                 OmoshiroiKamo.okLog(Level.ERROR, "		block: " + blk.getUnlocalizedName());
             }
         }
+    }
+
+    private boolean isJsonModel(ItemStack stack) {
+        Block blk = Block.getBlockFromItem(stack.getItem());
+        return blk instanceof IJsonModelBlock;
     }
 }

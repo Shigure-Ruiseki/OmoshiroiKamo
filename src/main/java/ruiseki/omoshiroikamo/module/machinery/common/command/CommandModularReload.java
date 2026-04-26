@@ -5,14 +5,10 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
-import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
-import ruiseki.omoshiroikamo.core.network.packet.PacketReloadNEI;
 import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
-import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class CommandModularReload extends CommandMod {
 
@@ -24,45 +20,28 @@ public class CommandModularReload extends CommandMod {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Reloading..."));
+        sender
+            .addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Reloading modular..."));
 
-        boolean hasErrors = false;
+        MachineryModule machineryModule = getMod().getModuleManager()
+            .getModuleByType(MachineryModule.class);
+        if (machineryModule == null || !machineryModule.isEnable()) {
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "[Modular] Module is disabled."));
+            return;
+        }
 
-        // Reload structures
         try {
-            StructureManager.getInstance()
-                .reload();
-            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  Structures reloaded"));
+            machineryModule.reload(sender);
         } catch (Exception e) {
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "  Structures failed: " + e.getMessage()));
-            hasErrors = true;
+                new ChatComponentText(EnumChatFormatting.RED + "[Modular] Reload failed: " + e.getMessage()));
+            return;
         }
 
-        // Reload recipes
-        try {
-            RecipeLoader.getInstance()
-                .reload(MachineryModule.getConfigDir());
-            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  Recipes reloaded"));
-
-            // Reload NEI (only triggers on Client Proxy via packet)
-            OmoshiroiKamo.instance.getPacketHandler()
-                .sendToAll(new PacketReloadNEI());
-        } catch (Exception e) {
-            sender
-                .addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "  Recipes failed: " + e.getMessage()));
-            hasErrors = true;
-        }
-
-        if (hasErrors || JsonErrorCollector.getInstance()
+        if (!JsonErrorCollector.getInstance()
             .hasErrors()) {
-            JsonErrorCollector.getInstance()
-                .writeToFile();
-            JsonErrorCollector.getInstance()
-                .reportToChat(sender);
-        } else {
-            sender
-                .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] Reload completed!"));
+            sender.addChatMessage(
+                new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] Modular reload completed!"));
         }
     }
 }

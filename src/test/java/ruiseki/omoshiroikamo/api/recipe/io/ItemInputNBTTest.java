@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.test.RegistryMocker;
 
 /**
@@ -151,9 +152,10 @@ public class ItemInputNBTTest {
                 .getAsJsonObject());
         ItemStack stack = new ItemStack(Items.diamond_sword);
 
-        Method method = ItemInput.class.getDeclaredMethod("checkNBTConditions", ItemStack.class);
+        Method method = ItemInput.class
+            .getDeclaredMethod("checkNBTConditions", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertTrue(result); // No conditions = always match
     }
@@ -174,9 +176,10 @@ public class ItemInputNBTTest {
         ItemStack stack = new ItemStack(Items.diamond_sword);
         // Stack has no NBT
 
-        Method method = ItemInput.class.getDeclaredMethod("checkNBTConditions", ItemStack.class);
+        Method method = ItemInput.class
+            .getDeclaredMethod("checkNBTConditions", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertFalse(result); // Has conditions but item has no NBT
     }
@@ -206,9 +209,10 @@ public class ItemInputNBTTest {
         nbt.setTag("ench", enchList);
         stack.setTagCompound(nbt);
 
-        Method method = ItemInput.class.getDeclaredMethod("checkNBTConditions", ItemStack.class);
+        Method method = ItemInput.class
+            .getDeclaredMethod("checkNBTConditions", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertTrue(result);
     }
@@ -238,9 +242,10 @@ public class ItemInputNBTTest {
         nbt.setTag("ench", enchList);
         stack.setTagCompound(nbt);
 
-        Method method = ItemInput.class.getDeclaredMethod("checkNBTConditions", ItemStack.class);
+        Method method = ItemInput.class
+            .getDeclaredMethod("checkNBTConditions", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertFalse(result);
     }
@@ -256,9 +261,10 @@ public class ItemInputNBTTest {
                 .getAsJsonObject());
         ItemStack stack = new ItemStack(Items.diamond_sword);
 
-        Method method = ItemInput.class.getDeclaredMethod("applyNBTModifications", ItemStack.class);
+        Method method = ItemInput.class
+            .getDeclaredMethod("applyNBTModifications", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        method.invoke(input, stack);
+        method.invoke(input, stack, null);
 
         // Should not crash and not add NBT
         assertNull(stack.getTagCompound());
@@ -279,9 +285,10 @@ public class ItemInputNBTTest {
                 .getAsJsonObject());
         ItemStack stack = new ItemStack(Items.diamond_sword);
 
-        Method method = ItemInput.class.getDeclaredMethod("applyNBTModifications", ItemStack.class);
+        Method method = ItemInput.class
+            .getDeclaredMethod("applyNBTModifications", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        method.invoke(input, stack);
+        method.invoke(input, stack, null);
 
         assertNotNull(stack.getTagCompound());
         assertTrue(
@@ -322,9 +329,10 @@ public class ItemInputNBTTest {
         nbt.setTag("ench", enchList);
         stack.setTagCompound(nbt);
 
-        Method method = ItemInput.class.getDeclaredMethod("applyNBTModifications", ItemStack.class);
+        Method method = ItemInput.class
+            .getDeclaredMethod("applyNBTModifications", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        method.invoke(input, stack);
+        method.invoke(input, stack, null);
 
         NBTTagList modifiedEnchList = (NBTTagList) stack.getTagCompound()
             .getTag("ench");
@@ -357,9 +365,10 @@ public class ItemInputNBTTest {
         nbt.setTag("ench", enchList);
         stack.setTagCompound(nbt);
 
-        Method method = ItemInput.class.getDeclaredMethod("applyNBTModifications", ItemStack.class);
+        Method method = ItemInput.class
+            .getDeclaredMethod("applyNBTModifications", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        method.invoke(input, stack);
+        method.invoke(input, stack, null);
 
         NBTTagList modifiedEnchList = (NBTTagList) stack.getTagCompound()
             .getTag("ench");
@@ -377,9 +386,9 @@ public class ItemInputNBTTest {
                 .getAsJsonObject());
         ItemStack stack = new ItemStack(Items.diamond_sword);
 
-        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class);
+        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertTrue(result);
     }
@@ -409,9 +418,9 @@ public class ItemInputNBTTest {
         nbt.setTag("ench", enchList);
         stack.setTagCompound(nbt);
 
-        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class);
+        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertTrue(result);
     }
@@ -441,9 +450,9 @@ public class ItemInputNBTTest {
         nbt.setTag("ench", enchList);
         stack.setTagCompound(nbt);
 
-        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class);
+        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertFalse(result);
     }
@@ -457,9 +466,9 @@ public class ItemInputNBTTest {
                 .getAsJsonObject());
         ItemStack stack = new ItemStack(Items.iron_sword);
 
-        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class);
+        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertFalse(result);
     }
@@ -472,9 +481,9 @@ public class ItemInputNBTTest {
             new JsonParser().parse(json)
                 .getAsJsonObject());
 
-        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class);
+        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, (ItemStack) null);
+        boolean result = (boolean) method.invoke(input, (ItemStack) null, null);
 
         assertFalse(result);
     }
@@ -623,9 +632,9 @@ public class ItemInputNBTTest {
         nbt.setTag("ench", enchList);
         stack.setTagCompound(nbt);
 
-        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class);
+        Method method = ItemInput.class.getDeclaredMethod("stacksMatch", ItemStack.class, ConditionContext.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(input, stack);
+        boolean result = (boolean) method.invoke(input, stack, null);
 
         assertTrue(result);
     }

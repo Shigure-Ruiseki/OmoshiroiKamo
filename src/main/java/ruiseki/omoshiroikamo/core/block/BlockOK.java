@@ -54,6 +54,11 @@ public class BlockOK extends Block implements IBlockPropertyProvider, IBlock {
     protected boolean isFullSize = true;
     public boolean hasSubtypes = false;
 
+    @Override
+    public void registerProperties() {
+        propertyComponent.registerProperties();
+    }
+
     protected boolean rotatable = false;
 
     protected BlockOK(String name) {

@@ -6,8 +6,12 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
@@ -16,11 +20,11 @@ import thaumcraft.api.aspects.IAspectContainer;
 public class EssentiaOutput extends AbstractModularRecipeOutput {
 
     private String aspectTag;
-    private int amount;
 
     public EssentiaOutput(String aspectTag, int amount) {
         this.aspectTag = aspectTag;
         this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
     }
 
     public String getAspectTag() {
@@ -37,11 +41,12 @@ public class EssentiaOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
-    public void apply(List<IModularPort> ports, int multiplier) {
+    public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return;
 
-        int remaining = amount * multiplier;
+        int req = amountExpr != null ? (int) amountExpr.evaluateDouble(context) : amount;
+        int remaining = req * multiplier;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ESSENTIA) continue;
@@ -87,8 +92,13 @@ public class EssentiaOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return evaluateAmount(context);
+    }
+
+    @Override
     public long getRequiredAmount() {
-        return amount;
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -98,15 +108,26 @@ public class EssentiaOutput extends AbstractModularRecipeOutput {
             .getAsInt();
         this.aspectTag = json.get("essentia")
             .getAsString();
-        this.amount = json.has("amount") ? json.get("amount")
-            .getAsInt() : 1;
+        if (json.has("amount")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("amount"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amount = (int) amountExpr.evaluateDouble(null);
+            }
+        } else {
+            this.amount = 1;
+            this.amountExpr = new ConstantExpression(1);
+        }
     }
 
     @Override
     public void write(JsonObject json) {
         if (index != -1) json.addProperty("index", index);
         json.addProperty("essentia", aspectTag);
-        json.addProperty("amount", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("amount", amount);
+        } else {
+            json.addProperty("amount", amountExpr.toString());
+        }
         if (interval > 0) json.addProperty("pertick", interval);
     }
 
@@ -131,6 +152,7 @@ public class EssentiaOutput extends AbstractModularRecipeOutput {
         EssentiaOutput result = new EssentiaOutput(aspectTag, amount * multiplier);
         result.interval = this.interval;
         result.index = this.index;
+        result.amountExpr = this.amountExpr;
         return result;
     }
 
@@ -140,6 +162,9 @@ public class EssentiaOutput extends AbstractModularRecipeOutput {
         nbt.setInteger("interval", interval);
         nbt.setString("aspect", aspectTag);
         nbt.setInteger("amount", amount);
+        if (!(amountExpr instanceof ConstantExpression)) {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
         nbt.setInteger("index", index);
     }
 
@@ -148,6 +173,11 @@ public class EssentiaOutput extends AbstractModularRecipeOutput {
         this.interval = nbt.getInteger("interval");
         this.aspectTag = nbt.getString("aspect");
         this.amount = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amount);
+        }
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 

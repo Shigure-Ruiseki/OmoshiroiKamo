@@ -120,6 +120,52 @@ public abstract class AbstractJsonMaterial implements IJsonMaterial {
     }
 
     /**
+     * Reads a Map of String arrays from the json object.
+     */
+    protected Map<String, String[]> getStringArrayMap(JsonObject json, String memberName) {
+        Map<String, String[]> map = new HashMap<>();
+        if (!json.has(memberName) || !json.get(memberName)
+            .isJsonObject()) return map;
+        for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject(memberName)
+            .entrySet()) {
+            if (entry.getValue()
+                .isJsonArray()) {
+                map.put(
+                    entry.getKey(),
+                    getStringArray(
+                        entry.getValue()
+                            .getAsJsonArray()));
+            }
+        }
+        return map.isEmpty() ? null : map;
+    }
+
+    private String[] getStringArray(JsonArray array) {
+        String[] result = new String[array.size()];
+        for (int i = 0; i < array.size(); i++) {
+            result[i] = array.get(i)
+                .getAsString();
+        }
+        return result;
+    }
+
+    /**
+     * Writes a Map of String arrays to the json object.
+     */
+    protected void writeStringArrayMap(JsonObject json, String memberName, Map<String, String[]> map) {
+        if (map == null || map.isEmpty()) return;
+        JsonObject obj = new JsonObject();
+        for (Map.Entry<String, String[]> entry : map.entrySet()) {
+            JsonArray array = new JsonArray();
+            for (String s : entry.getValue()) {
+                array.add(new JsonPrimitive(s));
+            }
+            obj.add(entry.getKey(), array);
+        }
+        json.add(memberName, obj);
+    }
+
+    /**
      * Writes a String array to the json object.
      */
     protected void writeStringArray(JsonObject json, String memberName, String[] array) {

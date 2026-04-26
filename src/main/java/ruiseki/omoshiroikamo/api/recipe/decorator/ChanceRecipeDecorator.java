@@ -25,7 +25,7 @@ public class ChanceRecipeDecorator extends RecipeDecorator {
     @Override
     public boolean isConditionMet(ConditionContext context) {
         // First check internal conditions, then roll for chance
-        double chance = chanceExpr.evaluate(context);
+        double chance = chanceExpr.evaluateDouble(context);
         return internal.isConditionMet(context) && rand.nextFloat() < chance;
     }
 

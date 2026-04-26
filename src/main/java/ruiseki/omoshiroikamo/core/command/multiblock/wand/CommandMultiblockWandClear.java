@@ -3,12 +3,10 @@ package ruiseki.omoshiroikamo.core.command.multiblock.wand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 
 public class CommandMultiblockWandClear extends CommandMod {
@@ -26,11 +24,9 @@ public class CommandMultiblockWandClear extends CommandMod {
             .hasPendingScan(player.getUniqueID())) {
             WandSelectionManager.getInstance()
                 .clearPendingScan(player.getUniqueID());
-            player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GREEN + LangHelpers.localize("command.ok.wand_cleared")));
+            sendLocalizedMessage(player, "command.ok.wand_cleared", EnumChatFormatting.GREEN);
         } else {
-            player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GRAY + LangHelpers.localize("command.ok.wand_no_selection")));
+            sendLocalizedMessage(player, "command.ok.wand_no_selection", EnumChatFormatting.GRAY);
         }
     }
 }

@@ -1,5 +1,22 @@
 {
-    "variants": {
-      "": { "model": "omoshiroikamo:block/multiblock/quantum_res_extractor" }
+  "variants": {
+    "tier=0": {
+      "model": "omoshiroikamo:block/multiblock/quantum_res_extractor"
+    },
+    "tier=1": {
+      "model": "omoshiroikamo:block/multiblock/quantum_res_extractor"
+    },
+    "tier=2": {
+      "model": "omoshiroikamo:block/multiblock/quantum_res_extractor"
+    },
+    "tier=3": {
+      "model": "omoshiroikamo:block/multiblock/quantum_res_extractor"
+    },
+    "tier=4": {
+      "model": "omoshiroikamo:block/multiblock/quantum_res_extractor"
+    },
+    "tier=5": {
+      "model": "omoshiroikamo:block/multiblock/quantum_res_extractor"
     }
+  }
 }

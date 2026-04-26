@@ -48,6 +48,10 @@ public class ModelRegistryItem extends AbstractJsonMaterial {
     @Getter
     protected String[] mobTrivia;
 
+    /** Locale -> lines. Takes priority over mobTrivia when present. */
+    @Getter
+    protected Map<String, String[]> mobTriviaLocalized;
+
     @Getter
     protected Map<String, String> lang;
     @Getter
@@ -126,6 +130,7 @@ public class ModelRegistryItem extends AbstractJsonMaterial {
             this.interfaceOffsetX = getInt(display, "interfaceOffsetX", 0);
             this.interfaceOffsetY = getInt(display, "interfaceOffsetY", 0);
             this.mobTrivia = getStringArray(display, "mobTrivia");
+            this.mobTriviaLocalized = getStringArrayMap(display, "mobTriviaLocalized");
         }
 
         // Loot Items
@@ -186,6 +191,7 @@ public class ModelRegistryItem extends AbstractJsonMaterial {
         display.addProperty("interfaceOffsetX", interfaceOffsetX);
         display.addProperty("interfaceOffsetY", interfaceOffsetY);
         writeStringArray(display, "mobTrivia", mobTrivia);
+        writeStringArrayMap(display, "mobTriviaLocalized", mobTriviaLocalized);
         json.add("deepLearnerDisplay", display);
 
         // Loot Items

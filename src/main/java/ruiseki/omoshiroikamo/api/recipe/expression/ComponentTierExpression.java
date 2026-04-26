@@ -8,12 +8,6 @@ import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
 
 /**
  * Expression that retrieves the tier of a specific machine component.
- * <p>
- * Examples:
- * <ul>
- * <li>tier.glass - Returns the tier of the "glass" component</li>
- * <li>tier.casing - Returns the tier of the "casing" component</li>
- * </ul>
  */
 public class ComponentTierExpression implements IExpression {
 
@@ -27,24 +21,13 @@ public class ComponentTierExpression implements IExpression {
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
-        // Null safety checks
-        if (context == null) {
-            return 0.0;
-        }
-
+    public EvaluationValue evaluate(ConditionContext context) {
+        if (context == null) return EvaluationValue.ZERO;
         IRecipeContext recipeContext = context.getRecipeContext();
-        if (recipeContext == null) {
-            return 0.0;
-        }
-
-        // Check if context implements ITieredMachine
-        if (!(recipeContext instanceof ITieredMachine)) {
-            return 0.0;
-        }
+        if (recipeContext == null || !(recipeContext instanceof ITieredMachine)) return EvaluationValue.ZERO;
 
         ITieredMachine machine = (ITieredMachine) recipeContext;
-        return (double) machine.getComponentTier(componentName);
+        return new EvaluationValue((double) machine.getComponentTier(componentName));
     }
 
     @Override
@@ -52,15 +35,10 @@ public class ComponentTierExpression implements IExpression {
         return "tier." + componentName;
     }
 
-    /**
-     * Deserialize from JSON format.
-     * <p>
-     * Expected format: {"type": "component_tier", "component": "glass"}
-     */
     public static ComponentTierExpression fromJson(JsonObject json) {
-        String component = json.get("component")
-            .getAsString();
-        return new ComponentTierExpression(component);
+        return new ComponentTierExpression(
+            json.get("component")
+                .getAsString());
     }
 
     public String getComponentName() {

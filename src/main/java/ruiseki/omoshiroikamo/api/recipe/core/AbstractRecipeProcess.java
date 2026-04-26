@@ -69,14 +69,14 @@ public abstract class AbstractRecipeProcess {
         // Process generalized per-tick inputs
         for (IModularRecipeInput input : perTickInputs) {
             if (input.getInterval() > 0 && progress % input.getInterval() == 0) {
-                input.process(inputPorts, 1, false);
+                input.process(inputPorts, 1, false, context);
             }
         }
 
         // Process generalized per-tick outputs
         for (IModularRecipeOutput output : perTickOutputs) {
             if (output.getInterval() > 0 && progress % output.getInterval() == 0) {
-                output.apply(outputPorts, 1);
+                output.apply(outputPorts, 1, context);
             }
         }
 
@@ -119,10 +119,10 @@ public abstract class AbstractRecipeProcess {
 
     protected abstract void onCompleted();
 
-    public boolean tryOutput(List<IModularPort> outputPorts) {
+    public boolean tryOutput(List<IModularPort> outputPorts, ConditionContext context) {
         if (!waitingForOutput) return false;
 
-        if (produceOutputs(outputPorts)) {
+        if (produceOutputs(outputPorts, context)) {
             this.waitingForOutput = false;
             reset();
             return true;
@@ -130,7 +130,7 @@ public abstract class AbstractRecipeProcess {
         return false;
     }
 
-    protected abstract boolean produceOutputs(List<IModularPort> outputPorts);
+    protected abstract boolean produceOutputs(List<IModularPort> outputPorts, ConditionContext context);
 
     public void abort() {
         reset();

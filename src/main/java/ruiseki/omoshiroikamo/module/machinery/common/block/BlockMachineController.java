@@ -236,8 +236,6 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
             ItemStack blueprint = controller.getBlueprintStack();
             if (blueprint != null && blueprint.stackSize > 0) {
                 InventoryHelpers.dropItems(world, blueprint.copy(), new BlockPos(x, y, z));
-                controller.getInventory()
-                    .setStackInSlot(TEMachineController.BLUEPRINT_SLOT, null);
             }
         }
 

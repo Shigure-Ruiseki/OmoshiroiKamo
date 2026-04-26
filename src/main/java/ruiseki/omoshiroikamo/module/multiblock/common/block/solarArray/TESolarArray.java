@@ -67,8 +67,13 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IOKEn
     }
 
     @Override
-    public float getSpeedMultiplier() {
-        return 1.0F;
+    public double getSpeedMultiplier() {
+        return 1.0;
+    }
+
+    @Override
+    protected boolean shouldSyncCraftingStateToBlock() {
+        return false;
     }
 
     @Override

@@ -36,6 +36,11 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
         isOpaque = false;
     }
 
+    @Override
+    public String getTextureName() {
+        return "multiblock/solar_tex";
+    }
+
     public static BlockSolarArray create() {
         return new BlockSolarArray();
     }

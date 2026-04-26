@@ -5,10 +5,12 @@ import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.DML_INVENTORY_
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -225,7 +227,7 @@ public class DeepLearnerPanel extends ModularPanel {
         if (model == null) return;
         float numberOfHearts = model.getNumberOfHearts();
         String name = entity != null ? entity.getCommandSenderName() : "entity." + model.getEntityDisplay() + ".name";
-        String[] trivia = model.getMobTrivia();
+        String[] trivia = resolveTrivia(model);
         int tier = DataModel.getTier(stack);
         int totalKillCount = DataModel.getTotalKillCount(stack);
         int killsThisTier = DataModel.getKillCount(stack);
@@ -287,7 +289,7 @@ public class DeepLearnerPanel extends ModularPanel {
         Column mobTrivia = (Column) new Column().coverChildren();
 
         for (String string : trivia) {
-            TextWidget<?> text = IKey.lang(string)
+            TextWidget<?> text = IKey.str(string)
                 .scale(1f)
                 .color(0xFFFFFFFF)
                 .alignment(Alignment.CenterLeft)
@@ -362,6 +364,26 @@ public class DeepLearnerPanel extends ModularPanel {
         infoDisplay.child(heartCol);
 
         child(infoDisplay);
+    }
+
+    private String[] resolveTrivia(ModelRegistryItem model) {
+        java.util.Map<String, String[]> localized = model.getMobTriviaLocalized();
+        if (localized != null && !localized.isEmpty()) {
+            String locale = Minecraft.getMinecraft().gameSettings.language;
+            String[] lines = localized.get(locale);
+            if (lines == null) lines = localized.get("en_US");
+            if (lines == null) lines = localized.values()
+                .iterator()
+                .next();
+            if (lines != null) return lines;
+        }
+        String[] keys = model.getMobTrivia();
+        if (keys == null || keys.length == 0) return new String[0];
+        String[] resolved = new String[keys.length];
+        for (int i = 0; i < keys.length; i++) {
+            resolved[i] = StatCollector.translateToLocal(keys[i]);
+        }
+        return resolved;
     }
 
     public void addChangeModelButton() {

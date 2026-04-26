@@ -20,6 +20,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
@@ -60,6 +61,26 @@ public class TierSystemIntegrationTest {
             if ("casing".equals(componentName)) return casingTier;
             if ("core".equals(componentName)) return coreTier;
             return 0;
+        }
+
+        @Override
+        public double getSpeedMultiplier() {
+            return 1.0;
+        }
+
+        @Override
+        public double getEnergyMultiplier() {
+            return 1.0;
+        }
+
+        @Override
+        public int getBatchMin() {
+            return 1;
+        }
+
+        @Override
+        public int getBatchMax() {
+            return 1;
         }
 
         @Override
@@ -153,6 +174,11 @@ public class TierSystemIntegrationTest {
         }
 
         public void update() {}
+
+        @Override
+        public IStructureEntry getStructureEntry() {
+            return null;
+        }
     }
 
     @Test

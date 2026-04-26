@@ -4,30 +4,21 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 
 /**
- * Expression that assigns a value to an NBT key.
- * Supports assignment operators: =, +=, -=, *=, /=
- * Supports nested NBT paths via dot notation (e.g., display.Name)
+ * Action that assigns a value to an NBT key in the current context's working NBT.
  */
-public class NBTAssignmentExpression implements INBTWriteExpression {
+public class NBTAssignmentExpression implements IAction, IExpression {
 
     private final String nbtKey;
     private final List<String> pathSegments;
     private final IExpression valueExpression;
     private final String operation;
 
-    // Legacy constructor for simple keys
-    public NBTAssignmentExpression(String nbtKey, IExpression valueExpression, String operation) {
-        this(nbtKey, null, valueExpression, operation);
-    }
-
-    // New constructor for nested paths
     public NBTAssignmentExpression(String nbtKey, List<String> pathSegments, IExpression valueExpression,
         String operation) {
         this.nbtKey = nbtKey;
@@ -37,16 +28,11 @@ public class NBTAssignmentExpression implements INBTWriteExpression {
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
-        // For numeric evaluation, return the value that would be written
-        return valueExpression.evaluate(context);
-    }
-
-    @Override
-    public void applyToNBT(NBTTagCompound nbt, ConditionContext context) {
+    public void execute(ConditionContext context) {
+        NBTTagCompound nbt = context.getWorkingNBT();
         if (nbt == null) return;
 
-        Object value = getValueToWrite(context);
+        EvaluationValue evalVal = valueExpression.evaluate(context);
 
         // Find the target compound and key
         NBTTagCompound targetNbt = nbt;
@@ -68,18 +54,13 @@ public class NBTAssignmentExpression implements INBTWriteExpression {
             targetKey = pathSegments.get(pathSegments.size() - 1);
         }
 
-        // Determine NBT type and write
-        if (value instanceof String) {
-            String stringValue = (String) value;
-            NBTBase nbtValue = NBTTypeInference.parseValue(stringValue);
-            targetNbt.setTag(targetKey, nbtValue);
-        } else if (value instanceof NBTTagList) {
-            // Array literal
-            targetNbt.setTag(targetKey, (NBTTagList) value);
-        } else if (value instanceof Double || value instanceof Float) {
-            double numValue = ((Number) value).doubleValue();
-
-            // For compound operations (+=, -=, *=, /=), get current value
+        // Apply operation
+        if (evalVal.isString()) {
+            targetNbt.setString(targetKey, evalVal.asString());
+        } else if (evalVal.isBoolean()) {
+            targetNbt.setBoolean(targetKey, evalVal.asBoolean());
+        } else if (evalVal.isNumeric()) {
+            double numValue = evalVal.asDouble();
             if (!operation.equals("=")) {
                 double current = targetNbt.hasKey(targetKey) ? targetNbt.getDouble(targetKey) : 0.0;
                 switch (operation) {
@@ -97,39 +78,14 @@ public class NBTAssignmentExpression implements INBTWriteExpression {
                         break;
                 }
             }
-
-            // Write as appropriate type
-            NBTBase nbtValue = NBTTypeInference.parseNumeric(numValue);
-            targetNbt.setTag(targetKey, nbtValue);
-        }
-    }
-
-    private void applySimpleNBT(NBTTagCompound nbt, String key, Object value, ConditionContext context) {
-        // Obsolete but keeping temporarily if needed by other logic
-        applyToNBT(nbt, context);
-    }
-
-    /**
-     * Get the value to write, either as a number, string, or array.
-     */
-    private Object getValueToWrite(ConditionContext context) {
-        if (valueExpression instanceof StringLiteralExpression) {
-            return ((StringLiteralExpression) valueExpression).getStringValue();
-        } else if (valueExpression instanceof ArrayLiteralExpression) {
-            return ((ArrayLiteralExpression) valueExpression).toNBTList(context);
-        } else {
-            return valueExpression.evaluate(context);
+            targetNbt.setDouble(targetKey, numValue);
         }
     }
 
     @Override
-    public String getNBTKey() {
-        return nbtKey;
-    }
-
-    @Override
-    public String getOperation() {
-        return operation;
+    public EvaluationValue evaluate(ConditionContext context) {
+        // As an expression, it returns the value to be assigned
+        return valueExpression.evaluate(context);
     }
 
     @Override
@@ -140,9 +96,18 @@ public class NBTAssignmentExpression implements INBTWriteExpression {
     public static NBTAssignmentExpression fromJson(JsonObject json) {
         String key = json.get("key")
             .getAsString();
-        String op = json.get("operation")
-            .getAsString();
         IExpression value = ExpressionsParser.parse(json.get("value"));
-        return new NBTAssignmentExpression(key, java.util.Arrays.asList(key.split("\\.")), value, op);
+        String op = json.has("op") ? json.get("op")
+            .getAsString() : "=";
+        java.util.List<String> path = java.util.Arrays.asList(key.split("\\."));
+        return new NBTAssignmentExpression(key, path, value, op);
+    }
+
+    public String getNBTKey() {
+        return nbtKey;
+    }
+
+    public String getOperation() {
+        return operation;
     }
 }

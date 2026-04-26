@@ -6,6 +6,12 @@ power.rf=RF
 fluid.millibucket=mB
 tooltip.holdshift=§7- §r§oSHIFT§r§7キーで詳細を表示§r
 
+# Update
+omoshiroikamo.chat.prefix=[OmoshiroiKamo]
+omoshiroikamo.update.available=新しいバージョンが利用可能です！
+omoshiroikamo.update.link=[CurseForgeで確認]
+omoshiroikamo.update.hover=クリックしてCurseForgeのページをブラウザで開きます
+
 
 # Creative Tabs
 creativetab.okBackpack=OK バックパック
@@ -73,6 +79,7 @@ gui.sort_order.desc=降順
 # Items
 item.wrench.name=レンチ
 item.structure_wand.name=ストラクチャーワンド
+item.fluid_canister.name=流体キャニスター
 
 
 # Tooltips
@@ -135,14 +142,28 @@ command.ok.invalidPlayer=プレイヤー '%s' は見つかりませんでした
 command.ok.ignitedPlayer=プレイヤー '%s' は%s秒間燃焼しました
 command.ok.noConfigsFound=設定可能なコンフィグ値は見つかりませんでした
 
-command.ok.main_usage_title=使用法:
+command.ok.main_usage_title=使い方:
 command.ok.main_usage_multiblock=/ok multiblock - マルチブロック管理コマンド
+command.ok.main_usage_multiblock_reload=/ok multiblock reload - マルチブロックデータを再読み込み
+command.ok.main_usage_modular_reload=/ok modular reload - モジュラーデータを再読み込み
 
 command.ok.reloading=[OmoshiroiKamo] 設定を再読み込み中...
 command.ok.reload_success=[OmoshiroiKamo] 設定の再読み込みに成功しました!
+command.ok.reload_all=[OmoshiroiKamo] 全てのモジュールを再読み込み中...
+command.ok.reload_all_success=[OmoshiroiKamo] 全てのモジュールの再読み込みが完了しました!
 command.ok.reload_errors=[OmoshiroiKamo] 再読み込み完了 (%d エラー)!
 command.ok.reload_check_file=確認: config/omoshiroikamo/json_errors.txt
 command.ok.reload_failed=[OmoshiroiKamo] 再読み込み失敗: %s
+
+command.ok.dml_mobdump_usage=使い方: /ok utils dump mobs <EntityID|EntityName|all>
+command.ok.dml_mobdump_not_found=エンティティが見つからないか、LivingEntityではありません: %s
+command.ok.dml_mobdump_failed=%s のダンプに失敗しました: %s
+command.ok.dml_mobdump_success=%d 体のモブデータを %s に出力しました
+
+command.ok.multiblock_reloading=[OmoshiroiKamo] マルチブロックの設定を再読み込み中...
+command.ok.multiblock_disabled=[Multiblock] モジュールが無効です。
+command.ok.multiblock_reload_failed=[Multiblock] 再読み込み失敗: %s
+command.ok.multiblock_reload_success=[OmoshiroiKamo] マルチブロックの再読み込みが完了しました!
 
 command.ok.status_header=== OmoshiroiKamo マルチブロックステータス ===
 command.ok.status_initialized=初期化済み:
@@ -151,23 +172,24 @@ command.ok.status_no=いいえ
 command.ok.status_errors=エラー:
 command.ok.status_none=なし
 
-command.ok.scan_usage=使用法: /ok multiblock scan <名前> <x1> <y1> <z1> <x2> <y2> <z2>
+command.ok.scan_usage=使い方: /ok multiblock scan <名前> <x1> <y1> <z1> <x2> <y2> <z2>
 command.ok.scan_example=例: /ok multiblock scan myStructure 0 64 0 10 70 10
 command.ok.scan_invalid_coords=無効な座標: %s
 command.ok.scan_no_world=ワールドインスタンスを取得できませんでした
 command.ok.scan_area_too_large=範囲が広すぎます! 最大 %d ブロック, 現在 %d
 command.ok.scan_scanning=%dx%dx%d の範囲をスキャン中...
-command.ok.scan_file=ファイル: config/omoshiroikamo/structures/custom/%s.json
+command.ok.scan_success=[OmoshiroiKamo] %s
+command.ok.scan_file=ファイル: %s
 command.ok.scan_failed=[OmoshiroiKamo] スキャン失敗: %s
 
-command.ok.usage_title=使用法:
+command.ok.usage_title=使い方:
 command.ok.usage_reload=/ok multiblock reload - 設定を再読み込み
 command.ok.usage_status=/ok multiblock status - 現在のステータスを表示
 command.ok.usage_scan=/ok multiblock scan <名前> <x1> <y1> <z1> <x2> <y2> <z2> - 範囲をスキャンしてJSONに保存
 command.ok.usage_wand_save=/ok multiblock wand save <名前> - ワンドの選択範囲をJSONに保存
 
 command.ok.wand_players_only=[OmoshiroiKamo] このコマンドはプレイヤーのみ使用可能です!
-command.ok.wand_usage=使用法: /ok wand save <名前>
+command.ok.wand_usage=使い方: /ok wand save <名前>
 command.ok.wand_no_pending=[OmoshiroiKamo] 保留中のスキャンがありません! 先にストラクチャーワンドを使用してください。
 command.ok.wand_different_dimension=[OmoshiroiKamo] 選択範囲が異なるディメンションにあります!
 command.ok.wand_scanning=[OmoshiroiKamo] %d ブロックをスキャン中...
@@ -1267,41 +1289,10 @@ tile.vis_bridge.name=ビスブリッジ
 # Machinery Casing Dynamic Localization
 machinery.casing.format=%s%s
 machinery.casing.modular=モジュラーマシンケーシング
-machinery.tier.0=標準的な
-machinery.tier.1=改良型の
-machinery.tier.2=革命的な
-machinery.tier.3=異形の
-machinery.tier.4=優れた
-machinery.tier.5=究極の
-machinery.tier.6=矛盾を孕んだ
-machinery.tier.7=虚空を操る
-machinery.tier.8=想像を超えた
-machinery.tier.9=深宇宙技術の
-machinery.tier.10=光学的に完璧な
-machinery.tier.11=反重力の
-machinery.tier.12=宇宙で最も優れた
-machinery.tier.13=永遠のギルティ
-machinery.tier.14=次元を超越した
-machinery.tier.15=磁気流体力学的に制御された
 machinery.design.plain=マシンケーシング
 machinery.design.reinforced=補強マシンケーシング
 machinery.design.vented=放熱マシンケーシング
 machinery.design.circuitry=回路マシンケーシング
-
-
-# Materials
-item.ingot_osmiridium.name=オスミリジウムインゴット
-item.plate_osmiridium.name=オスミリジウムプレート
-item.gear_osmiridium.name=オスミリジウム歯車
-item.ingot_hikarium.name=光イウムインゴット
-item.plate_hikarium.name=光イウムプレート
-item.gear_hikarium.name=光イウム歯車
-item.ingot_tairithium.name=対立イウムインゴット
-item.plate_tairithium.name=対立イウムプレート
-item.gear_tairithium.name=対立イウム歯車
-item.ingot_vitarium.name=ヴィータリウムインゴット
-item.plate_vitarium.name=ヴィータリウムプレート
-item.gear_vitarium.name=ヴィータリウム歯車
 
 
 # Item Input Port
@@ -1369,3 +1360,145 @@ tooltip.machinery.capacity=容量: %s
 tooltip.machinery.slots=スロット数: %s
 tooltip.machinery.mana_transfer=転送量: %s /t
 
+# Gas/Fluid
+tile.gas.helium.name=ヘリウム
+fluid.helium=ヘリウム
+tile.gas.neon.name=ネオン
+fluid.neon=ネオン
+tile.gas.argon.name=アルゴン
+fluid.argon=アルゴン
+tile.gas.krypton.name=クリプトン
+fluid.krypton=クリプトン
+tile.gas.xenon.name=キセノン
+fluid.xenon=キセノン
+tile.gas.radon.name=ラドン
+fluid.radon=ラドン
+tile.gas.oganesson.name=オガネソン
+fluid.oganesson=オガネソン
+tile.gas.fluorine.name=フッ素
+fluid.fluorine=フッ素
+tile.gas.chlorine.name=塩素
+fluid.chlorine=塩素
+tile.gas.hydrogen.name=水素
+fluid.hydrogen=水素
+tile.gas.oxygen.name=酸素
+fluid.oxygen=酸素
+tile.gas.nitrogen.name=窒素
+fluid.nitrogen=窒素
+tile.gas.carbon_dioxide.name=二酸化炭素
+fluid.carbon_dioxide=二酸化炭素
+tile.gas.steam.name=蒸気
+fluid.steam=蒸気
+tile.liquid.bromine.name=臭素
+fluid.bromine=臭素
+tile.liquid.iodine.name=ヨウ素
+fluid.iodine=ヨウ素
+tile.liquid.astatine.name=アスタチン
+fluid.astatine=アスタチン
+tile.liquid.tennessine.name=テネシン
+fluid.tennessine=テネシン
+tile.liquid.oil.name=石油
+fluid.oil=石油
+tile.liquid.fuel.name=燃料
+fluid.fuel=燃料
+tile.liquid.biofuel.name=バイオ燃料
+fluid.biofuel=バイオ燃料
+tile.liquid.ethanol.name=エタノール
+fluid.ethanol=エタノール
+tile.liquid.mana.name=マナ
+fluid.mana=マナ
+
+
+# Material Parts
+part.ingot.format=%sインゴット
+part.plate.format=%sプレート
+part.gear.format=%sギア
+part.dust.format=%s粉末
+
+# Materials
+material.neutronium=ニュートロニウム
+material.lithium=リチウム
+material.beryllium=ベリリウム
+material.boron=ホウ素
+material.sodium=ナトリウム
+material.magnesium=マグネシウム
+material.aluminium=アルミニウム
+material.silicon=シリコン
+material.phosphorus=リン
+material.sulfur=硫黄
+material.titanium=チタン
+material.vanadium=バナジウム
+material.chromium=クロム
+material.manganese=マンガン
+material.cobalt=コバルト
+material.nickel=ニッケル
+material.copper=銅
+material.zinc=亜鉛
+material.gallium=ガリウム
+material.germanium=ゲルマニウム
+material.arsenic=ヒ素
+material.zirconium=ジルコニウム
+material.niobium=ニオブ
+material.molybdenum=モリブデン
+material.ruthenium=ルテニウム
+material.rhodium=ロジウム
+material.palladium=パラジウム
+material.silver=銀
+material.indium=インジウム
+material.tin=スズ
+material.antimony=アンチモン
+material.europium=ユウロピウム
+material.holmium=ホルミウム
+material.tantalum=タンタル
+material.tungsten=タングステン
+material.rhenium=レニウム
+material.osmium=オスミウム
+material.iridium=イリジウム
+material.platinum=プラチナ
+material.lead=鉛
+material.polonium=ポロニウム
+material.radium=ラジウム
+material.thorium=トリウム
+material.uranium=ウラン
+material.obsidian=黒曜石
+material.bronze=ブロンズ
+material.wroughtiron=錬鉄
+material.graphite=グラファイト
+material.steel=スチール
+material.cupronickel=キュプロニッケル
+material.kanthal=カンタル
+material.ingap=インジウム燐
+material.galliumarsenide=ヒ化ガリウム
+material.invar=インバー
+material.magnalium=マグナリウム
+material.stainlesssteel=ステンレススチール
+material.tungstensteel=タングステンスチール
+material.vanadiumsteel=バナジウムスチール
+material.blacksteel=ブラックスチール
+material.bluesteel=ブルースチール
+material.redsteel=レッドスチール
+material.rosegold=ローズゴールド
+material.platinumalloy=プラチナ合金
+material.titaniumalloy=チタン合金
+material.chromiumchloride=塩化クロム
+material.hss_g=HSS-G
+material.hss_s=HSS-S
+material.osmiridium=オスミリジウム
+material.rhodiumpalladium=ロジウムパラジウム
+material.thouranium=トウラニウム
+material.exciteduranium=励起ウラン
+material.toughalloy=タフアロイ
+material.adamantium=アダマンチウム
+material.aurarium=オーラリウム
+material.freezium=フリージウム
+material.enderalloy=エンダー合金
+material.chorusalloy=コーラス合金
+material.hihiirokane=ヒヒイロカネ
+material.opticallium=オプティカリウム
+material.orihalkon=オリハルコン
+material.paradox=パラドックス
+material.voidsteel=ボイドスチール
+material.vulcanium=ヴォルケニウム
+material.chlonox=クロノックス
+material.leviathan=リヴァイアサン
+material.perfect=パーフェクト

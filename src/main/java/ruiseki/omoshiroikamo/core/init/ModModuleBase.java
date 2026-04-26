@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.core.init;
 import java.util.Map;
 
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -40,6 +41,12 @@ public abstract class ModModuleBase {
     }
 
     protected void registerSubCommand(Map<String, ICommand> subcommand) {}
+
+    /**
+     * Reloads module's runtime data.
+     * Called by /ok reload and module-specific reload commands.
+     */
+    public void reload(ICommandSender sender) throws Exception {}
 
     public ICommonProxy getModuleProxy() {
         return moduleProxy;

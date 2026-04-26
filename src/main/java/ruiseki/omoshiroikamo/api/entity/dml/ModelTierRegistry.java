@@ -30,6 +30,10 @@ public class ModelTierRegistry {
         return items.get(id);
     }
 
+    public void clear() {
+        items.clear();
+    }
+
     public Collection<ModelTierRegistryItem> getItems() {
         return new ArrayList<>(items.values());
     }

@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.api.recipe.io;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.json.IJsonMaterial;
@@ -52,6 +53,16 @@ public interface IRecipeOutput extends IJsonMaterial {
      * Get the amount produced by this output.
      */
     long getRequiredAmount();
+
+    /**
+     * Get the produced amount based on the provided condition context.
+     *
+     * @param context The condition context
+     * @return The produced amount
+     */
+    default long getRequiredAmount(ConditionContext context) {
+        return getRequiredAmount();
+    }
 
     /**
      * Accept a visitor to perform operations on this output.

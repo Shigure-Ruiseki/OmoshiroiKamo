@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.fluids.Fluid;
@@ -48,6 +49,7 @@ public class RegistryMocker {
             try {
                 Field fluidsField = frClass.getDeclaredField("fluids");
                 fluidsField.setAccessible(true);
+                @SuppressWarnings("unchecked")
                 Map<String, Fluid> fluids = (Map<String, Fluid>) fluidsField.get(null);
 
                 if (fluids == null) {
@@ -160,16 +162,20 @@ public class RegistryMocker {
                 .getDeclaredConstructor(String.class, int.class, int.class, Class.class, char.class);
             constructor.setAccessible(true);
 
-            // Create registry with parameters: optionalDefault, maxId, minId, type, discriminator
-            // For items: maxId=31999, minId=256, type=Item.class, discriminator='\u0002' (items)
+            // Create registry with parameters: optionalDefault, maxId, minId, type,
+            // discriminator
+            // For items: maxId=31999, minId=256, type=Item.class, discriminator='\u0002'
+            // (items)
             Object itemRegistry = constructor.newInstance(null, 31999, 256, Item.class, '\u0002');
 
             // Set Item.itemRegistry (deprecated field, but still used by some code)
             setStaticFinalField(Item.class, "itemRegistry", itemRegistry);
 
-            // Register items using reflection (try-catch individually to not break GameData mocking)
+            // Register items using reflection (try-catch individually to not break GameData
+            // mocking)
             try {
-                // Use private addObjectRaw method - putObject is deprecated and doesn't actually add items
+                // Use private addObjectRaw method - putObject is deprecated and doesn't
+                // actually add items
                 Method addObjectRawMethod = fmlRegistryClass
                     .getDeclaredMethod("addObjectRaw", int.class, String.class, Object.class);
                 addObjectRawMethod.setAccessible(true);
@@ -208,7 +214,8 @@ public class RegistryMocker {
             }
 
             // Also mock GameData.getItemRegistry() for ItemJson.resolveItemStack()
-            // GameData.getItemRegistry() returns getMain().iItemRegistry where getMain() returns mainData
+            // GameData.getItemRegistry() returns getMain().iItemRegistry where getMain()
+            // returns mainData
             try {
                 Class<?> gameDataClass = Class.forName("cpw.mods.fml.common.registry.GameData");
 
@@ -226,8 +233,10 @@ public class RegistryMocker {
                     System.err.println("Created new GameData instance for mainData");
                 }
 
-                // Set iItemRegistry field in the GameData instance using reflection hack for final fields
-                // We need to use the same technique as setStaticFinalField but for instance fields
+                // Set iItemRegistry field in the GameData instance using reflection hack for
+                // final fields
+                // We need to use the same technique as setStaticFinalField but for instance
+                // fields
                 Field iItemRegistryField = gameDataClass.getDeclaredField("iItemRegistry");
                 iItemRegistryField.setAccessible(true);
 
@@ -294,16 +303,52 @@ public class RegistryMocker {
     private static void mockBlocks() throws Exception {
         try {
             Class<?> blocksClass = Class.forName("net.minecraft.init.Blocks");
-            setStaticFinalField(blocksClass, "wool", createMockBlock("wool"));
-            setStaticFinalField(blocksClass, "stone", createMockBlock("stone"));
-            setStaticFinalField(blocksClass, "grass", createMockBlock("grass"));
-            setStaticFinalField(blocksClass, "dirt", createMockBlock("dirt"));
-            setStaticFinalField(blocksClass, "cobblestone", createMockBlock("cobblestone"));
-            setStaticFinalField(blocksClass, "obsidian", createMockBlock("obsidian"));
-            setStaticFinalField(blocksClass, "bedrock", createMockBlock("bedrock"));
+            Map<String, Block> blocksToRegister = new HashMap<>();
+
+            blocksToRegister.put("wool", (Block) createMockBlock("wool"));
+            blocksToRegister.put("stone", (Block) createMockBlock("stone"));
+            blocksToRegister.put("grass", (Block) createMockBlock("grass"));
+            blocksToRegister.put("dirt", (Block) createMockBlock("dirt"));
+            blocksToRegister.put("cobblestone", (Block) createMockBlock("cobblestone"));
+            blocksToRegister.put("obsidian", (Block) createMockBlock("obsidian"));
+            blocksToRegister.put("bedrock", (Block) createMockBlock("bedrock"));
+            blocksToRegister.put("air", (Block) createMockBlock("air"));
+            blocksToRegister.put("glass", (Block) createMockBlock("glass"));
+
+            for (Map.Entry<String, Block> entry : blocksToRegister.entrySet()) {
+                setStaticFinalField(blocksClass, entry.getKey(), entry.getValue());
+            }
+
+            mockBlockRegistry(blocksToRegister);
         } catch (ClassNotFoundException e) {
             Logger.warn("RegistryMocker: Blocks class not found.");
         }
+    }
+
+    private static void mockBlockRegistry(Map<String, Block> blocks) throws Exception {
+        // Similar to mockItemRegistry but for blocks
+        Class<?> blockClass = Class.forName("net.minecraft.block.Block");
+        Class<?> fmlRegistryClass = Class.forName("cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry");
+
+        Constructor<?> constructor = fmlRegistryClass
+            .getDeclaredConstructor(String.class, int.class, int.class, Class.class, char.class);
+        constructor.setAccessible(true);
+        // For blocks: maxId=4095, minId=0, type=Block.class, discriminator='\u0001'
+        // (blocks)
+        Object blockRegistry = constructor.newInstance(null, 4095, 0, blockClass, '\u0001');
+
+        setStaticFinalField(blockClass, "blockRegistry", blockRegistry);
+
+        Method addObjectRawMethod = fmlRegistryClass
+            .getDeclaredMethod("addObjectRaw", int.class, String.class, Object.class);
+        addObjectRawMethod.setAccessible(true);
+
+        int blockId = 0;
+        for (Map.Entry<String, Block> entry : blocks.entrySet()) {
+            addObjectRawMethod.invoke(blockRegistry, blockId++, "minecraft:" + entry.getKey(), entry.getValue());
+        }
+
+        System.out.println("RegistryMocker: Successfully mocked Block.blockRegistry with " + blocks.size() + " blocks");
     }
 
     private static void setStaticFinalField(Class<?> clazz, String fieldName, Object value) throws Exception {
@@ -405,13 +450,33 @@ public class RegistryMocker {
         try {
             Class<?> blockClass = Class.forName("net.minecraft.block.Block");
             Class<?> materialClass = Class.forName("net.minecraft.block.material.Material");
-            Field airField = materialClass.getDeclaredField("air");
-            airField.setAccessible(true);
-            Object airMaterial = airField.get(null);
+
+            String materialName = "rock";
+            if (name.equalsIgnoreCase("air")) materialName = "air";
+            else if (name.equalsIgnoreCase("glass")) materialName = "glass";
+            else if (name.equalsIgnoreCase("grass")) materialName = "grass";
+            else if (name.equalsIgnoreCase("dirt")) materialName = "ground";
+            else if (name.equalsIgnoreCase("wool")) materialName = "cloth";
+
+            Field matField = materialClass.getDeclaredField(materialName);
+            matField.setAccessible(true);
+            Object material = matField.get(null);
 
             Constructor<?> constructor = blockClass.getDeclaredConstructor(materialClass);
             constructor.setAccessible(true);
-            return constructor.newInstance(airMaterial);
+            Object block = constructor.newInstance(material);
+
+            if (materialName.equals("glass") || materialName.equals("air")) {
+                try {
+                    Field opacityField = blockClass.getDeclaredField("lightOpacity");
+                    opacityField.setAccessible(true);
+                    opacityField.setInt(block, 0);
+                } catch (Exception e) {
+                    // Ignore if field not found
+                }
+            }
+
+            return block;
         } catch (Exception e) {
             Logger.warn("RegistryMocker: Failed to create mock block for " + name + ": " + e.getMessage());
             return null;

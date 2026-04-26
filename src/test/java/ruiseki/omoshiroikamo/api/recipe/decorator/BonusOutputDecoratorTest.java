@@ -250,7 +250,9 @@ public class BonusOutputDecoratorTest {
         assertEquals(
             1.5,
             decorator.getBaseChanceExpression()
-                .evaluate(null));
+                .evaluate(null)
+                .asDouble(),
+            0.001);
     }
 
     // ========================================

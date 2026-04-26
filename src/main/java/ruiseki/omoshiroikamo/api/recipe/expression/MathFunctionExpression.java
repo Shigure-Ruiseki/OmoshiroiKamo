@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
  * Expression that performs mathematical functions like sin, cos, sqrt, etc.
@@ -16,7 +17,6 @@ public class MathFunctionExpression implements IExpression {
 
     private final String functionName;
     private final List<IExpression> arguments;
-    private static final Random RANDOM = new Random();
 
     public static final Set<String> SUPPORTED_FUNCTIONS = Collections.unmodifiableSet(
         new HashSet<>(
@@ -60,116 +60,139 @@ public class MathFunctionExpression implements IExpression {
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
-        if (arguments.isEmpty()) {
-            return 0;
+    public EvaluationValue evaluate(ConditionContext context) {
+        if (functionName.equals("random")) {
+            return new EvaluationValue(new Random(context.getEvaluationSeed()).nextDouble());
         }
 
-        double v1 = arguments.get(0)
-            .evaluate(context);
+        if (arguments == null || arguments.isEmpty()) return EvaluationValue.ZERO;
+
+        // Special case: log with 2 arguments
+        if (functionName.equals("log") && arguments.size() == 2) {
+            double x = arguments.get(0)
+                .evaluate(context)
+                .asDouble();
+            double base = arguments.get(1)
+                .evaluate(context)
+                .asDouble();
+            if (base <= 0 || base == 1 || x <= 0) return EvaluationValue.ZERO;
+            return new EvaluationValue(Math.log(x) / Math.log(base));
+        }
+
+        double val = arguments.get(0)
+            .evaluate(context)
+            .asDouble();
 
         switch (functionName) {
             case "abs":
-                return Math.abs(v1);
+                return new EvaluationValue(Math.abs(val));
+            case "ceil":
+            case "ceiling":
+                return new EvaluationValue(Math.ceil(val));
+            case "floor":
+                return new EvaluationValue(Math.floor(val));
             case "sqrt":
-                return Math.sqrt(v1);
+                return new EvaluationValue(val < 0 ? 0 : Math.sqrt(val));
+            case "cbrt":
+                return new EvaluationValue(Math.cbrt(val));
             case "sin":
-                return Math.sin(v1);
+                return new EvaluationValue(Math.sin(val));
             case "cos":
-                return Math.cos(v1);
+                return new EvaluationValue(Math.cos(val));
             case "tan":
-                return Math.tan(v1);
-            case "rad":
-                return Math.toRadians(v1);
-            case "deg":
-                return Math.toDegrees(v1);
-            case "exp":
-                return Math.exp(v1);
-            case "log":
-                if (arguments.size() >= 2) {
-                    return Math.log(v1) / Math.log(
-                        arguments.get(1)
-                            .evaluate(context));
-                }
-                return Math.log(v1);
-            case "log10":
-                return Math.log10(v1);
+                return new EvaluationValue(Math.tan(val));
             case "asin":
-                return Math.asin(v1);
+                return new EvaluationValue((val < -1 || val > 1) ? 0 : Math.asin(val));
             case "acos":
-                return Math.acos(v1);
+                return new EvaluationValue((val < -1 || val > 1) ? 0 : Math.acos(val));
             case "atan":
-                return Math.atan(v1);
+                return new EvaluationValue(Math.atan(val));
+            case "rad":
+                return new EvaluationValue(Math.toRadians(val));
+            case "deg":
+                return new EvaluationValue(Math.toDegrees(val));
+            case "log":
+                return new EvaluationValue(val <= 0 ? 0 : Math.log(val));
+            case "log10":
+                return new EvaluationValue(val <= 0 ? 0 : Math.log10(val));
+            case "ln":
+                return new EvaluationValue(val <= 0 ? 0 : Math.log(val));
+            case "exp":
+                return new EvaluationValue(Math.exp(val));
+            case "round":
+                return new EvaluationValue((double) Math.round(val));
             case "fact":
-                return factorial(v1);
+                return new EvaluationValue(factorial(val));
+            case "sign":
+                return new EvaluationValue(Math.signum(val));
+            case "chance":
+                return new EvaluationValue(new Random(context.getEvaluationSeed() + 1).nextDouble() < val);
             case "npr":
             case "perm":
             case "permu":
-            case "permutation":
-                if (arguments.size() < 2) {
-                    return 0;
-                }
-                return permutation(
-                    v1,
-                    arguments.get(1)
-                        .evaluate(context));
+            case "permutation": {
+                if (arguments.size() < 2) return EvaluationValue.ZERO;
+                double r = arguments.get(1)
+                    .evaluate(context)
+                    .asDouble();
+                return new EvaluationValue(permutation(val, r));
+            }
             case "ncr":
             case "combi":
-            case "combination":
-                if (arguments.size() < 2) {
-                    return 0;
-                }
-                return combination(
-                    v1,
-                    arguments.get(1)
-                        .evaluate(context));
-            case "sign":
-                return Math.signum(v1);
-            case "atan2":
-                if (arguments.size() < 2) return 0;
-                return Math.atan2(
-                    v1,
-                    arguments.get(1)
-                        .evaluate(context));
-            case "clamp":
-                if (arguments.size() < 3) return v1;
+            case "combination": {
+                if (arguments.size() < 2) return EvaluationValue.ZERO;
+                double r = arguments.get(1)
+                    .evaluate(context)
+                    .asDouble();
+                return new EvaluationValue(combination(val, r));
+            }
+            case "atan2": {
+                if (arguments.size() < 2) return EvaluationValue.ZERO;
+                double x = arguments.get(1)
+                    .evaluate(context)
+                    .asDouble();
+                return new EvaluationValue(Math.atan2(val, x));
+            }
+            case "pow": {
+                if (arguments.size() < 2) return EvaluationValue.ZERO;
+                double p = arguments.get(1)
+                    .evaluate(context)
+                    .asDouble();
+                return new EvaluationValue(Math.pow(val, p));
+            }
+            case "min": {
+                if (arguments.size() < 2) return EvaluationValue.ZERO;
+                double v2 = arguments.get(1)
+                    .evaluate(context)
+                    .asDouble();
+                return new EvaluationValue(Math.min(val, v2));
+            }
+            case "max": {
+                if (arguments.size() < 2) return EvaluationValue.ZERO;
+                double v2 = arguments.get(1)
+                    .evaluate(context)
+                    .asDouble();
+                return new EvaluationValue(Math.max(val, v2));
+            }
+            case "clamp": {
+                if (arguments.size() < 3) return new EvaluationValue(val);
                 double min = arguments.get(1)
-                    .evaluate(context);
+                    .evaluate(context)
+                    .asDouble();
                 double max = arguments.get(2)
-                    .evaluate(context);
-                return Math.max(min, Math.min(max, v1));
-            case "random":
-                return RANDOM.nextDouble();
-            case "floor":
-                return Math.floor(v1);
-            case "ceil":
-                return Math.ceil(v1);
-            case "round":
-                return Math.round(v1);
-            case "chance":
-                // 1.0 if chance succeeds, 0.0 otherwise
-                return RANDOM.nextDouble() < v1 ? 1.0 : 0.0;
-            case "pow":
-                if (arguments.size() < 2) return 0;
-                return Math.pow(
-                    v1,
-                    arguments.get(1)
-                        .evaluate(context));
-            case "min":
-                if (arguments.size() < 2) return v1;
-                return Math.min(
-                    v1,
-                    arguments.get(1)
-                        .evaluate(context));
-            case "max":
-                if (arguments.size() < 2) return v1;
-                return Math.max(
-                    v1,
-                    arguments.get(1)
-                        .evaluate(context));
-            default:
-                return 0;
+                    .evaluate(context)
+                    .asDouble();
+                if (min > max) {
+                    Logger.warn(
+                        "[Expression] clamp(v, min, max) called with min > max (min=" + min + ", max=" + max + ")");
+                    double temp = min;
+                    min = max;
+                    max = temp;
+                }
+                return new EvaluationValue(Math.max(min, Math.min(max, val)));
+            }
         }
+        return EvaluationValue.ZERO;
     }
 
     private double factorial(double n) {

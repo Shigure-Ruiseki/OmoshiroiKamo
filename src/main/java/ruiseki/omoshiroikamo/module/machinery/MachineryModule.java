@@ -6,21 +6,29 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
+import ruiseki.omoshiroikamo.core.network.packet.PacketReloadNEI;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.module.machinery.common.command.CommandModular;
+import ruiseki.omoshiroikamo.module.machinery.common.fluid.ModFluidGases;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryOreDict;
 import ruiseki.omoshiroikamo.module.machinery.common.integration.MachineryIntegration;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierConfigLoader;
 
 public class MachineryModule extends ModModuleBase {
 
@@ -70,6 +78,7 @@ public class MachineryModule extends ModModuleBase {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         configDir = event.getModConfigurationDirectory();
+        ModFluidGases.preInit();
         MachineryIntegration.preInit();
         MachineryBlocks.preInit();
         MachineryItems.preInit();
@@ -87,7 +96,52 @@ public class MachineryModule extends ModModuleBase {
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
+        TierConfigLoader.INSTANCE.load(configDir);
         RecipeLoader.getInstance()
             .loadAll(configDir);
+    }
+
+    @Override
+    public void reload(ICommandSender sender) throws Exception {
+        boolean hasErrors = false;
+
+        try {
+            StructureManager.getInstance()
+                .reload();
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  [Modular] Structures reloaded"));
+        } catch (Exception e) {
+            sender.addChatMessage(
+                new ChatComponentText(EnumChatFormatting.RED + "  [Modular] Structures failed: " + e.getMessage()));
+            hasErrors = true;
+        }
+
+        try {
+            TierConfigLoader.INSTANCE.reload();
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  [Modular] Tier config reloaded"));
+        } catch (Exception e) {
+            sender.addChatMessage(
+                new ChatComponentText(EnumChatFormatting.RED + "  [Modular] Tier config failed: " + e.getMessage()));
+            hasErrors = true;
+        }
+
+        try {
+            RecipeLoader.getInstance()
+                .reload(configDir);
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  [Modular] Recipes reloaded"));
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToAll(new PacketReloadNEI());
+        } catch (Exception e) {
+            sender.addChatMessage(
+                new ChatComponentText(EnumChatFormatting.RED + "  [Modular] Recipes failed: " + e.getMessage()));
+            hasErrors = true;
+        }
+
+        if (hasErrors || JsonErrorCollector.getInstance()
+            .hasErrors()) {
+            JsonErrorCollector.getInstance()
+                .writeToFile();
+            JsonErrorCollector.getInstance()
+                .reportToChat(sender);
+        }
     }
 }

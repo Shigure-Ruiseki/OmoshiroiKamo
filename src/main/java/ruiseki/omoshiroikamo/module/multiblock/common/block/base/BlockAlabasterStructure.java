@@ -9,16 +9,22 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
+import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
+import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.property.BlockPropertyReg;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
-public class BlockAlabasterStructure extends BlockOK implements IMBBlock {
+public class BlockAlabasterStructure extends BlockOK implements IMBBlock, IJsonModelBlock {
+
+    @BlockPropertyReg
+    public static final IntegerBlockProperty TIER = IntegerBlockProperty.meta("tier", 0b0111, 0);
 
     protected BlockAlabasterStructure() {
         super(ModObject.ALABASTER_STRUCTURE.name);
@@ -115,5 +121,10 @@ public class BlockAlabasterStructure extends BlockOK implements IMBBlock {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
         }
+    }
+
+    @Override
+    public String getTextureName() {
+        return "multiblock/" + name;
     }
 }

@@ -5,17 +5,19 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
 
 public class EnergyOutput extends AbstractModularRecipeOutput {
-
-    private int amount;
 
     public EnergyOutput(int amount, boolean perTick) {
         this.amount = amount;
@@ -41,8 +43,8 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
-    public void apply(List<IModularPort> ports, int multiplier) {
-        long remaining = (long) amount * multiplier;
+    public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
+        long remaining = getRequiredAmount(context) * multiplier;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ENERGY) continue;
@@ -74,8 +76,13 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return evaluateAmount(context);
+    }
+
+    @Override
     public long getRequiredAmount() {
-        return (long) amount;
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -83,14 +90,27 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
         readPerTick(json, 1);
         if (json.has("index")) this.index = json.get("index")
             .getAsInt();
-        this.amount = json.get("energy")
-            .getAsInt();
+        if (json.has("energy")) {
+            JsonElement energyElement = json.get("energy");
+            if (energyElement.isJsonPrimitive() && energyElement.getAsJsonPrimitive()
+                .isString()) {
+                this.amountExpr = ExpressionParser.parseExpression(energyElement.getAsString());
+                this.amount = 0; // Fallback
+            } else {
+                this.amount = energyElement.getAsInt();
+                this.amountExpr = null;
+            }
+        }
     }
 
     @Override
     public void write(JsonObject json) {
         if (index != -1) json.addProperty("index", index);
-        json.addProperty("energy", amount);
+        if (amountExpr != null) {
+            json.addProperty("energy", amountExpr.toString());
+        } else {
+            json.addProperty("energy", amount);
+        }
         if (interval != 1) {
             if (isPerTick()) {
                 json.addProperty("pertick", interval);
@@ -119,6 +139,7 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
     @Override
     public IRecipeOutput copy(int multiplier) {
         EnergyOutput result = new EnergyOutput(amount * multiplier, isPerTick());
+        result.amountExpr = this.amountExpr;
         result.interval = this.interval;
         result.index = this.index;
         return result;
@@ -130,6 +151,7 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
         nbt.setInteger("amount", amount);
         nbt.setInteger("interval", interval);
         nbt.setInteger("index", index);
+        if (amountExpr != null) nbt.setString("amountExpr", amountExpr.toString());
     }
 
     @Override
@@ -137,6 +159,13 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
         this.amount = nbt.getInteger("amount");
         this.interval = nbt.getInteger("interval");
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
+        if (nbt.hasKey("amountExpr")) {
+            try {
+                this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+            } catch (Exception e) {
+                Logger.error("Failed to restore energy amount expression: " + e.getMessage());
+            }
+        }
     }
 
     @Override

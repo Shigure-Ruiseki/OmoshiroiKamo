@@ -12,7 +12,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 import ruiseki.omoshiroikamo.api.structure.visitor.IStructureVisitor;
 
@@ -29,10 +32,15 @@ public class StructureEntry implements IStructureEntry {
     private final List<String> recipeGroup;
     private final int[] controllerOffset;
     private final String tintColor;
-    private final float speedMultiplier;
-    private final float energyMultiplier;
-    private final int batchMin;
-    private final int batchMax;
+    private final double speedMultiplier;
+    private final IExpression speedMultiplierExpr;
+    private final double energyMultiplier;
+    private final IExpression energyMultiplierExpr;
+    private final double batchMin;
+    private final IExpression batchMinExpr;
+    private final double batchMax;
+    private final IExpression batchMaxExpr;
+    private final boolean dynamic;
     private final int tier;
     private final String defaultFacing;
     private final Set<Character> externalPorts;
@@ -41,9 +49,11 @@ public class StructureEntry implements IStructureEntry {
 
     public StructureEntry(String name, String displayName, List<IStructureLayer> layers,
         Map<Character, ISymbolMapping> mappings, List<IStructureRequirement> requirements, List<String> recipeGroup,
-        int[] controllerOffset, String tintColor, float speedMultiplier, float energyMultiplier, int batchMin,
-        int batchMax, int tier, String defaultFacing, Set<Character> externalPorts,
-        Map<Character, EnumIO> fixedExternalPorts, List<TierStructureRef> tierStructures) {
+        int[] controllerOffset, String tintColor, double speedMultiplier, IExpression speedMultiplierExpr,
+        double energyMultiplier, IExpression energyMultiplierExpr, double batchMin, IExpression batchMinExpr,
+        double batchMax, IExpression batchMaxExpr, boolean dynamic, int tier, String defaultFacing,
+        Set<Character> externalPorts, Map<Character, EnumIO> fixedExternalPorts,
+        List<TierStructureRef> tierStructures) {
         this.name = name;
         this.displayName = displayName;
         this.layers = Collections.unmodifiableList(new ArrayList<>(layers));
@@ -54,9 +64,16 @@ public class StructureEntry implements IStructureEntry {
         this.controllerOffset = controllerOffset != null ? controllerOffset.clone() : null;
         this.tintColor = tintColor;
         this.speedMultiplier = speedMultiplier;
+        this.speedMultiplierExpr = speedMultiplierExpr != null ? speedMultiplierExpr
+            : new ConstantExpression(speedMultiplier);
         this.energyMultiplier = energyMultiplier;
+        this.energyMultiplierExpr = energyMultiplierExpr != null ? energyMultiplierExpr
+            : new ConstantExpression(energyMultiplier);
         this.batchMin = batchMin;
+        this.batchMinExpr = batchMinExpr != null ? batchMinExpr : new ConstantExpression(batchMin);
         this.batchMax = batchMax;
+        this.batchMaxExpr = batchMaxExpr != null ? batchMaxExpr : new ConstantExpression(batchMax);
+        this.dynamic = dynamic;
         this.tier = tier;
         this.defaultFacing = defaultFacing;
         this.externalPorts = externalPorts != null ? Collections.unmodifiableSet(new LinkedHashSet<>(externalPorts))
@@ -122,23 +139,48 @@ public class StructureEntry implements IStructureEntry {
     }
 
     @Override
-    public float getSpeedMultiplier() {
+    public boolean isDynamic() {
+        return dynamic;
+    }
+
+    @Override
+    public double getSpeedMultiplier() {
         return speedMultiplier;
     }
 
     @Override
-    public float getEnergyMultiplier() {
+    public double evaluateSpeedMultiplier(ConditionContext context) {
+        return speedMultiplierExpr.evaluateDouble(context);
+    }
+
+    @Override
+    public double getEnergyMultiplier() {
         return energyMultiplier;
     }
 
     @Override
+    public double evaluateEnergyMultiplier(ConditionContext context) {
+        return energyMultiplierExpr.evaluateDouble(context);
+    }
+
+    @Override
     public int getBatchMin() {
-        return batchMin;
+        return (int) Math.round(batchMin);
+    }
+
+    @Override
+    public int evaluateBatchMin(ConditionContext context) {
+        return (int) Math.round(batchMinExpr.evaluateDouble(context));
     }
 
     @Override
     public int getBatchMax() {
-        return batchMax;
+        return (int) Math.round(batchMax);
+    }
+
+    @Override
+    public int evaluateBatchMax(ConditionContext context) {
+        return (int) Math.round(batchMaxExpr.evaluateDouble(context));
     }
 
     @Override
@@ -201,18 +243,11 @@ public class StructureEntry implements IStructureEntry {
         if (tintColor != null) {
             json.addProperty("tintColor", tintColor);
         }
-        if (speedMultiplier != 1.0f) {
-            json.addProperty("speedMultiplier", speedMultiplier);
-        }
-        if (energyMultiplier != 1.0f) {
-            json.addProperty("energyMultiplier", energyMultiplier);
-        }
-        if (batchMin != 1) {
-            json.addProperty("batchMin", batchMin);
-        }
-        if (batchMax != 1) {
-            json.addProperty("batchMax", batchMax);
-        }
+        if (dynamic) json.addProperty("dynamic", true);
+        serializeExpr(json, "speedMultiplier", speedMultiplier, speedMultiplierExpr, 1.0);
+        serializeExpr(json, "energyMultiplier", energyMultiplier, energyMultiplierExpr, 1.0);
+        serializeExpr(json, "batchMin", batchMin, batchMinExpr, 1.0);
+        serializeExpr(json, "batchMax", batchMin, batchMaxExpr, 1.0);
 
         if (tier != 0) {
             json.addProperty("tier", tier);
@@ -276,5 +311,14 @@ public class StructureEntry implements IStructureEntry {
         }
 
         return json;
+    }
+
+    private static void serializeExpr(JsonObject json, String key, double staticVal, IExpression expr,
+        double defaultValue) {
+        if (expr instanceof ConstantExpression) {
+            if (staticVal != defaultValue) json.addProperty(key, staticVal);
+        } else {
+            json.addProperty(key, expr.toString());
+        }
     }
 }

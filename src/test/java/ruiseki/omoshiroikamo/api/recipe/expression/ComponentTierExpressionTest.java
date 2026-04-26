@@ -51,6 +51,26 @@ public class ComponentTierExpressionTest {
             return 0;
         }
 
+        @Override
+        public double getSpeedMultiplier() {
+            return 1.0;
+        }
+
+        @Override
+        public double getEnergyMultiplier() {
+            return 1.0;
+        }
+
+        @Override
+        public int getBatchMin() {
+            return 1;
+        }
+
+        @Override
+        public int getBatchMax() {
+            return 1;
+        }
+
         // IRecipeContext methods - not needed for this test, returning defaults
         @Override
         public World getWorld() {
@@ -81,6 +101,11 @@ public class ComponentTierExpressionTest {
         public ConditionContext getConditionContext() {
             return null;
         }
+
+        @Override
+        public IStructureEntry getStructureEntry() {
+            return null;
+        }
     }
 
     @Test
@@ -107,7 +132,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(3.0, result, 0.001);
     }
@@ -118,7 +144,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(2.0, result, 0.001);
     }
@@ -129,7 +156,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001); // Returns 0 for unknown components
     }
@@ -138,7 +166,8 @@ public class ComponentTierExpressionTest {
     public void testEvaluate_NullContext() {
         ComponentTierExpression expr = new ComponentTierExpression("glass");
 
-        double result = expr.evaluate(null);
+        double result = expr.evaluate(null)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001);
     }
@@ -148,7 +177,8 @@ public class ComponentTierExpressionTest {
         ComponentTierExpression expr = new ComponentTierExpression("glass");
         ConditionContext context = new ConditionContext(null, 0, 0, 0, null);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001);
     }
@@ -160,28 +190,28 @@ public class ComponentTierExpressionTest {
         IRecipeContext nonTiered = new IRecipeContext() {
 
             @Override
-            public net.minecraft.world.World getWorld() {
+            public World getWorld() {
                 return null;
             }
 
             @Override
-            public net.minecraft.util.ChunkCoordinates getControllerPos() {
+            public ChunkCoordinates getControllerPos() {
                 return null;
             }
 
             @Override
-            public ruiseki.omoshiroikamo.api.structure.core.IStructureEntry getCurrentStructure() {
+            public IStructureEntry getCurrentStructure() {
                 return null;
             }
 
             @Override
-            public net.minecraftforge.common.util.ForgeDirection getFacing() {
+            public ForgeDirection getFacing() {
                 return null;
             }
 
             @Override
-            public java.util.List<net.minecraft.util.ChunkCoordinates> getSymbolPositions(char symbol) {
-                return java.util.Collections.emptyList();
+            public List<ChunkCoordinates> getSymbolPositions(char symbol) {
+                return Collections.emptyList();
             }
 
             @Override
@@ -191,7 +221,8 @@ public class ComponentTierExpressionTest {
         };
         ConditionContext context = new ConditionContext(null, 0, 0, 0, nonTiered);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001);
     }
@@ -206,7 +237,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         // In boolean context, 1.0 = true, 0.0 = false
         assertEquals(1.0, result, 0.001); // tier.glass (3) >= 2 is true
     }
@@ -220,7 +252,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 3);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         assertEquals(1.0, result, 0.001); // tier.casing (3) == 3 is true
     }
 
@@ -233,7 +266,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         assertEquals(1.0, result, 0.001); // tier.glass (3) < 5 is true
     }
 
@@ -246,7 +280,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         assertEquals(5.0, result, 0.001); // 3 + 2 = 5
     }
 
@@ -259,7 +294,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         assertEquals(32.0, result, 0.001); // 3*10 + 2 = 32
     }
 
@@ -272,7 +308,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         assertEquals(10.0, result, 0.001); // (3 + 2) * 2 = 10
     }
 
@@ -318,11 +355,15 @@ public class ComponentTierExpressionTest {
 
     @Test
     public void testInvalidTierExpression_NoComponent() {
-        Exception exception = assertThrows(RuntimeException.class, () -> { ExpressionParser.parseExpression("tier"); });
+        // Note: "tier" alone is now valid as a MachinePropertyExpression (returns
+        // machine's overall tier)
+        // This test now verifies that "tier" is parsed as MachinePropertyExpression,
+        // not ComponentTierExpression
+        IExpression expr = ExpressionParser.parseExpression("tier");
 
-        assertTrue(
-            exception.getMessage()
-                .contains("Unknown variable"));
+        assertNotNull(expr);
+        assertTrue(expr instanceof MachinePropertyExpression);
+        assertEquals("tier", expr.toString());
     }
 
     @Test
@@ -375,7 +416,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 3);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         assertEquals(1.0, result, 0.001); // Both conditions true
     }
 
@@ -388,7 +430,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 3);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         assertEquals(1.0, result, 0.001); // Second condition true
     }
 
@@ -402,7 +445,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
         assertEquals(1.0, result, 0.001); // (3>=3 || 2>=3) && (3+2>=5) = true && true = true
     }
 
@@ -412,7 +456,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(0, 0);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001);
     }
@@ -423,7 +468,8 @@ public class ComponentTierExpressionTest {
         MockTieredMachine machine = new MockTieredMachine(10, 5);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(10.0, result, 0.001);
     }

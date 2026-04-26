@@ -38,15 +38,14 @@ public class BlockStateHelpers {
     }
 
     public static void setFacingProp(World world, int x, int y, int z, ForgeDirection facing) {
-        BlockState state = getBlockState(world, x, y, z);
-        state.setPropertyValue("facing", facing);
-        state.place(world, x, y, z);
-        state.close();
+        try (BlockState state = getBlockState(world, x, y, z)) {
+            state.setPropertyValue("facing", facing);
+            state.place(world, x, y, z);
+        }
     }
 
     public static ForgeDirection getFacingProp(World world, int x, int y, int z) {
-        try {
-            BlockState state = getBlockState(world, x, y, z);
+        try (BlockState state = getBlockState(world, x, y, z)) {
             if (state != null) {
                 ForgeDirection facing = state.getPropertyValue("facing");
                 return facing != null ? facing : NORTH;
@@ -72,16 +71,17 @@ public class BlockStateHelpers {
     }
 
     public static void setCraftingState(World world, int x, int y, int z, CraftingState state) {
-        BlockState blockState = getBlockState(world, x, y, z);
-        blockState.setPropertyValue(CRAFTING_STATE, state.getIndex());
-        blockState.place(world, x, y, z);
-        blockState.close();
+        try (BlockState blockState = getBlockState(world, x, y, z)) {
+            blockState.setPropertyValue(CRAFTING_STATE, state.getIndex());
+            blockState.place(world, x, y, z);
+        }
     }
 
     public static CraftingState getCraftingState(World world, int x, int y, int z) {
-        BlockState blockState = getBlockState(world, x, y, z);
-        int index = blockState.getPropertyValue(CRAFTING_STATE);
-        return CraftingState.byIndex(index);
+        try (BlockState blockState = getBlockState(world, x, y, z)) {
+            int index = blockState.getPropertyValue(CRAFTING_STATE);
+            return CraftingState.byIndex(index);
+        }
     }
 
 }

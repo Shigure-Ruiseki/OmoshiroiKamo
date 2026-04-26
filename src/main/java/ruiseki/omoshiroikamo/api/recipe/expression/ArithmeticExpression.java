@@ -20,24 +20,31 @@ public class ArithmeticExpression implements IExpression {
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
-        double lVal = left.evaluate(context);
-        double rVal = right.evaluate(context);
+    public EvaluationValue evaluate(ConditionContext context) {
+        EvaluationValue val1 = left.evaluate(context);
+        EvaluationValue val2 = right.evaluate(context);
+
+        // String concatenation support
+        if (operation.equals("+") && (val1.isString() || val2.isString())) {
+            return new EvaluationValue(val1.asString() + val2.asString());
+        }
+
+        double d1 = val1.asDouble();
+        double d2 = val2.asDouble();
 
         switch (operation) {
             case "+":
-                return lVal + rVal;
+                return new EvaluationValue(d1 + d2);
             case "-":
-                return lVal - rVal;
+                return new EvaluationValue(d1 - d2);
             case "*":
-                return lVal * rVal;
+                return new EvaluationValue(d1 * d2);
             case "/":
-                return rVal != 0 ? lVal / rVal : 0;
+                return d2 != 0 ? new EvaluationValue(d1 / d2) : EvaluationValue.ZERO;
             case "%":
-                return rVal != 0 ? lVal % rVal : 0;
-            default:
-                return 0;
+                return d2 != 0 ? new EvaluationValue(d1 % d2) : EvaluationValue.ZERO;
         }
+        return EvaluationValue.ZERO;
     }
 
     public static IExpression fromJson(JsonObject json) {

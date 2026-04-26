@@ -10,8 +10,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
@@ -40,12 +42,15 @@ public class WeightedRandomDecorator extends RecipeDecorator {
         }
 
         if (!simulate) {
+            IRecipeContext context = findRecipeContext(outputPorts);
+            ConditionContext condContext = context != null ? context.getConditionContext() : null;
+
             for (int i = 0; i < rolls; i++) {
                 WeightedOutputEntry picked = (WeightedOutputEntry) WeightedRandom.getRandomItem(rand, pool);
                 if (picked != null && picked.output instanceof IModularRecipeOutput modularOutput) {
                     List<IModularPort> filtered = filterByType(outputPorts, modularOutput.getPortType());
-                    if (modularOutput.checkCapacity(filtered)) {
-                        modularOutput.apply(filtered);
+                    if (modularOutput.checkCapacity(filtered, 1, condContext)) {
+                        modularOutput.apply(filtered, 1, condContext);
                     }
                 }
             }
@@ -62,6 +67,15 @@ public class WeightedRandomDecorator extends RecipeDecorator {
             }
         }
         return filtered;
+    }
+
+    private IRecipeContext findRecipeContext(List<IModularPort> outputPorts) {
+        for (IModularPort port : outputPorts) {
+            if (port instanceof IRecipeContext context) {
+                return context;
+            }
+        }
+        return null;
     }
 
     /**

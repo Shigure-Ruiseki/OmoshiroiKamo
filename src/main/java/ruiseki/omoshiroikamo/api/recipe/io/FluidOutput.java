@@ -9,17 +9,20 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 public class FluidOutput extends AbstractModularRecipeOutput {
 
     private String fluidName;
-    private int amount;
 
     public FluidOutput(String fluidName, int amount) {
         this.fluidName = fluidName;
@@ -48,8 +51,8 @@ public class FluidOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
-    public void apply(List<IModularPort> ports, int multiplier) {
-        FluidStack output = FluidRegistry.getFluidStack(fluidName, amount * multiplier);
+    public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
+        FluidStack output = FluidRegistry.getFluidStack(fluidName, (int) getRequiredAmount(context) * multiplier);
         if (output == null) return;
 
         int remaining = output.amount;
@@ -113,8 +116,13 @@ public class FluidOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return evaluateAmount(context);
+    }
+
+    @Override
     public long getRequiredAmount() {
-        return amount;
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -124,15 +132,32 @@ public class FluidOutput extends AbstractModularRecipeOutput {
             .getAsInt();
         this.fluidName = json.get("fluid")
             .getAsString();
-        this.amount = json.has("amount") ? json.get("amount")
-            .getAsInt() : 1000;
+
+        if (json.has("amount")) {
+            JsonElement amountElement = json.get("amount");
+            if (amountElement.isJsonPrimitive() && amountElement.getAsJsonPrimitive()
+                .isString()) {
+                this.amountExpr = ExpressionParser.parseExpression(amountElement.getAsString());
+                this.amount = 1000; // Fallback
+            } else {
+                this.amount = amountElement.getAsInt();
+                this.amountExpr = null;
+            }
+        } else {
+            this.amount = 1000;
+            this.amountExpr = null;
+        }
     }
 
     @Override
     public void write(JsonObject json) {
         if (index != -1) json.addProperty("index", index);
         json.addProperty("fluid", fluidName);
-        json.addProperty("amount", amount);
+        if (amountExpr != null) {
+            json.addProperty("amount", amountExpr.toString());
+        } else {
+            json.addProperty("amount", amount);
+        }
         if (interval > 0) json.addProperty("pertick", interval);
     }
 
@@ -155,6 +180,7 @@ public class FluidOutput extends AbstractModularRecipeOutput {
     @Override
     public IRecipeOutput copy(int multiplier) {
         FluidOutput result = new FluidOutput(fluidName, amount * multiplier);
+        result.amountExpr = this.amountExpr;
         result.interval = this.interval;
         result.index = this.index;
         return result;
@@ -167,6 +193,7 @@ public class FluidOutput extends AbstractModularRecipeOutput {
         nbt.setString("fluid", fluidName);
         nbt.setInteger("amount", amount);
         nbt.setInteger("index", index);
+        if (amountExpr != null) nbt.setString("amountExpr", amountExpr.toString());
     }
 
     @Override
@@ -175,6 +202,13 @@ public class FluidOutput extends AbstractModularRecipeOutput {
         this.fluidName = nbt.getString("fluid");
         this.amount = nbt.getInteger("amount");
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
+        if (nbt.hasKey("amountExpr")) {
+            try {
+                this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+            } catch (Exception e) {
+                Logger.error("Failed to restore fluid amount expression: " + e.getMessage());
+            }
+        }
     }
 
     @Override

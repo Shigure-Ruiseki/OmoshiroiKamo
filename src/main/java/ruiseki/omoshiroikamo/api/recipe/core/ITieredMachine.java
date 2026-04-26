@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.recipe.core;
 
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+
 /**
  * Interface for machines that support dynamic component-based tiers.
  */
@@ -12,4 +14,29 @@ public interface ITieredMachine {
      * @return The current tier (minimum 0)
      */
     int getComponentTier(String componentName);
+
+    /**
+     * Get the speed multiplier of the machine.
+     */
+    double getSpeedMultiplier();
+
+    /**
+     * Get the energy multiplier of the machine.
+     */
+    double getEnergyMultiplier();
+
+    /**
+     * Get the minimum batch size.
+     */
+    int getBatchMin();
+
+    /**
+     * Get the maximum batch size.
+     */
+    int getBatchMax();
+
+    /**
+     * Get the current structure entry being used.
+     */
+    IStructureEntry getStructureEntry();
 }
