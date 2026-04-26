@@ -97,7 +97,6 @@ public class OmoshiroiKamo extends ModBase {
         registerModule(new ChickensModule());
         registerModule(new CowsModule());
         registerModule(new DMLModule());
-        registerModule(new BackpackModule());
         registerModule(new IDsModule());
         registerModule(new MachineryModule());
         registerModule(new MultiBlockModule());

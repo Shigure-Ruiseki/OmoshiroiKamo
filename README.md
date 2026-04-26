@@ -19,10 +19,8 @@ Each backport module can be individually enabled or disabled in the config.
 - Environmental Tech (Clean-Room Rewrite)
 - Chickens, More Chickens and Roost (Backport)
 - Fluid Cows (Backport WIP)
-- RetroSophisticated Backpacks (Backport) [Extracted Mod](https://github.com/Shigure-Ruiseki/OKBackpack)
 - Modular Machinery (Basic function only for now)
 - Deep Mob Learning
-- Cable system from Integrated Dynamics
 
 ![Backport Config](https://media.forgecdn.net/attachments/1389/517/z7214707883928_63d047db4be5142074322b35573e34d4.jpg)
 
@@ -112,55 +110,3 @@ Decoupled and extensible recipe engine supporting multiple resource types and dy
 
 ![Cows](https://media.forgecdn.net/attachments/1388/696/2025-11-11_12-45-23-png.png)
 ![Cows](https://media.forgecdn.net/attachments/1397/915/2025-11-19_19-23-22-png.png)
-
-### RetroSophisticated Backpacks (Backport)
-
-#### Backpack
-
-- [X] Sorting system
-- [X] Custom name
-- [X] Memory slot
-- [X] Lockable by player
-- [X] Searching System
-- [X] Backpack model render on player's back when equipped
-- [X] Custom Backpack main color and accent color
-- [X] Modifier each backpack and upgrade slot size
-- [X] Sleeping Bag
-
-#### Upgrades
-
-- [X] Stack upgrade — extended backpacks max slot stack
-- [X] Inception upgrade — backpacks inside backpacks
-- [X] Pickup upgrade — auto-pickup items
-- [X] Feeding upgrade — auto-feed player
-- [X] Filter upgrade — filter in/out to access backpacks block
-- [X] Magnet upgrade — collect item and experient around player
-- [X] Everlasting upgrade — make backpack immortal
-- [X] Void upgrade — filter item to remove
-- [X] Crafting upgrade — crafting table
-
-### Traits (WIP)
-
-- Level Up Like Enchantment
-- Buff/Debuff Trait
-
-## License
-
-This mod is primarily released under the MIT License (see LICENSE file).
-
-### Third-party components
-
-Some parts of this mod (assets or code) are derived from other mods and retain
-their original licenses:
-
-- This mod IS NOT OFFICIAL WORK of original author P3pp3rF1y & CleanroomMC,
-  please do not report any issue to original author.
-- RetroSophisticated Backpacks (textures/models) — original license applies.
-- Any GPLv3/LGPL-3.0 components used in this project remain under GPLv3/LGPL-3.0 and must be
-respected accordingly, all assets are forked before Sophisticated Backpack changes license to All Right Reserve.
-- Portions of the textures are from DeepMobLearningReloaded by ArtanMod (https://github.com/ArtanMod/DeepMobLearningReloaded), licensed under MIT.
-
-You are free to use, modify, and distribute the MIT-licensed portions of this
-project, but must comply with the original licenses of the included third-party
-components.
-

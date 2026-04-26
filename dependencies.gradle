@@ -35,9 +35,9 @@
  */
 dependencies {
 
-    implementation("com.github.GTNewHorizons:GTNHLib:0.9.45:dev")
+    implementation("com.github.GTNewHorizons:GTNHLib:0.9.52:dev")
     implementation("com.github.GTNewHorizons:StructureLib:1.4.28:dev")
-    implementation("com.github.GTNewHorizons:ModularUI2:2.3.46-1.7.10:dev")
+    implementation("com.github.GTNewHorizons:ModularUI2:2.3.56-1.7.10:dev")
 
     devOnlyNonPublishable('com.github.GTNewHorizons:Baubles-Expanded:2.2.2-GTNH:dev')
     devOnlyNonPublishable("com.github.GTNewHorizons:BlockRenderer6343:1.4.5:dev") { transitive = false }
@@ -78,7 +78,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:Chisel:2.17.0-GTNH:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:ModularUI:1.2.20:dev")
     compileOnly('org.jetbrains:annotations:26.0.1')
-    compileOnly("org.projectlombok:lombok:1.18.36") { transitive = false }
+    compileOnly("org.projectlombok:lombok:1.18.40") { transitive = false }
     compileOnly("curse.maven:neverenoughanimation-1062347:7624764")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
@@ -86,5 +86,5 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    annotationProcessor('org.projectlombok:lombok:1.18.30')
+    annotationProcessor('org.projectlombok:lombok:1.18.40')
 }
