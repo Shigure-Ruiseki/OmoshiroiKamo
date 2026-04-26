@@ -5,8 +5,7 @@ import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.VANILLA_SEARCH
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
@@ -18,11 +17,11 @@ public class AndVariable extends BaseVariableWidget {
     public AndVariable(ProgrammerPanel panel) {
         super(panel);
 
-        Column col = new Column();
+        Flow col = Flow.column();
         col.coverChildren()
             .childPadding(2);
 
-        Row row = new Row();
+        Flow row = Flow.row();
         row.coverChildren()
             .padding(2)
             .background(VANILLA_SEARCH_BACKGROUND)
@@ -32,7 +31,7 @@ public class AndVariable extends BaseVariableWidget {
                 .syncHandler("slots", 1));
         row.child(
             new TextWidget<>(IKey.str("&&")).size(18)
-                .alignment(Alignment.CENTER));
+                .posRel(Alignment.CENTER));
         row.child(
             new ItemSlot().name("b")
                 .syncHandler("slots", 2));

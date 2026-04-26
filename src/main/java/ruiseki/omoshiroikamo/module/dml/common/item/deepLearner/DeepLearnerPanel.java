@@ -34,8 +34,7 @@ import com.cleanroommc.modularui.widgets.EntityDisplayWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
@@ -142,7 +141,7 @@ public class DeepLearnerPanel extends ModularPanel {
     @Getter
     private final List<ModelDisplay> modelDisplayList;
     private ParentWidget<?> infoDisplay;
-    private Row modelButtonRow;
+    private Flow modelButtonFlow;
     private final List<ItemSlot> itemSlots = new ArrayList<>();
 
     @Getter
@@ -247,18 +246,20 @@ public class DeepLearnerPanel extends ModularPanel {
         Widget<?> heart = new Widget<>().background(HEART)
             .size(12);
 
-        Row heartRow = (Row) new Row().coverChildren()
+        Flow heartFlow = Flow.row()
+            .coverChildren()
             .left(0)
             .childPadding(2)
             .child(heart)
             .child(hearts);
 
-        Column heartCol = (Column) new Column().name("info_display_" + modelIndex)
+        Flow heartCol = Flow.column()
+            .name("info_display_" + modelIndex)
             .pos(185, 10)
             .coverChildren()
             .childPadding(2)
             .child(heartTile)
-            .child(heartRow);
+            .child(heartFlow);
 
         TextWidget<?> nameTile = IKey.lang("gui.deep_learner.heading_name")
             .scale(1f)
@@ -272,7 +273,8 @@ public class DeepLearnerPanel extends ModularPanel {
             .asWidget()
             .left(0);
 
-        Column nameCol = (Column) new Column().name("info_display_" + modelIndex)
+        Flow nameCol = Flow.column()
+            .name("info_display_" + modelIndex)
             .pos(10, 10)
             .coverChildren()
             .childPadding(2)
@@ -285,8 +287,9 @@ public class DeepLearnerPanel extends ModularPanel {
             .asWidget()
             .left(0);
 
-        ListWidget<Column, ?> info = new ListWidget<>();
-        Column mobTrivia = (Column) new Column().coverChildren();
+        ListWidget<Flow, ?> info = new ListWidget<>();
+        Flow mobTrivia = Flow.column()
+            .coverChildren();
 
         for (String string : trivia) {
             TextWidget<?> text = IKey.str(string)
@@ -302,8 +305,9 @@ public class DeepLearnerPanel extends ModularPanel {
             .width(200)
             .maxSize(45);
 
-        ListWidget<Column, ?> kill = new ListWidget<>();
-        Column killInfo = (Column) new Column().coverChildren()
+        ListWidget<Flow, ?> kill = new ListWidget<>();
+        Flow killInfo = Flow.column()
+            .coverChildren()
             .childPadding(2);
         TextWidget<?> tierText = IKey
             .lang("gui.deep_learner.model_tier", IKey.lang(ModelTierRegistry.INSTANCE.getTierName(tier)))
@@ -350,7 +354,8 @@ public class DeepLearnerPanel extends ModularPanel {
             .width(200)
             .maxSize(32);
 
-        Column infoCol = (Column) new Column().name("info_display_" + modelIndex)
+        Flow infoCol = Flow.column()
+            .name("info_display_" + modelIndex)
             .pos(10, 36)
             .coverChildren()
             .childPadding(2)
@@ -420,20 +425,21 @@ public class DeepLearnerPanel extends ModularPanel {
                 return false;
             });
 
-        modelButtonRow = (Row) new Row().size(75, 24)
+        modelButtonFlow = Flow.row()
+            .size(75, 24)
             .pos(-80, 106);
-        modelButtonRow.child(left)
+        modelButtonFlow.child(left)
             .child(right)
             .setEnabled(false);
-        child(modelButtonRow);
+        child(modelButtonFlow);
     }
 
     public void updateModelDisplay() {
         disableAllModelDisplays();
 
         List<Integer> validIndexes = getValidModelIndexes();
-        if (modelButtonRow != null) {
-            modelButtonRow.setEnabled(validIndexes.size() >= 2);
+        if (modelButtonFlow != null) {
+            modelButtonFlow.setEnabled(validIndexes.size() >= 2);
         }
 
         if (validIndexes.isEmpty()) {

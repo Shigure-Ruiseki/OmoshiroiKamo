@@ -6,9 +6,12 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import org.apache.logging.log4j.Level;
+
 import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 
@@ -52,9 +55,11 @@ public abstract class AbstractTieredMBBlock<T extends AbstractMBModifierTE> exte
     public TileEntity createTileEntity(World world, int meta) {
         if (meta >= 0 && meta < teClasses.length) {
             try {
-                return teClasses[meta].newInstance();
+                return teClasses[meta].getDeclaredConstructor()
+                    .newInstance();
             } catch (Exception e) {
-                e.printStackTrace();
+                OmoshiroiKamo
+                    .okLog(Level.ERROR, "Could not create tile entity for block " + name + " for class " + teClass);
             }
         }
         return null;

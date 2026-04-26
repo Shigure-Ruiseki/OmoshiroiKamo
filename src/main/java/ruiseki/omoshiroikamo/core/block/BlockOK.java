@@ -17,12 +17,14 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.experimental.Delegate;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.block.orientable.IOrientableBlock;
 import ruiseki.omoshiroikamo.core.block.property.BlockPropertyProviderComponent;
 import ruiseki.omoshiroikamo.core.block.property.IBlockPropertyProvider;
@@ -162,12 +164,14 @@ public class BlockOK extends Block implements IBlockPropertyProvider, IBlock {
     public TileEntity createTileEntity(World world, int metadata) {
         if (teClass != null) {
             try {
-                TileEntityOK tile = teClass.newInstance();
+                TileEntityOK tile = teClass.getDeclaredConstructor()
+                    .newInstance();
                 tile.onLoad();
                 tile.setRotatable(isRotatable());
                 return tile;
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                OmoshiroiKamo
+                    .okLog(Level.ERROR, "Could not create tile entity for block " + name + " for class " + teClass);
             }
             return null;
         }

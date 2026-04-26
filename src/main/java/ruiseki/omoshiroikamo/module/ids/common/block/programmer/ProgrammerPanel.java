@@ -22,8 +22,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
@@ -58,7 +57,7 @@ public class ProgrammerPanel extends ModularPanel {
     public ItemSlotSH[] slots;
 
     private final StringValue selectedItem = new StringValue("");
-    private Column detailColumn;
+    private Flow detailColumn;
     private BaseVariableWidget detailWidget;
 
     public ProgrammerPanel(GuiData data, PanelSyncManager syncManager, UISettings settings, ProgrammerHandler handler) {
@@ -160,7 +159,7 @@ public class ProgrammerPanel extends ModularPanel {
 
     public void addVariableList() {
         StringValue searchValue = new StringValue("");
-        Column column = new Column();
+        Flow column = Flow.column();
 
         column.padding(5)
             .width(80)
@@ -207,9 +206,9 @@ public class ProgrammerPanel extends ModularPanel {
     }
 
     public void addDetailPanel() {
-        Column col = new Column();
+        Flow col = Flow.column();
 
-        detailColumn = new Column();
+        detailColumn = Flow.column();
         detailWidget = new EmptyVariable(this);
 
         detailColumn.margin(5)
@@ -218,7 +217,7 @@ public class ProgrammerPanel extends ModularPanel {
             .child(detailWidget);
         col.child(detailColumn);
 
-        Row row = new Row();
+        Flow row = Flow.row();
         ItemSlot slot = new ItemSlot().syncHandler("slots", 0)
             .right(7)
             .background(OKGuiTextures.VARIABLE_SLOT)

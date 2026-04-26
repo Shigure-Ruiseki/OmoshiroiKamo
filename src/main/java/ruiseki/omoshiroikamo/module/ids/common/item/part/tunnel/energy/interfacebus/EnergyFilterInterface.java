@@ -33,8 +33,7 @@ import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cofh.api.energy.IEnergyConnection;
@@ -150,14 +149,14 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
 
         StringValue searchValue = new StringValue("");
 
-        Column col = new Column();
+        Flow col = Flow.column();
         TextFieldWidget searchWidget = new TextFieldWidget().value(searchValue)
             .width(162)
             .height(10)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         // List
-        ListWidget<Row, ?> list = new ListWidget<>();
+        ListWidget<Flow, ?> list = new ListWidget<>();
         list.width(162)
             .height(72)
             .maxSize(72);
@@ -201,9 +200,9 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
             .setDisablePanelsBelow(false)
             .setCloseOnOutOfBoundsClick(false);
 
-        Column col = new Column();
+        Flow col = Flow.column();
 
-        Row allowInsertions = new Row();
+        Flow allowInsertions = Flow.row();
         allowInsertions.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.allowInsertions")).width(162))
             .child(
@@ -212,7 +211,7 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
                     .size(12)
                     .value(new BooleanSyncValue(this::isAllowInsertions, this::setAllowInsertions)));
 
-        Row allowExtractions = new Row();
+        Flow allowExtractions = Flow.row();
         allowExtractions.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.allowExtractions")).width(162))
             .child(

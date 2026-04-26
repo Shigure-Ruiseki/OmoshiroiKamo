@@ -25,13 +25,11 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.updateGroup.UpgradeSlotGroupRegisters;
 
 public class CoreModule extends ModModuleBase {
 
     public CoreModule() {
         super(OmoshiroiKamo.instance);
-        addInitListener(new UpgradeSlotGroupRegisters());
     }
 
     @Override

@@ -15,7 +15,7 @@ import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
@@ -123,7 +123,7 @@ public abstract class AbstractWriterPart extends AbstractPart {
         return found;
     }
 
-    public void addSearchableRow(ListWidget<Row, ?> list, String searchKey, Row row, StringValue searchValue) {
+    public void addSearchableRow(ListWidget<Flow, ?> list, String searchKey, Flow row, StringValue searchValue) {
         row.setEnabledIf(
             w -> searchKey.toLowerCase()
                 .contains(
@@ -132,25 +132,26 @@ public abstract class AbstractWriterPart extends AbstractPart {
         list.child(row);
     }
 
-    public Row writerSlotRow(int slot, String label) {
+    public Flow writerSlotRow(int slot, String label) {
         return writerSlotRow(slot, label, null);
     }
 
-    public Row writerSlotRow(int slot, String label, IPanelHandler settingPanel) {
-        Row row = (Row) new Row().coverChildrenHeight()
+    public Flow writerSlotRow(int slot, String label, IPanelHandler settingPanel) {
+        Flow row = Flow.row()
+            .coverChildrenHeight()
             .width(162)
             .height(18)
             .background(INFO_BG);
 
         // Label
-        Row labelRow = new Row();
-        labelRow.align(Alignment.CenterLeft)
+        Flow labelFlow = Flow.row();
+        labelFlow.posRel(Alignment.CenterLeft)
             .width(130)
             .child(
                 IKey.str(label)
                     .asWidget()
                     .padding(4));
-        row.child(labelRow);
+        row.child(labelFlow);
 
         if (settingPanel != null) {
             ButtonWidget<?> settingBtn = new ButtonWidget<>().overlay(GuiTextures.ADD)
@@ -169,13 +170,13 @@ public abstract class AbstractWriterPart extends AbstractPart {
                     }
                     return false;
                 });
-            labelRow.child(settingBtn);
+            labelFlow.child(settingBtn);
         }
 
         // Slot
         row.child(
             new ItemSlot().slot(new ModularSlot(inv, slot))
-                .align(Alignment.CenterRight)
+                .posRel(Alignment.CenterRight)
                 .marginRight(4)
                 .background(OKGuiTextures.VARIABLE_SLOT));
 

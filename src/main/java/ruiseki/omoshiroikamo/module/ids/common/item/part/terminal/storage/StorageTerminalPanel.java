@@ -26,8 +26,7 @@ import com.cleanroommc.modularui.value.sync.SyncHandlers;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
@@ -118,7 +117,8 @@ public class StorageTerminalPanel extends ModularPanel {
             })
             .columns(COLUMNS)
             .rows(ROWS);
-        Column rightCol = (Column) new Column().coverChildren()
+        Flow rightCol = Flow.column()
+            .coverChildren()
             .child(scrollBar);
         rightExpanded.child(rightCol);
         this.child(rightExpanded);
@@ -228,7 +228,7 @@ public class StorageTerminalPanel extends ModularPanel {
             this::changeCraftingFilter);
         syncManager.syncValue("craftingSyncer", craftingSyncer);
 
-        Column col = new Column();
+        Flow col = Flow.column();
         col.coverChildren()
             .width(18)
             .pos(-20, 6)
@@ -254,25 +254,25 @@ public class StorageTerminalPanel extends ModularPanel {
 
     private void buildTopBar() {
 
-        Row row = new Row();
+        Flow row = Flow.row();
         row.coverChildren()
             .pos(7, 5)
             .childPadding(2);
 
-        Row channelRow = new Row();
-        channelRow.height(11)
+        Flow channelFlow = Flow.row();
+        channelFlow.height(11)
             .width(60);
-        channelRow.child(
+        channelFlow.child(
             IKey.lang("gui.ids.index_channel")
                 .asWidget());
-        channelRow.child(
+        channelFlow.child(
             new TextFieldWidget().size(32, 11)
                 .setFormatAsInteger(true)
                 .setScrollValues(1, 5, 10)
                 .setDefaultNumber(-1)
                 .setNumbers(-1, Integer.MAX_VALUE)
                 .value(SyncHandlers.intNumber(terminal::getChannel, this::changeChannel)));
-        row.child(channelRow);
+        row.child(channelFlow);
 
         searchSyncer = new StringSyncValue(terminal::getSearch, terminal::setSearch);
         searchBar = new SearchBarWidget() {

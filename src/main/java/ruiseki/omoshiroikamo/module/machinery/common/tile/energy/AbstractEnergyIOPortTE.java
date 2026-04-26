@@ -22,8 +22,7 @@ import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.google.common.collect.ImmutableList;
 
 import lombok.Getter;
@@ -35,12 +34,12 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.ToggleWidget;
 
@@ -318,7 +317,8 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
                 .asWidget()
                 .pos(8, 72));
 
-        Column column = (Column) new Column().coverChildren()
+        Flow column = Flow.column()
+            .coverChildren()
             .pos(28, 6)
             .childPadding(2);
 
@@ -334,7 +334,8 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
                 .left(0));
 
         column.child(
-            new Row().coverChildren()
+            Flow.row()
+                .coverChildren()
                 .left(0)
                 .childPadding(2)
                 .child(new ToggleWidget(ic2CompatSyncer))
