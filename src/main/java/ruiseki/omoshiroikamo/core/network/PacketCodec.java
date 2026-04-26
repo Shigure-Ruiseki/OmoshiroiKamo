@@ -447,7 +447,7 @@ public abstract class PacketCodec extends PacketBase {
                 ICodecAction action = getAction(clazz);
 
                 // Make private fields temporarily accessible.
-                boolean accessible = field.canAccess(field);
+                boolean accessible = field.isAccessible();
                 if (!accessible) {
                     field.setAccessible(true);
                 }
