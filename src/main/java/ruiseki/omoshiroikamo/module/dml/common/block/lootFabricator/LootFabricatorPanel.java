@@ -6,7 +6,6 @@ import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.EMPTY_SLOT;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
@@ -22,6 +21,7 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
+import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.FloatSyncValue;
