@@ -8,8 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class ItemOK extends Item implements IItem {
 
@@ -66,9 +66,9 @@ public class ItemOK extends Item implements IItem {
     @Override
     public void registerIcons(IIconRegister register) {
         if (getTextureName() != null) {
-            itemIcon = register.registerIcon(LibResources.PREFIX_MOD + getTextureName());
+            itemIcon = register.registerIcon(Reference.PREFIX_MOD + getTextureName());
         } else {
-            itemIcon = register.registerIcon(LibResources.PREFIX_MOD + getName());
+            itemIcon = register.registerIcon(Reference.PREFIX_MOD + getName());
         }
     }
 

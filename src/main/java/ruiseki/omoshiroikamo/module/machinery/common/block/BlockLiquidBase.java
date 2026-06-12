@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.Fluid;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.module.machinery.common.fluid.EnumFluidMaterial;
 
 /**
@@ -86,8 +86,8 @@ public class BlockLiquidBase extends BlockFluidBase {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister register) {
-        stillIcon = register.registerIcon(LibResources.PREFIX_MOD + "modular/fluid_still");
-        flowingIcon = register.registerIcon(LibResources.PREFIX_MOD + "modular/fluid_flow");
+        stillIcon = register.registerIcon(Reference.PREFIX_MOD + "modular/fluid_still");
+        flowingIcon = register.registerIcon(Reference.PREFIX_MOD + "modular/fluid_flow");
 
         // We still set them on the fluid object just in case other things like buckets use them
         getFluid().setIcons(stillIcon, flowingIcon);

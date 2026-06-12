@@ -2,11 +2,10 @@ package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Main Backpack Settings")
-@Config.LangKey(LibResources.CONFIG + "backpackConfig")
+@Config.LangKey(Reference.CONFIG + "backpackConfig")
 @Config(
     modid = Reference.MOD_ID,
     category = "backpack",
@@ -77,7 +76,7 @@ public class BackpackConfig {
     @Config.RangeInt(min = 1)
     public static int stackUpgradeTierOmegaMul;
 
-    @Config.LangKey(LibResources.CONFIG + "magnetConfig")
+    @Config.LangKey(Reference.CONFIG + "magnetConfig")
     public static class MagnetConfig {
 
         @Config.DefaultInt(5)

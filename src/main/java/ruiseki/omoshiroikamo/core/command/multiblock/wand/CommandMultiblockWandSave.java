@@ -8,12 +8,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.core.common.structure.StructureScanner;
 import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class CommandMultiblockWandSave extends CommandMod {
 

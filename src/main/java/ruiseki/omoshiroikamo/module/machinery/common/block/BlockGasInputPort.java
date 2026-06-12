@@ -16,13 +16,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPort;
@@ -70,12 +70,11 @@ public class BlockGasInputPort extends AbstractPortBlock<TEGasInputPort> {
         // Register overlays for all 16 tiers (1-based indexing to match texture files)
         String prefix = getOverlayPrefix();
         for (int i = 1; i <= TIER_COUNT; i++) {
-            IconRegistry.addIcon(
-                prefix + i,
-                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + i));
+            IconRegistry
+                .addIcon(prefix + i, reg.registerIcon(Reference.PREFIX_MOD + "modularmachineryOverlay/" + prefix + i));
         }
         IconRegistry
-            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+            .addIcon("overlay_port_disabled", reg.registerIcon(Reference.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

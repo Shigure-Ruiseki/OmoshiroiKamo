@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.enums;
 
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 public enum ModObject {
 

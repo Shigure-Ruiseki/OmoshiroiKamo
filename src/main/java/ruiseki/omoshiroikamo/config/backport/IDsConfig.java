@@ -2,11 +2,10 @@ package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Main Integrated Dynamics Settings")
-@Config.LangKey(LibResources.CONFIG + "idsConfig")
+@Config.LangKey(Reference.CONFIG + "idsConfig")
 @Config(modid = Reference.MOD_ID, category = "ids", configSubDirectory = Reference.MOD_ID + "/ids", filename = "ids")
 public class IDsConfig {
 

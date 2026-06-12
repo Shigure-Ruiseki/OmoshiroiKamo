@@ -26,7 +26,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.core.client.render.player.IPlayerItemRender;
 import ruiseki.omoshiroikamo.core.client.render.player.PlayerRenderContext;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 
 @EventBusSubscriber
 public class ItemRenderEvent {

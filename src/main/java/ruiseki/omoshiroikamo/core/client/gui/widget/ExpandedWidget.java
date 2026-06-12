@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.core.client.gui.widget;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.widget.ParentWidget;
 
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 public class ExpandedWidget extends ParentWidget<ExpandedWidget> {
 

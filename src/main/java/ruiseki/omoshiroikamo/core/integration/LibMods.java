@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.lib;
+package ruiseki.omoshiroikamo.core.integration;
 
 import java.util.function.Supplier;
 

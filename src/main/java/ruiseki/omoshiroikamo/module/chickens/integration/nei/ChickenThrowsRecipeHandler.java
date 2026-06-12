@@ -9,10 +9,10 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 public class ChickenThrowsRecipeHandler extends RecipeHandlerBase {
@@ -26,7 +26,7 @@ public class ChickenThrowsRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getGuiTexture() {
-        return LibResources.GUI_CHICKEN_THROWS;
+        return Reference.GUI_CHICKEN_THROWS;
     }
 
     @Override

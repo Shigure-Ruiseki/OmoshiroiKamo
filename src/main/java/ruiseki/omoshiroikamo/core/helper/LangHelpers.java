@@ -10,7 +10,7 @@ import net.minecraft.util.StatCollector;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 /**

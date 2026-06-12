@@ -20,9 +20,9 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.util.SlotDefinition;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;

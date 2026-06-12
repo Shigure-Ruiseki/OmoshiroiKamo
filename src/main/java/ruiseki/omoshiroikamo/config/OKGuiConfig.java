@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiScreen;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.SimpleGuiConfig;
 
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 public class OKGuiConfig extends SimpleGuiConfig {
 

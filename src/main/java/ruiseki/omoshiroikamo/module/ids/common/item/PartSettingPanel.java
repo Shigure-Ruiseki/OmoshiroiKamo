@@ -12,8 +12,8 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class PartSettingPanel {
 

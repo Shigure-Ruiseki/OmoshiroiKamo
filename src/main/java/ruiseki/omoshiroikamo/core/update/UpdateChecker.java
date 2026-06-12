@@ -13,9 +13,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
 import ruiseki.omoshiroikamo.core.common.util.VersionComparator;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Checks for updates from CurseForge API.

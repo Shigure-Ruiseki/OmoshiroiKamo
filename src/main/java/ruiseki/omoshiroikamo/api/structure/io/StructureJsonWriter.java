@@ -8,11 +8,11 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.core.common.util.VersionComparator;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonWriter;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Writer that serializes IStructureEntry objects to JSON files.

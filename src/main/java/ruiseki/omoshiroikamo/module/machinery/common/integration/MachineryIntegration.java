@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.core.energy.capability.EnergyIntegrationRegistry;
 import ruiseki.omoshiroikamo.core.energy.capability.IEnergyIntegrationDelegate;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort;

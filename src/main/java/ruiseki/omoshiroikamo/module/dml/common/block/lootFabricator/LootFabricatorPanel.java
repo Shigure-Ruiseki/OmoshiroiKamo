@@ -36,13 +36,13 @@ import com.google.common.collect.ImmutableList;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.MathHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeWidget;
 
@@ -182,7 +182,10 @@ public class LootFabricatorPanel extends ModularPanel {
         syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
         FloatSyncValue processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress);
         syncManager.syncValue("processSyncer", processSyncer);
-        outputSyncer = GenericSyncValue.forItem(tileEntity::getOutputItem, tileEntity::setOutputItem);
+        outputSyncer = GenericSyncValue.builder(ItemStack.class)
+            .getter(tileEntity::getOutputItem)
+            .setter(tileEntity::setOutputItem)
+            .build();
         syncManager.syncValue("outputSyncer", outputSyncer);
         EnumSyncValue<RedstoneMode, ?> redstoneModeSyncer = new EnumSyncValue<>(
             RedstoneMode.class,

@@ -32,6 +32,7 @@ import com.kuba6000.mobsinfo.api.IMobInfoProvider;
 import com.kuba6000.mobsinfo.api.MobDrop;
 
 import cpw.mods.fml.common.Optional;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -42,7 +43,6 @@ import ruiseki.omoshiroikamo.config.backport.CowConfig;
 import ruiseki.omoshiroikamo.core.fluid.SmartTank;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaEntityInfoProvider;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Optional.Interface(iface = "com.kuba6000.mobsinfo.api.IMobInfoProvider", modid = "mobsinfo")
 public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityInfoProvider, IMobInfoProvider {
@@ -475,12 +475,12 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         if (!(entity instanceof EntityCowsCow cow)) {
             return;
         }
-        tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.tier", getTier()));
+        tooltip.add(LangHelpers.localize(Reference.TOOLTIP + "mob.tier", getTier()));
 
         if (getStatsAnalyzed() || CowConfig.alwaysShowStats) {
-            tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.growth", getGrowth()));
-            tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.gain", getGain()));
-            tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.strength", getStrength()));
+            tooltip.add(LangHelpers.localize(Reference.TOOLTIP + "mob.growth", getGrowth()));
+            tooltip.add(LangHelpers.localize(Reference.TOOLTIP + "mob.gain", getGain()));
+            tooltip.add(LangHelpers.localize(Reference.TOOLTIP + "mob.strength", getStrength()));
         }
 
         if (!isChild()) {
@@ -490,7 +490,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
                 int minutes = totalSeconds / 60;
                 int seconds = totalSeconds % 60;
                 String timeFormatted = String.format("%d:%02d", minutes, seconds);
-                tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.milkProgress", timeFormatted));
+                tooltip.add(LangHelpers.localize(Reference.TOOLTIP + "mob.milkProgress", timeFormatted));
             }
 
             FluidStack stored = cow.getMilkFluid();
@@ -502,7 +502,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
                     String.format(
                         "%s%s : %s (%d %s)",
                         EnumChatFormatting.GRAY,
-                        LangHelpers.localize(LibResources.TOOLTIP + "mob.fluid"),
+                        LangHelpers.localize(Reference.TOOLTIP + "mob.fluid"),
                         fluidName,
                         amount,
                         LangHelpers.localize("fluid.millibucket")));

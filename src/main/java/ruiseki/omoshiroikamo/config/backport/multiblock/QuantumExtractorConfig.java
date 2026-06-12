@@ -2,11 +2,10 @@ package ruiseki.omoshiroikamo.config.backport.multiblock;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Main Quantum Extractor Settings")
-@Config.LangKey(LibResources.CONFIG + "quantumExtractorConfig")
+@Config.LangKey(Reference.CONFIG + "quantumExtractorConfig")
 @Config(
     modid = Reference.MOD_ID,
     category = "extractor",
@@ -15,15 +14,15 @@ import ruiseki.omoshiroikamo.core.lib.Reference;
 public class QuantumExtractorConfig {
 
     @Config.Comment("Ore Miner settings per tier")
-    @Config.LangKey(LibResources.CONFIG + "oreMinerConfig")
+    @Config.LangKey(Reference.CONFIG + "oreMinerConfig")
     public static final MinerTierSettings oreMiner = new MinerTierSettings();
 
     @Config.Comment("Resource Miner settings per tier")
-    @Config.LangKey(LibResources.CONFIG + "resMinerConfig")
+    @Config.LangKey(Reference.CONFIG + "resMinerConfig")
     public static final MinerTierSettings resMiner = new MinerTierSettings();
 
     @Config.Comment("Modifier settings")
-    @Config.LangKey(LibResources.CONFIG + "extractorModifiers")
+    @Config.LangKey(Reference.CONFIG + "extractorModifiers")
     public static final ModifierSettings modifiers = new ModifierSettings();
 
     @Config.Comment("Additional blocks to allow in the miner's path to void (e.g., \"OmoshiroiKamo:LASER_CORE:0\")")

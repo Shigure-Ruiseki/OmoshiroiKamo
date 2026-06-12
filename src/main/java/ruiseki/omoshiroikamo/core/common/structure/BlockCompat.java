@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.core.common.structure;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 /**
  * Utility for block ID compatibility following name refactoring (camelCase to snake_case).

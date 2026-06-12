@@ -10,11 +10,11 @@ import net.minecraft.world.World;
 
 import com.gtnewhorizon.structurelib.alignment.constructable.ConstructableUtility;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class ItemAssembler extends ItemOK {
 
@@ -62,8 +62,8 @@ public class ItemAssembler extends ItemOK {
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
         TooltipUtils builder = TooltipUtils.builder();
-        builder.addLang(LibResources.TOOLTIP + "assembler.l1");
-        builder.addLang(LibResources.TOOLTIP + "assembler.l2");
+        builder.addLang(Reference.TOOLTIP + "assembler.l1");
+        builder.addLang(Reference.TOOLTIP + "assembler.l2");
         list.addAll(builder.build());
     }
 }

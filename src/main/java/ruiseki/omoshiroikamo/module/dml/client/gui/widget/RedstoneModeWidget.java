@@ -9,10 +9,10 @@ import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.RedstoneModeBaseWidget;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class RedstoneModeWidget extends RedstoneModeBaseWidget {
 

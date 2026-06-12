@@ -2,11 +2,10 @@ package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Main Cows Settings")
-@Config.LangKey(LibResources.CONFIG + "cowConfig")
+@Config.LangKey(Reference.CONFIG + "cowConfig")
 @Config(modid = Reference.MOD_ID, category = "cow", configSubDirectory = Reference.MOD_ID + "/cow", filename = "cow")
 public class CowConfig {
 

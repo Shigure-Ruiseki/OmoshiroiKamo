@@ -12,11 +12,11 @@ import net.minecraft.util.IIcon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class BlockMachineBase extends BlockOK implements IMBBlock {
 
@@ -58,7 +58,7 @@ public class BlockMachineBase extends BlockOK implements IMBBlock {
         icons = new IIcon[blocks.length];
 
         for (int i = 0; i < blocks.length; i++) {
-            String iconName = LibResources.PREFIX_MOD + "multiblock/" + blocks[i];
+            String iconName = Reference.PREFIX_MOD + "multiblock/" + blocks[i];
             icons[i] = reg.registerIcon(iconName);
         }
     }

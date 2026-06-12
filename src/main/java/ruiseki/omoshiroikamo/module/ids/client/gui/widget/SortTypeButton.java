@@ -7,9 +7,9 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class SortTypeButton extends CyclicVariantButtonWidget {
 

@@ -25,6 +25,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.experimental.Delegate;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.block.orientable.IOrientableBlock;
 import ruiseki.omoshiroikamo.core.block.property.BlockPropertyProviderComponent;
 import ruiseki.omoshiroikamo.core.block.property.IBlockPropertyProvider;
@@ -36,7 +37,6 @@ import ruiseki.omoshiroikamo.core.client.texture.MissingIcon;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.IOrientable;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityNBTStorage;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
@@ -190,7 +190,7 @@ public class BlockOK extends Block implements IBlockPropertyProvider, IBlock {
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
+        blockIcon = reg.registerIcon(Reference.PREFIX_MOD + getTextureName());
     }
 
     /* Subclass Helpers */

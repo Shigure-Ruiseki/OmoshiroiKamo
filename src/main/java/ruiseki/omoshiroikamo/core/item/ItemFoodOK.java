@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.Reference;
 
 public class ItemFoodOK extends ItemFood implements IItem {
 
@@ -29,6 +29,6 @@ public class ItemFoodOK extends ItemFood implements IItem {
 
     @Override
     public void registerIcons(IIconRegister register) {
-        this.itemIcon = register.registerIcon(LibResources.PREFIX_MOD + this.getIconString());
+        this.itemIcon = register.registerIcon(Reference.PREFIX_MOD + this.getIconString());
     }
 }

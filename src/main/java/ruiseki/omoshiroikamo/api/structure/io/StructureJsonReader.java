@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
@@ -31,7 +32,6 @@ import ruiseki.omoshiroikamo.core.common.structure.migration.StructureMigrationR
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
 import ruiseki.omoshiroikamo.core.json.ParsingContext;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Reader that parses JSON into IStructureEntry.

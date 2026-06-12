@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.core.integration.waila;
 
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 
 public class WailaCompat {
 

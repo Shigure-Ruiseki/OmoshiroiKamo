@@ -16,11 +16,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
@@ -115,9 +115,9 @@ public class DataChicken {
      */
     public List<String> getStatsInfoTooltip() {
         return TooltipUtils.builder()
-            .addLang(LibResources.TOOLTIP + "mob.growth", growth)
-            .addLang(LibResources.TOOLTIP + "mob.gain", gain)
-            .addLang(LibResources.TOOLTIP + "mob.strength", strength)
+            .addLang(Reference.TOOLTIP + "mob.growth", growth)
+            .addLang(Reference.TOOLTIP + "mob.gain", gain)
+            .addLang(Reference.TOOLTIP + "mob.strength", strength)
             .build();
     }
 

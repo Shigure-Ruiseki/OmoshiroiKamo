@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import cpw.mods.fml.common.Loader;
 import lombok.Getter;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickenRecipe;
@@ -27,8 +28,6 @@ import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.core.json.ItemMaterial;
 import ruiseki.omoshiroikamo.core.json.JsonUtils;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 public abstract class BaseChickenHandler {
@@ -152,12 +151,12 @@ public abstract class BaseChickenHandler {
                     if (data.texture != null && !data.texture.isEmpty()) {
                         String itemSubPath = this.texturesLocation.replace("textures/entity/", "")
                             .replaceAll("/$", "");
-                        chicken.setIconName(LibResources.PREFIX_MOD + itemSubPath + "/" + data.texture);
+                        chicken.setIconName(Reference.PREFIX_MOD + itemSubPath + "/" + data.texture);
                     }
                     if (data.textureOverlay != null && !data.textureOverlay.isEmpty()) {
                         String itemSubPath = this.texturesLocation.replace("textures/entity/", "")
                             .replaceAll("/$", "");
-                        chicken.setIconOverlayName(LibResources.PREFIX_MOD + itemSubPath + "/" + data.textureOverlay);
+                        chicken.setIconOverlayName(Reference.PREFIX_MOD + itemSubPath + "/" + data.textureOverlay);
                     }
                     if (!data.realConditions.isEmpty()) {
                         for (ICondition condition : data.realConditions) chicken.addCondition(condition);

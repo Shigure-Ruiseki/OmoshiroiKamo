@@ -28,8 +28,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import ruiseki.omoshiroikamo.core.client.icon.IconProvider;
 import ruiseki.omoshiroikamo.core.client.key.IKeyRegistry;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 import ruiseki.omoshiroikamo.core.integration.nei.NEIConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.network.PacketHandler;
 
 /**

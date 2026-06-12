@@ -6,12 +6,11 @@ import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.multiblock.common.registries.FocusableHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.registries.FocusableRegistry;
 
@@ -514,42 +513,42 @@ public class QuantumExtractorRecipes {
         // Crystal 0
         defaults.addEntry(
             new FocusableHandler.FocusableItem(
-                LibResources.PREFIX_MOD + "crystal",
+                Reference.PREFIX_MOD + "crystal",
                 0,
                 EnumDye.CRYSTAL,
                 new double[] { 200, 200, 200, 200, 200, 200 }));
         // Crystal 1
         defaults.addEntry(
             new FocusableHandler.FocusableItem(
-                LibResources.PREFIX_MOD + "crystal",
+                Reference.PREFIX_MOD + "crystal",
                 1,
                 EnumDye.CRYSTAL,
                 new double[] { 150, 150, 150, 150, 150, 150 }));
         // Crystal 2
         defaults.addEntry(
             new FocusableHandler.FocusableItem(
-                LibResources.PREFIX_MOD + "crystal",
+                Reference.PREFIX_MOD + "crystal",
                 2,
                 EnumDye.CRYSTAL,
                 new double[] { 0, 120, 120, 120, 120, 120 }));
         // Crystal 3
         defaults.addEntry(
             new FocusableHandler.FocusableItem(
-                LibResources.PREFIX_MOD + "crystal",
+                Reference.PREFIX_MOD + "crystal",
                 3,
                 EnumDye.CRYSTAL,
                 new double[] { 0, 0, 90, 90, 90, 90 }));
         // Crystal 4
         defaults.addEntry(
             new FocusableHandler.FocusableItem(
-                LibResources.PREFIX_MOD + "crystal",
+                Reference.PREFIX_MOD + "crystal",
                 4,
                 EnumDye.CRYSTAL,
                 new double[] { 0, 0, 0, 60, 60, 60 }));
         // Crystal 5
         defaults.addEntry(
             new FocusableHandler.FocusableItem(
-                LibResources.PREFIX_MOD + "crystal",
+                Reference.PREFIX_MOD + "crystal",
                 5,
                 EnumDye.CRYSTAL,
                 new double[] { 0, 0, 0, 0, 30, 30 }));
@@ -557,7 +556,7 @@ public class QuantumExtractorRecipes {
         // Crystal 6
         defaults.addEntry(
             new FocusableHandler.FocusableItem(
-                LibResources.PREFIX_MOD + "crystal",
+                Reference.PREFIX_MOD + "crystal",
                 6,
                 EnumDye.CRYSTAL,
                 new double[] { 0, 0, 0, 0, 0, 50 }));
@@ -565,7 +564,7 @@ public class QuantumExtractorRecipes {
         // Crystal 7
         defaults.addEntry(
             new FocusableHandler.FocusableItem(
-                LibResources.PREFIX_MOD + "crystal",
+                Reference.PREFIX_MOD + "crystal",
                 7,
                 EnumDye.CRYSTAL,
                 new double[] { 3, 3, 3, 3, 3, 3 }));
@@ -631,11 +630,10 @@ public class QuantumExtractorRecipes {
 
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:sponge", 0, EnumDye.YELLOW, 28, 0));
         defaults
-            .addEntry(new FocusableHandler.FocusableBlock(LibResources.PREFIX_MOD + "alabaster", 0, EnumDye.WHITE, 12));
-        defaults
-            .addEntry(new FocusableHandler.FocusableBlock(LibResources.PREFIX_MOD + "basalt", 0, EnumDye.BLACK, 30));
+            .addEntry(new FocusableHandler.FocusableBlock(Reference.PREFIX_MOD + "alabaster", 0, EnumDye.WHITE, 12));
+        defaults.addEntry(new FocusableHandler.FocusableBlock(Reference.PREFIX_MOD + "basalt", 0, EnumDye.BLACK, 30));
         defaults.addEntry(
-            new FocusableHandler.FocusableBlock(LibResources.PREFIX_MOD + "hardened_stone", 0, EnumDye.GRAY, 20));
+            new FocusableHandler.FocusableBlock(Reference.PREFIX_MOD + "hardened_stone", 0, EnumDye.GRAY, 20));
         defaults.addEntry(new FocusableHandler.FocusableBlock("chisel:limestone", 0, EnumDye.LIME, 30));
         defaults.addEntry(new FocusableHandler.FocusableBlock("chisel:marble", 0, EnumDye.WHITE, 30));
         defaults.addEntry(new FocusableHandler.FocusableBlock("TConstruct:CraftedSoil", 5, EnumDye.GREEN, 2));
@@ -646,7 +644,7 @@ public class QuantumExtractorRecipes {
         // Mica (Tier-based weights)
         defaults.addEntry(
             new FocusableHandler.FocusableBlock(
-                LibResources.PREFIX_MOD + "mica",
+                Reference.PREFIX_MOD + "mica",
                 0,
                 EnumDye.WHITE,
                 new double[] { 2, 4, 6, 8, 12, 16 }));

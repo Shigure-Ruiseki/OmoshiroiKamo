@@ -8,7 +8,7 @@ import com.cleanroommc.modularui.drawable.AdaptableUITexture;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
 
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 public final class OKGuiTextures {
 

@@ -3,4 +3,4 @@
 package ruiseki.omoshiroikamo.api;
 
 import cpw.mods.fml.common.API;
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;

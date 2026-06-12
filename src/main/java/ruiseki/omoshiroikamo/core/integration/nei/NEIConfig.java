@@ -18,6 +18,7 @@ import codechicken.nei.recipe.HandlerInfo;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
@@ -25,11 +26,9 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularRecipeNEIHandler;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
@@ -158,7 +157,7 @@ public class NEIConfig implements IConfigureNEI {
         int maxPerPage) {
         event.registerHandlerInfo(
             new HandlerInfo.Builder(handlerID, Reference.MOD_NAME, Reference.MOD_ID)
-                .setDisplayImage(new ResourceLocation(LibResources.PREFIX_GUI + iconPath), 0, 0, 16, 16)
+                .setDisplayImage(new ResourceLocation(Reference.PREFIX_GUI + iconPath), 0, 0, 16, 16)
                 .setHeight(height)
                 .setWidth(166)
                 .build());

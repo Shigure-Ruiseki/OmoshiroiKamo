@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import cpw.mods.fml.common.Loader;
 import lombok.Getter;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
@@ -19,7 +20,6 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.json.FluidJson;
 import ruiseki.omoshiroikamo.core.json.JsonUtils;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 // Refactor base on OriginalChicken by Chlorine0808
 public abstract class BaseCowHandler {

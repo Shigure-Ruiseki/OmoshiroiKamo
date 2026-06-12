@@ -12,11 +12,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
 public class BlockStall extends AbstractBlock<TEStall> {
@@ -82,7 +82,7 @@ public class BlockStall extends AbstractBlock<TEStall> {
                     String.format(
                         "%s%s : %s (%d %s)",
                         EnumChatFormatting.GRAY,
-                        LangHelpers.localize(LibResources.TOOLTIP + "mob.fluid"),
+                        LangHelpers.localize(Reference.TOOLTIP + "mob.fluid"),
                         fluidName,
                         amount,
                         LangHelpers.localize("fluid.millibucket")));

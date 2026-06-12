@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 
 import cpw.mods.fml.common.FMLLog;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class Logger {
 

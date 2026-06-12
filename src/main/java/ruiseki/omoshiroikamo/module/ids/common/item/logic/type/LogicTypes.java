@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class LogicTypes {
 
@@ -35,7 +35,7 @@ public class LogicTypes {
             public void registerIcons(IIconRegister register) {
                 IconRegistry.addIcon(
                     "valuetype.boolean",
-                    register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/boolean"));
+                    register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/boolean"));
             }
         });
 
@@ -44,7 +44,7 @@ public class LogicTypes {
             @Override
             public void registerIcons(IIconRegister register) {
                 IconRegistry
-                    .addIcon("valuetype.int", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/int"));
+                    .addIcon("valuetype.int", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/int"));
             }
 
             @Override
@@ -76,9 +76,8 @@ public class LogicTypes {
 
             @Override
             public void registerIcons(IIconRegister register) {
-                IconRegistry.addIcon(
-                    "valuetype.double",
-                    register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/double"));
+                IconRegistry
+                    .addIcon("valuetype.double", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/double"));
             }
 
             @Override
@@ -92,9 +91,8 @@ public class LogicTypes {
 
             @Override
             public void registerIcons(IIconRegister register) {
-                IconRegistry.addIcon(
-                    "valuetype.string",
-                    register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/string"));
+                IconRegistry
+                    .addIcon("valuetype.string", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/string"));
             }
         });
 
@@ -103,7 +101,7 @@ public class LogicTypes {
             @Override
             public void registerIcons(IIconRegister register) {
                 IconRegistry
-                    .addIcon("valuetype.list", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/list"));
+                    .addIcon("valuetype.list", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/list"));
             }
         });
 
@@ -118,7 +116,7 @@ public class LogicTypes {
             @Override
             public void registerIcons(IIconRegister register) {
                 IconRegistry
-                    .addIcon("valuetype.nbt", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/nbt"));
+                    .addIcon("valuetype.nbt", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/nbt"));
             }
         });
     }

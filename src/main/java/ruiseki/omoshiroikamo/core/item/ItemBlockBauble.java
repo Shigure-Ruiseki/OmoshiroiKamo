@@ -14,9 +14,9 @@ import baubles.api.BaubleType;
 import baubles.api.expanded.BaubleItemHelper;
 import baubles.api.expanded.IBaubleExpanded;
 import cpw.mods.fml.common.Optional;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.entity.EntityDoppleganger;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 
 @Optional.InterfaceList({
     @Optional.Interface(modid = "Baubles|Expanded", iface = "baubles.api.expanded.IBaubleExpanded"),
@@ -110,7 +110,7 @@ public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
     public void onEquipped(ItemStack stack, EntityLivingBase player) {
         if (player != null) {
             if (!player.worldObj.isRemote) {
-                player.worldObj.playSoundAtEntity(player, LibResources.PREFIX_MOD + "equipBauble", 0.1F, 1.3F);
+                player.worldObj.playSoundAtEntity(player, Reference.PREFIX_MOD + "equipBauble", 0.1F, 1.3F);
             }
             onEquippedOrLoadedIntoWorld(stack, player);
 

@@ -41,11 +41,11 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.dml.client.gui.container.DeepLearnerContainer;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;

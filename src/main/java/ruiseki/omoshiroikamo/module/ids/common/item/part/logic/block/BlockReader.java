@@ -30,6 +30,7 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
@@ -37,7 +38,6 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.ILogicNet;
@@ -269,9 +269,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModel() {
-        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/reader.obj"));
-        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/block_reader_front.png");
-        back_texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/block_reader_back.png");
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.PREFIX_MODEL + "ids/reader.obj"));
+        texture = new ResourceLocation(Reference.PREFIX_ITEM + "ids/part/block_reader_front.png");
+        back_texture = new ResourceLocation(Reference.PREFIX_ITEM + "ids/part/block_reader_back.png");
     }
 
     @Override

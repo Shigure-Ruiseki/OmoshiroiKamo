@@ -11,10 +11,10 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class TextureGenerator {
 

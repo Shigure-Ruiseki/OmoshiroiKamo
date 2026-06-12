@@ -13,8 +13,8 @@ import net.minecraft.util.StatCollector;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 /**
  * Define the type of intermediate material.
@@ -69,8 +69,7 @@ public class ItemMaterialPart extends ItemOK {
         for (EnumMaterial material : EnumMaterial.values()) {
             icons.put(
                 material.getMeta(),
-                register
-                    .registerIcon(LibResources.PREFIX_MOD + "modular/" + folder + partType + material.getOreName()));
+                register.registerIcon(Reference.PREFIX_MOD + "modular/" + folder + partType + material.getOreName()));
         }
     }
 

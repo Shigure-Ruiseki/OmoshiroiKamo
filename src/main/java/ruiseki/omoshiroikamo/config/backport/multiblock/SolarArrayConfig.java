@@ -2,11 +2,10 @@ package ruiseki.omoshiroikamo.config.backport.multiblock;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.lib.Reference;
+import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Main Solar Array Settings")
-@Config.LangKey(LibResources.CONFIG + "solarArrayConfig")
+@Config.LangKey(Reference.CONFIG + "solarArrayConfig")
 @Config(
     modid = Reference.MOD_ID,
     category = "solar",
@@ -15,11 +14,11 @@ import ruiseki.omoshiroikamo.core.lib.Reference;
 public class SolarArrayConfig {
 
     @Config.Comment("Peak energy output per tier (RF/t)")
-    @Config.LangKey(LibResources.CONFIG + "solarTierEnergy")
+    @Config.LangKey(Reference.CONFIG + "solarTierEnergy")
     public static final TierEnergy tierEnergy = new TierEnergy();
 
     @Config.Comment("Solar cell generation settings")
-    @Config.LangKey(LibResources.CONFIG + "solarCellSettings")
+    @Config.LangKey(Reference.CONFIG + "solarCellSettings")
     public static final CellSettings cellSettings = new CellSettings();
 
     public static class TierEnergy {

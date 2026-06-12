@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
@@ -27,7 +28,6 @@ import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class ItemChicken extends ItemOK {
 
@@ -185,7 +185,7 @@ public class ItemChicken extends ItemOK {
 
         // Tier
         builder.addLang(
-            LibResources.TOOLTIP + "spawn_egg.tier",
+            Reference.TOOLTIP + "spawn_egg.tier",
             chicken.getItem()
                 .getTier());
 
@@ -194,9 +194,9 @@ public class ItemChicken extends ItemOK {
         // Lay item
         builder.addLangIf(
             layItem != null && layItem.getItem() != null,
-            LibResources.TOOLTIP + "spawn_egg.layitem",
+            Reference.TOOLTIP + "spawn_egg.layitem",
             layItem.getDisplayName());
-        builder.addLangIf(layItem == null || layItem.getItem() == null, LibResources.TOOLTIP + "spawn_egg.nolayitem");
+        builder.addLangIf(layItem == null || layItem.getItem() == null, Reference.TOOLTIP + "spawn_egg.nolayitem");
 
         // Spawn type (chỉ hiển thị nếu khác NONE)
         EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
@@ -213,7 +213,7 @@ public class ItemChicken extends ItemOK {
         }
 
         builder.addLabelWithLangValue(
-            LibResources.TOOLTIP + "spawn_egg.spawnType",
+            Reference.TOOLTIP + "spawn_egg.spawnType",
             labelColor,
             spawnType.toString(),
             valueColor);
@@ -223,7 +223,7 @@ public class ItemChicken extends ItemOK {
             !chicken.getItem()
                 .isBreedable(),
             EnumChatFormatting.RED,
-            LibResources.TOOLTIP + "spawn_egg.notbreedable");
+            Reference.TOOLTIP + "spawn_egg.notbreedable");
 
         // Breedable with parents
         if (chicken.getItem()
@@ -242,7 +242,7 @@ public class ItemChicken extends ItemOK {
                     .getDisplayName()).getFormattedText();
 
             builder.addLabelWithValue(
-                new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
+                new ChatComponentTranslation(Reference.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
                 EnumChatFormatting.YELLOW,
                 parent1 + " & " + parent2,
                 EnumChatFormatting.GOLD);

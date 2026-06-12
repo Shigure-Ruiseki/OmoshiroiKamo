@@ -9,9 +9,9 @@ import net.minecraft.stats.Achievement;
 import net.minecraftforge.common.AchievementPage;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.common.achievement.AchievementEntry;
 import ruiseki.omoshiroikamo.core.common.achievement.AchievementTrigger;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public enum MultiBlockAchievements {
 

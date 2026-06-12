@@ -32,9 +32,9 @@ import com.gtnewhorizon.gtnhlib.itemrendering.ItemWithTextures;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.client.render.item.MaskedBlockItemTexture;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.fluid.EnumFluidMaterial;
 
 /**
@@ -55,8 +55,8 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "modular/canister");
-        iconFluid = register.registerIcon(LibResources.PREFIX_MOD + "modular/canister_fluid");
+        itemIcon = register.registerIcon(Reference.PREFIX_MOD + "modular/canister");
+        iconFluid = register.registerIcon(Reference.PREFIX_MOD + "modular/canister_fluid");
     }
 
     @Override

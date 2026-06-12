@@ -10,6 +10,7 @@ import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
@@ -20,7 +21,6 @@ import ruiseki.omoshiroikamo.api.structure.visitor.StructureValidationVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
-import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Main manager for the custom structure system.
