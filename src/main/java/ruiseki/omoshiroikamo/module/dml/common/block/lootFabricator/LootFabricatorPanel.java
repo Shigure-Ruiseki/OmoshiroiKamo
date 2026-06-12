@@ -6,6 +6,7 @@ import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.EMPTY_SLOT;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
@@ -185,6 +186,7 @@ public class LootFabricatorPanel extends ModularPanel {
         outputSyncer = GenericSyncValue.builder(ItemStack.class)
             .getter(tileEntity::getOutputItem)
             .setter(tileEntity::setOutputItem)
+            .adapter(ByteBufAdapters.ITEM_STACK)
             .build();
         syncManager.syncValue("outputSyncer", outputSyncer);
         EnumSyncValue<RedstoneMode, ?> redstoneModeSyncer = new EnumSyncValue<>(
