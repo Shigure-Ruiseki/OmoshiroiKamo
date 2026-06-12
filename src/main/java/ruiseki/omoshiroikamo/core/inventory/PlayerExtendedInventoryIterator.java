@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import baubles.api.BaublesApi;
 import cpw.mods.fml.common.Optional;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 
 /**
  * Iterate over a player's inventory and any other attached inventory like baubles.

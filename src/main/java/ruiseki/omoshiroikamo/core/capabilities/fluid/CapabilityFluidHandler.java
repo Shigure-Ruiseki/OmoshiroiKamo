@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.capabilities.AttachCapabilitiesEvent;
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.capabilities.CapabilityInject;
@@ -21,7 +22,6 @@ import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.core.fluid.FluidHandlerItemStack;
 import ruiseki.omoshiroikamo.core.fluid.IFluidHandlerItem;
 import ruiseki.omoshiroikamo.core.fluid.SmartTank;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class CapabilityFluidHandler {
 
@@ -52,7 +52,7 @@ public class CapabilityFluidHandler {
             if (stack.getItem() instanceof IFluidContainerItem containerItem) {
                 int capacity = containerItem.getCapacity(stack);
                 event.addCapability(
-                    new ResourceLocation(LibMisc.MOD_ID, "fluid_handler"),
+                    new ResourceLocation(Reference.MOD_ID, "fluid_handler"),
                     new FluidHandlerItemStack(stack, capacity));
             }
         }

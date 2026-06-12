@@ -8,11 +8,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 public class BaseChickens extends BaseChickenHandler {
@@ -385,7 +385,7 @@ public class BaseChickens extends BaseChickenHandler {
         return new ChickensRegistryItem(
             this.nextID(),
             name,
-            new ResourceLocation(LibMisc.MOD_ID, texturesLocation + name + ".png"),
+            new ResourceLocation(Reference.MOD_ID, texturesLocation + name + ".png"),
             color.getColor(),
             0xf2f2f2).setSpawnType(SpawnType.NONE)
                 .setLayItem(new ItemStack(Items.dye, 1, color.ordinal()));

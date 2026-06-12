@@ -14,13 +14,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
@@ -134,9 +134,9 @@ public class ItemCowHalter extends ItemOK {
         builder.addIf(stack.getItemDamage() == 0, "Empty. Right Click on cow to pick it up!");
         if (stack.getItemDamage() != 0) {
             builder.addColoredLang(EnumChatFormatting.WHITE, cow.getDisplayName());
-            builder.addLang(LibResources.TOOLTIP + "mob.growth", growth)
-                .addLang(LibResources.TOOLTIP + "mob.gain", gain)
-                .addLang(LibResources.TOOLTIP + "mob.strength", strength);
+            builder.addLang(Reference.TOOLTIP + "mob.growth", growth)
+                .addLang(Reference.TOOLTIP + "mob.gain", gain)
+                .addLang(Reference.TOOLTIP + "mob.strength", strength);
         }
         list.addAll(builder.build());
     }

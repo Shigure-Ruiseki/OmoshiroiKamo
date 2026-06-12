@@ -14,6 +14,7 @@ import com.cleanroommc.modularui.utils.Color;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
@@ -21,7 +22,6 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber.BlockSimulationChamber;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
@@ -40,7 +40,7 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getGuiTexture() {
-        return LibResources.PREFIX_GUI + "nei/dml/simulation_chamber.png";
+        return Reference.PREFIX_GUI + "nei/dml/simulation_chamber.png";
     }
 
     @Override

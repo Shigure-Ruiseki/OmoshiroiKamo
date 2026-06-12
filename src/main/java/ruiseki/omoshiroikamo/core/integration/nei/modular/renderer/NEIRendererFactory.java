@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.api.recipe.io.ManaInput;
 import ruiseki.omoshiroikamo.api.recipe.io.ManaOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.VisInput;
 import ruiseki.omoshiroikamo.api.recipe.io.VisOutput;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 
 public class NEIRendererFactory {
 

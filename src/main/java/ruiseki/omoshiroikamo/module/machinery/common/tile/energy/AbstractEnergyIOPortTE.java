@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableList;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -37,7 +38,6 @@ import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
@@ -241,12 +241,12 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     }
 
     public static final UITexture EU_MODE = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/machinery/icons")
+        .location(Reference.MOD_ID, "gui/machinery/icons")
         .imageSize(256, 256)
         .xy(16, 16, 16, 16)
         .build();
     public static final UITexture RF_MODE = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/machinery/icons")
+        .location(Reference.MOD_ID, "gui/machinery/icons")
         .imageSize(256, 256)
         .xy(0, 16, 16, 16)
         .build();
@@ -257,14 +257,14 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     @Override
     public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
-        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+        return new ModularScreen(Reference.MOD_ID, mainPanel);
     }
 
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         ModularPanel panel = new ModularPanel("energy_port_gui");
 
-        EnumSyncValue<RedstoneMode> redstoneSyncer = new EnumSyncValue<>(
+        EnumSyncValue<RedstoneMode, ?> redstoneSyncer = new EnumSyncValue<>(
             RedstoneMode.class,
             this::getRedstoneMode,
             this::setRedstoneMode);
@@ -275,7 +275,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
         BooleanSyncValue ic2CompatSyncer = new BooleanSyncValue(this::isUseIC2Compat, this::setUseIC2Compat);
         syncManager.syncValue("ic2CompatSyncer", ic2CompatSyncer);
 
-        EnumSyncValue<EnergyMode> modeSyncer = new EnumSyncValue<>(
+        EnumSyncValue<EnergyMode, ?> modeSyncer = new EnumSyncValue<>(
             EnergyMode.class,
             this::getEnergyMode,
             this::setEnergyMode);

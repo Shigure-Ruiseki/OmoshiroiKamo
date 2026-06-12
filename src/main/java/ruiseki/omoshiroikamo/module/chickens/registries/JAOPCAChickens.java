@@ -12,11 +12,11 @@ import java.util.TreeSet;
 import net.minecraft.util.ResourceLocation;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 import thelm.jaopca.api.config.IDynamicSpecConfig;
 import thelm.jaopca.api.helpers.IMiscHelper;
 import thelm.jaopca.api.materials.IMaterial;
@@ -205,7 +205,7 @@ public class JAOPCAChickens extends BaseChickenHandler implements IModule {
                 SpawnType.NONE);
 
             chicken.setTextureOverlay(
-                new ResourceLocation(LibMisc.MOD_ID, "textures/entity/chicken/original/base_chicken_overlay.png"));
+                new ResourceLocation(Reference.MOD_ID, "textures/entity/chicken/original/base_chicken_overlay.png"));
             chicken.setTintColor(color);
 
             // Item Icon

@@ -13,9 +13,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
 import ruiseki.omoshiroikamo.core.common.util.VersionComparator;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Checks for updates from CurseForge API.
@@ -23,7 +23,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 public class UpdateChecker {
 
     private static final String CFWIDGET_API = "https://api.cfwidget.com/minecraft/mc-mods/omoshiroi-kamo";
-    private static final String USER_AGENT = "OmoshiroiKamo UpdateChecker/" + LibMisc.VERSION;
+    private static final String USER_AGENT = "OmoshiroiKamo UpdateChecker/" + Reference.VERSION;
 
     private static String latestVersion = null;
     private static final AtomicBoolean hasChecked = new AtomicBoolean(false);
@@ -87,7 +87,7 @@ public class UpdateChecker {
     private static void compareVersions() {
         if (latestVersion == null) return;
 
-        String current = LibMisc.VERSION;
+        String current = Reference.VERSION;
         if (VersionComparator.compare(current, latestVersion) < 0) {
             updateAvailable = true;
         }

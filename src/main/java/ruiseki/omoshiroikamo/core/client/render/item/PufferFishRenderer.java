@@ -14,14 +14,14 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.Reference;
 
 @SideOnly(Side.CLIENT)
 public class PufferFishRenderer implements IItemRenderer {
 
     public static IModelCustom model;
 
-    private static final ResourceLocation texture = new ResourceLocation(LibResources.PREFIX_ITEM + "pufferfish.png");
+    private static final ResourceLocation texture = new ResourceLocation(Reference.PREFIX_ITEM + "pufferfish.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -36,7 +36,7 @@ public class PufferFishRenderer implements IItemRenderer {
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         if (model == null) {
-            model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "pufferfish.obj"));
+            model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.PREFIX_MODEL + "pufferfish.obj"));
         }
         if (item.getItem() == Items.fish && item.getItemDamage() == 3) {
             GL11.glPushMatrix();

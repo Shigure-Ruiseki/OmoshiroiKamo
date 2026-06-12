@@ -26,12 +26,12 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPart;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
@@ -236,8 +236,8 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModel() {
-        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
-        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/item_interface.png");
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.PREFIX_MODEL + "ids/base_bus.obj"));
+        texture = new ResourceLocation(Reference.PREFIX_ITEM + "ids/part/item_interface.png");
     }
 
     @Override

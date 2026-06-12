@@ -9,57 +9,57 @@ import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.RedstoneModeBaseWidget;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class RedstoneModeWidget extends RedstoneModeBaseWidget {
 
     public static final UITexture ALWAYS_ON = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
         .imageSize(256, 256)
         .xy(0, 18, 18, 18)
         .build();
 
     public static final UITexture HOVER_ALWAYS_ON = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
         .imageSize(256, 256)
         .xy(0, 36, 18, 18)
         .build();
 
     public static final UITexture HIGH_ON = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
         .imageSize(256, 256)
         .xy(18, 18, 18, 18)
         .build();
 
     public static final UITexture HOVER_HIGH_ON = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
         .imageSize(256, 256)
         .xy(18, 36, 18, 18)
         .build();
 
     public static final UITexture HIGH_OFF = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
         .imageSize(256, 256)
         .xy(36, 18, 18, 18)
         .build();
 
     public static final UITexture HOVER_HIGH_OFF = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
         .imageSize(256, 256)
         .xy(36, 36, 18, 18)
         .build();
 
     public static final UITexture ALWAYS_OFF = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
         .imageSize(256, 256)
         .xy(54, 18, 18, 18)
         .build();
 
     public static final UITexture HOVER_ALWAYS_OFF = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
         .imageSize(256, 256)
         .xy(54, 36, 18, 18)
         .build();
@@ -73,13 +73,13 @@ public class RedstoneModeWidget extends RedstoneModeBaseWidget {
     private static final List<UITexture> HOVER_TEXTURES = Arrays
         .asList(HOVER_ALWAYS_ON, HOVER_HIGH_ON, HOVER_HIGH_OFF, HOVER_ALWAYS_OFF);
 
-    public RedstoneModeWidget(EnumSyncValue<RedstoneMode> syncValue) {
+    public RedstoneModeWidget(EnumSyncValue<RedstoneMode, ?> syncValue) {
         super(VARIANTS, 0, 18, syncValue);
         size(18);
     }
 
     public void setVariants(List<CyclicVariantButtonWidget.Variant> newVariants,
-        EnumSyncValue<RedstoneMode> syncValue) {
+        EnumSyncValue<RedstoneMode, ?> syncValue) {
         if (newVariants == null || newVariants.isEmpty()) {
             throw new IllegalArgumentException("Variants list cannot be null or empty");
         }

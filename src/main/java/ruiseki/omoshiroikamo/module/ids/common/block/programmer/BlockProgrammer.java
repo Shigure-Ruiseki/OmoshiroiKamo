@@ -5,9 +5,9 @@ import net.minecraft.util.IIcon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class BlockProgrammer extends AbstractBlock<TEProgrammer> {
 
@@ -21,9 +21,9 @@ public class BlockProgrammer extends AbstractBlock<TEProgrammer> {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister reg) {
-        top = reg.registerIcon(LibResources.PREFIX_MOD + "ids/logic_programmer_top");
-        side = reg.registerIcon(LibResources.PREFIX_MOD + "ids/logic_programmer_side");
-        bottom = reg.registerIcon(LibResources.PREFIX_MOD + "ids/crystalized_menril_block");
+        top = reg.registerIcon(Reference.PREFIX_MOD + "ids/logic_programmer_top");
+        side = reg.registerIcon(Reference.PREFIX_MOD + "ids/logic_programmer_side");
+        bottom = reg.registerIcon(Reference.PREFIX_MOD + "ids/crystalized_menril_block");
     }
 
     @Override

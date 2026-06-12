@@ -16,9 +16,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.recipe.expression.RecipeScriptException;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Universal collector for JSON-related parsing and validation errors.
@@ -166,7 +166,7 @@ public class JsonErrorCollector {
 
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.GRAY + "Check: config/" + LibMisc.MOD_ID + "/json_errors.txt for details."));
+                EnumChatFormatting.GRAY + "Check: config/" + Reference.MOD_ID + "/json_errors.txt for details."));
     }
 
     /**

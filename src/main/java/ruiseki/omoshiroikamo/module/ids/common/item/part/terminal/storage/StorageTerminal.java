@@ -23,13 +23,13 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.item.CraftingFilter;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPart;
@@ -214,9 +214,9 @@ public class StorageTerminal extends AbstractPart {
     @Override
     public void registerModel() {
         model = AdvancedModelLoader
-            .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/storage_terminal.obj"));
-        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/storage_terminal.png");
-        back_texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/terminal_back.png");
+            .loadModel(new ResourceLocation(Reference.PREFIX_MODEL + "ids/storage_terminal.obj"));
+        texture = new ResourceLocation(Reference.PREFIX_ITEM + "ids/part/storage_terminal.png");
+        back_texture = new ResourceLocation(Reference.PREFIX_ITEM + "ids/part/terminal_back.png");
     }
 
     @Override

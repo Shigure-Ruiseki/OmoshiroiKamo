@@ -15,9 +15,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Collector that gathers and reports structure-system errors.
@@ -210,7 +210,7 @@ public class StructureErrorCollector {
         // File path hint
         player.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.GRAY + "Check: config/" + LibMisc.MOD_ID + "/structures/errors.txt"));
+                EnumChatFormatting.GRAY + "Check: config/" + Reference.MOD_ID + "/structures/errors.txt"));
     }
 
     /**

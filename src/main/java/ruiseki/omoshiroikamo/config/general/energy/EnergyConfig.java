@@ -4,12 +4,11 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Main Energy settings")
-@Config.LangKey(LibResources.CONFIG + "energyConfig")
-@Config(modid = LibMisc.MOD_ID, category = "general.energy", configSubDirectory = LibMisc.MOD_ID)
+@Config.LangKey(Reference.CONFIG + "energyConfig")
+@Config(modid = Reference.MOD_ID, category = "general.energy", configSubDirectory = Reference.MOD_ID)
 public class EnergyConfig {
 
     public static void registerConfig() throws ConfigException {

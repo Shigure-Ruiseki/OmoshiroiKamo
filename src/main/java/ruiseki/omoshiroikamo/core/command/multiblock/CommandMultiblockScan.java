@@ -9,11 +9,11 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.core.common.structure.StructureScanner;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class CommandMultiblockScan extends CommandMod {
 
@@ -91,7 +91,7 @@ public class CommandMultiblockScan extends CommandMod {
             FMLCommonHandler.instance()
                 .getMinecraftServerInstance()
                 .getFile("."),
-            "config/" + LibMisc.MOD_ID);
+            "config/" + Reference.MOD_ID);
 
         StructureScanner.ScanResult result = StructureScanner.scan(world, name, x1, y1, z1, x2, y2, z2, configDir);
 

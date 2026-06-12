@@ -19,6 +19,7 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.IUsageHandler;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedStackAdv;
@@ -26,7 +27,6 @@ import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
@@ -225,7 +225,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getGuiTexture() {
-        return LibResources.GUI_NEI_BLANK;
+        return Reference.GUI_NEI_BLANK;
     }
 
     @Override

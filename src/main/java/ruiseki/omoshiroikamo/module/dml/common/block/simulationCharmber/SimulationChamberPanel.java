@@ -28,19 +28,19 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import lombok.Getter;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.common.util.StringAnimator;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.StringHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeWidget;
 
 public class SimulationChamberPanel extends ModularPanel {
 
     public static final AdaptableUITexture BASE_TEXTURE = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/simulation_chamber")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/simulation_chamber")
         .imageSize(256, 256)
         .xy(0, 0, 216, 141)
         .adaptable(4)
@@ -48,7 +48,7 @@ public class SimulationChamberPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture ENERGY_BAR = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/simulation_chamber")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/simulation_chamber")
         .imageSize(256, 256)
         .xy(25, 141, 7, 87)
         .adaptable(1)
@@ -56,7 +56,7 @@ public class SimulationChamberPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture DATA_BAR = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/simulation_chamber")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/simulation_chamber")
         .imageSize(256, 256)
         .xy(18, 141, 7, 87)
         .adaptable(1)
@@ -64,7 +64,7 @@ public class SimulationChamberPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture DATA_MODEL_SLOT = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/simulation_chamber")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/simulation_chamber")
         .imageSize(256, 256)
         .xy(0, 141, 18, 18)
         .adaptable(1)
@@ -131,7 +131,7 @@ public class SimulationChamberPanel extends ModularPanel {
         syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
         processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress);
         syncManager.syncValue("processSyncer", processSyncer);
-        EnumSyncValue<RedstoneMode> redstoneModeSyncer = new EnumSyncValue<>(
+        EnumSyncValue<RedstoneMode, ?> redstoneModeSyncer = new EnumSyncValue<>(
             RedstoneMode.class,
             tileEntity::getRedstoneMode,
             tileEntity::setRedstoneMode);

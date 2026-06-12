@@ -7,18 +7,18 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ToggleWidget extends CyclicVariantButtonWidget {
 
     public static final UITexture ALWAYS_ON = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/machinery/icons")
+        .location(Reference.MOD_ID, "gui/machinery/icons")
         .imageSize(256, 256)
         .xy(32, 0, 16, 16)
         .build();
     public static final UITexture ALWAYS_OFF = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/machinery/icons")
+        .location(Reference.MOD_ID, "gui/machinery/icons")
         .imageSize(256, 256)
         .xy(48, 0, 16, 16)
         .build();

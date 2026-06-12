@@ -19,6 +19,7 @@ import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
@@ -29,7 +30,6 @@ import ruiseki.omoshiroikamo.core.block.AbstractTieredBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.item.ItemWrench;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
@@ -154,9 +154,9 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
         // Use the same tier textures as Casing blocks
         for (int i = 0; i < tierCount; i++) {
             // Format: tier_0_base, tier_1_base, etc. (same as BlockMachineCasing)
-            baseIcons[i] = reg.registerIcon(LibResources.PREFIX_MOD + "modular/tier_" + i + "_base");
+            baseIcons[i] = reg.registerIcon(Reference.PREFIX_MOD + "modular/tier_" + i + "_base");
             // Casing icons also tier-based
-            casingIcons[i] = reg.registerIcon(LibResources.PREFIX_MOD + "modular/tier_" + i + "_base");
+            casingIcons[i] = reg.registerIcon(Reference.PREFIX_MOD + "modular/tier_" + i + "_base");
         }
         registerPortOverlays(reg);
     }
@@ -167,10 +167,10 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
             int tier = i + 1;
             IconRegistry.addIcon(
                 prefix + tier,
-                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + tier));
+                reg.registerIcon(Reference.PREFIX_MOD + "modularmachineryOverlay/" + prefix + tier));
         }
         IconRegistry
-            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+            .addIcon("overlay_port_disabled", reg.registerIcon(Reference.PREFIX_MOD + "modular_machine_casing"));
     }
 
     public abstract String getOverlayPrefix();

@@ -18,6 +18,7 @@ import codechicken.nei.recipe.HandlerInfo;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
@@ -25,11 +26,9 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularRecipeNEIHandler;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
@@ -64,7 +63,7 @@ public class NEIConfig implements IConfigureNEI {
         if (BackportConfigs.enableMachinery && LibMods.BlockRenderer6343.isLoaded()) {
             // Register icon for the generic preview handler
             event.registerHandlerInfo(
-                new HandlerInfo.Builder(ModularMachineNEIHandler.class.getName(), LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                new HandlerInfo.Builder(ModularMachineNEIHandler.class.getName(), Reference.MOD_NAME, Reference.MOD_ID)
                     .setDisplayStack(getStructureLibTrigger())
                     .setHeight(168)
                     .setWidth(192)
@@ -76,7 +75,7 @@ public class NEIConfig implements IConfigureNEI {
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 String handlerID = "modular_structure_" + structureName;
                 event.registerHandlerInfo(
-                    new HandlerInfo.Builder(handlerID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    new HandlerInfo.Builder(handlerID, Reference.MOD_NAME, Reference.MOD_ID)
                         .setDisplayStack(getStructureLibTrigger())
                         .setHeight(168)
                         .setWidth(192)
@@ -88,7 +87,7 @@ public class NEIConfig implements IConfigureNEI {
             for (String group : MachineryModule.getCachedGroupNames()) {
                 String handlerID = "modular_" + group;
                 event.registerHandlerInfo(
-                    new HandlerInfo.Builder(handlerID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    new HandlerInfo.Builder(handlerID, Reference.MOD_NAME, Reference.MOD_ID)
                         .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
                         .setHeight(100)
                         .setWidth(166)
@@ -100,7 +99,7 @@ public class NEIConfig implements IConfigureNEI {
             for (int i = 0; i < 6; i++) {
                 String oreId = ModObject.QUANTUM_ORE_EXTRACTOR.getRegistryName() + ".tier" + i;
                 event.registerHandlerInfo(
-                    new HandlerInfo.Builder(oreId, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    new HandlerInfo.Builder(oreId, Reference.MOD_NAME, Reference.MOD_ID)
                         .setDisplayStack(MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i))
                         .setHeight(48)
                         .setWidth(166)
@@ -108,7 +107,7 @@ public class NEIConfig implements IConfigureNEI {
 
                 String resId = ModObject.QUANTUM_RES_EXTRACTOR.getRegistryName() + ".tier" + i;
                 event.registerHandlerInfo(
-                    new HandlerInfo.Builder(resId, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    new HandlerInfo.Builder(resId, Reference.MOD_NAME, Reference.MOD_ID)
                         .setDisplayStack(MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i))
                         .setHeight(48)
                         .setWidth(166)
@@ -125,13 +124,13 @@ public class NEIConfig implements IConfigureNEI {
 
         if (BackportConfigs.enableCows) {
             event.registerHandlerInfo(
-                new HandlerInfo.Builder(CowMilkingRecipeHandler.UID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                new HandlerInfo.Builder(CowMilkingRecipeHandler.UID, Reference.MOD_NAME, Reference.MOD_ID)
                     .setDisplayStack(new ItemStack(Items.milk_bucket))
                     .setHeight(64)
                     .setWidth(166)
                     .build());
             event.registerHandlerInfo(
-                new HandlerInfo.Builder(CowBreedingRecipeHandler.UID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                new HandlerInfo.Builder(CowBreedingRecipeHandler.UID, Reference.MOD_NAME, Reference.MOD_ID)
                     .setDisplayStack(new ItemStack(Items.wheat))
                     .setHeight(64)
                     .setWidth(166)
@@ -140,13 +139,13 @@ public class NEIConfig implements IConfigureNEI {
 
         if (BackportConfigs.enableDML) {
             event.registerHandlerInfo(
-                new HandlerInfo.Builder(LootFabricatorRecipeHandler.UID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                new HandlerInfo.Builder(LootFabricatorRecipeHandler.UID, Reference.MOD_NAME, Reference.MOD_ID)
                     .setDisplayStack(DMLBlocks.LOOT_FABRICATOR.newItemStack())
                     .setHeight(48)
                     .setWidth(166)
                     .build());
             event.registerHandlerInfo(
-                new HandlerInfo.Builder(SimulationChamberRecipeHandler.UID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                new HandlerInfo.Builder(SimulationChamberRecipeHandler.UID, Reference.MOD_NAME, Reference.MOD_ID)
                     .setDisplayStack(DMLBlocks.SIMULATION_CHAMBER.newItemStack())
                     .setHeight(48)
                     .setWidth(166)
@@ -157,8 +156,8 @@ public class NEIConfig implements IConfigureNEI {
     private void registerHandlerImage(NEIRegisterHandlerInfosEvent event, String handlerID, String iconPath, int height,
         int maxPerPage) {
         event.registerHandlerInfo(
-            new HandlerInfo.Builder(handlerID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
-                .setDisplayImage(new ResourceLocation(LibResources.PREFIX_GUI + iconPath), 0, 0, 16, 16)
+            new HandlerInfo.Builder(handlerID, Reference.MOD_NAME, Reference.MOD_ID)
+                .setDisplayImage(new ResourceLocation(Reference.PREFIX_GUI + iconPath), 0, 0, 16, 16)
                 .setHeight(height)
                 .setWidth(166)
                 .build());
@@ -309,7 +308,7 @@ public class NEIConfig implements IConfigureNEI {
                 Method method = guiRecipeClass.getMethod("registerHandlerInfo", HandlerInfo.class);
                 method.invoke(
                     null,
-                    new HandlerInfo.Builder(handler.getRecipeID(), LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    new HandlerInfo.Builder(handler.getRecipeID(), Reference.MOD_NAME, Reference.MOD_ID)
                         .setDisplayStack(catalyst)
                         .setHeight(100)
                         .setWidth(166)
@@ -358,11 +357,11 @@ public class NEIConfig implements IConfigureNEI {
 
     @Override
     public String getName() {
-        return LibMisc.MOD_NAME;
+        return Reference.MOD_NAME;
     }
 
     @Override
     public String getVersion() {
-        return LibMisc.VERSION;
+        return Reference.VERSION;
     }
 }

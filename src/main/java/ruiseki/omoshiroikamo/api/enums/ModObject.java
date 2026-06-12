@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.enums;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.Reference;
 
 public enum ModObject {
 
@@ -156,6 +156,6 @@ public enum ModObject {
     }
 
     public String getRegistryName() {
-        return LibMisc.MOD_ID + ":" + name;
+        return Reference.MOD_ID + ":" + name;
     }
 }

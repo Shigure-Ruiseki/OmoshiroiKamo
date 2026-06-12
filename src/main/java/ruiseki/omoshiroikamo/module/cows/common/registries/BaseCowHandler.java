@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import cpw.mods.fml.common.Loader;
 import lombok.Getter;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
@@ -19,7 +20,6 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.json.FluidJson;
 import ruiseki.omoshiroikamo.core.json.JsonUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 // Refactor base on OriginalChicken by Chlorine0808
 public abstract class BaseCowHandler {
@@ -65,7 +65,7 @@ public abstract class BaseCowHandler {
 
         Logger.info("Loading {} cows...", modName);
 
-        File configDir = new File("config/" + LibMisc.MOD_ID + "/cow/");
+        File configDir = new File("config/" + Reference.MOD_ID + "/cow/");
         File configFile = new File(configDir, configFileName);
         if (!configFile.exists()) {
             List<CowsRegistryItem> defaultCows = registerCows();
@@ -297,7 +297,7 @@ public abstract class BaseCowHandler {
     public void syncConfig() {
         if (registeredCows.isEmpty()) return;
 
-        File configDir = new File("config/" + LibMisc.MOD_ID + "/cow/");
+        File configDir = new File("config/" + Reference.MOD_ID + "/cow/");
         File configFile = new File(configDir, configFileName);
 
         try {

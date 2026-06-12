@@ -19,7 +19,7 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.Reference;
 
 public abstract class RecipeHandlerBase extends TemplateRecipeHandler implements IRecipeHandlerBase {
 
@@ -269,21 +269,21 @@ public abstract class RecipeHandlerBase extends TemplateRecipeHandler implements
     public static void drawItemSlot(int x, int y) {
         Minecraft.getMinecraft()
             .getTextureManager()
-            .bindTexture(new ResourceLocation(LibResources.GUI_SLOT));
+            .bindTexture(new ResourceLocation(Reference.GUI_SLOT));
         GuiDraw.drawTexturedModalRect(x, y, 18, 0, 18, 18);
     }
 
     public void drawFluidSlot(int x, int y) {
         Minecraft.getMinecraft()
             .getTextureManager()
-            .bindTexture(new ResourceLocation(LibResources.GUI_SLOT));
+            .bindTexture(new ResourceLocation(Reference.GUI_SLOT));
         GuiDraw.drawTexturedModalRect(x, y, 0, 0, 18, 18);
     }
 
     public void drawStretchedItemSlot(int x, int y, int totalWidth, int totalHeight) {
         Minecraft.getMinecraft()
             .getTextureManager()
-            .bindTexture(new ResourceLocation(LibResources.GUI_SLOT));
+            .bindTexture(new ResourceLocation(Reference.GUI_SLOT));
 
         int texX = 18;
         int texY = 0;
@@ -328,7 +328,7 @@ public abstract class RecipeHandlerBase extends TemplateRecipeHandler implements
     public void drawStretchedFluidSlot(int x, int y, int totalWidth, int totalHeight) {
         Minecraft.getMinecraft()
             .getTextureManager()
-            .bindTexture(new ResourceLocation(LibResources.GUI_SLOT));
+            .bindTexture(new ResourceLocation(Reference.GUI_SLOT));
 
         int texX = 0;
         int texY = 0;

@@ -14,7 +14,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.Reference;
 
 public class BlockDoorOK extends BlockDoor implements IBlock {
 
@@ -48,8 +48,8 @@ public class BlockDoorOK extends BlockDoor implements IBlock {
     public void registerBlockIcons(IIconRegister reg) {
         this.field_150017_a = new IIcon[2];
         this.field_150016_b = new IIcon[2];
-        this.field_150017_a[0] = reg.registerIcon(LibResources.PREFIX_MOD + this.getTextureName() + "_upper");
-        this.field_150016_b[0] = reg.registerIcon(LibResources.PREFIX_MOD + this.getTextureName() + "_lower");
+        this.field_150017_a[0] = reg.registerIcon(Reference.PREFIX_MOD + this.getTextureName() + "_upper");
+        this.field_150016_b[0] = reg.registerIcon(Reference.PREFIX_MOD + this.getTextureName() + "_lower");
         this.field_150017_a[1] = new IconFlipped(this.field_150017_a[0], true, false);
         this.field_150016_b[1] = new IconFlipped(this.field_150016_b[0], true, false);
     }
@@ -62,7 +62,7 @@ public class BlockDoorOK extends BlockDoor implements IBlock {
 
         @Override
         public void registerIcons(IIconRegister register) {
-            itemIcon = register.registerIcon(LibResources.PREFIX_MOD + field_150939_a.getTextureName());
+            itemIcon = register.registerIcon(Reference.PREFIX_MOD + field_150939_a.getTextureName());
         }
 
         @Override

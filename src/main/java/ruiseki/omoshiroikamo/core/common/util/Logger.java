@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 
 import cpw.mods.fml.common.FMLLog;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class Logger {
 
@@ -16,11 +16,11 @@ public class Logger {
     private Logger() {}
 
     public static void log(Level level, String message) {
-        FMLLog.log(LibMisc.MOD_NAME, level, message);
+        FMLLog.log(Reference.MOD_NAME, level, message);
     }
 
     public static void log(Level level, String message, Throwable t) {
-        FMLLog.log(LibMisc.MOD_NAME, level, message, t);
+        FMLLog.log(Reference.MOD_NAME, level, message, t);
     }
 
     public static void log(Level level, String message, Object... args) {

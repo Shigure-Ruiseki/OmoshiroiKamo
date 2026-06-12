@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class ItemAnalyzer extends ItemOK {
 
@@ -65,8 +65,8 @@ public class ItemAnalyzer extends ItemOK {
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
         TooltipUtils builder = TooltipUtils.builder();
-        builder.addLang(LibResources.TOOLTIP + "analyzer.l1");
-        builder.addLang(LibResources.TOOLTIP + "analyzer.l2");
+        builder.addLang(Reference.TOOLTIP + "analyzer.l1");
+        builder.addLang(Reference.TOOLTIP + "analyzer.l2");
         list.addAll(builder.build());
     }
 }

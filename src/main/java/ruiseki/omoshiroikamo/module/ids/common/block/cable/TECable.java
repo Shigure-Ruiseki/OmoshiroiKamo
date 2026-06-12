@@ -32,6 +32,7 @@ import cofh.api.item.IToolHammer;
 import lombok.Getter;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICableEndpoint;
@@ -43,7 +44,6 @@ import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
 import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.datastructure.EnumFacingMap;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTickingTE;
 import ruiseki.omoshiroikamo.module.ids.common.capabilities.SidedDynamicLight;
@@ -679,7 +679,7 @@ public class TECable extends AbstractTickingTE
 
     @Override
     public ModularScreen createScreen(SidedPosGuiData data, ModularPanel mainPanel) {
-        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+        return new ModularScreen(Reference.MOD_ID, mainPanel);
     }
 
     @Override

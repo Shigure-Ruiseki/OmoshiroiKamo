@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import codechicken.nei.PositionedStack;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.init.CowsItems;
 
 public class CowMilkingRecipeHandler extends RecipeHandlerBase {
@@ -25,7 +25,7 @@ public class CowMilkingRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getGuiTexture() {
-        return LibResources.GUI_NEI_BLANK;
+        return Reference.GUI_NEI_BLANK;
     }
 
     @Override

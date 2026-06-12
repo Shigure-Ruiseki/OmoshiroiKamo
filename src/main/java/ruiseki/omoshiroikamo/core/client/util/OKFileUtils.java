@@ -30,8 +30,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.jetbrains.annotations.NotNull;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 // Copy form EnderCore
 public class OKFileUtils {
@@ -243,7 +243,7 @@ public class OKFileUtils {
      */
     public static boolean manuallyChangeConfigValue(String filePathFromConfigFolder, String prefix, String from,
         String to) {
-        File config = new File("config/" + LibMisc.MOD_ID + "/" + filePathFromConfigFolder);
+        File config = new File("config/" + Reference.MOD_ID + "/" + filePathFromConfigFolder);
         boolean found = false;
 
         try {
@@ -290,7 +290,7 @@ public class OKFileUtils {
      *         <code>Boolean.parseBoolean(String)</code>
      */
     public static String manuallyGetConfigValue(String filePathFromConfigFolder, String key) {
-        File config = new File("config/" + LibMisc.MOD_ID + "/" + filePathFromConfigFolder);
+        File config = new File("config/" + Reference.MOD_ID + "/" + filePathFromConfigFolder);
         Scanner scan = null;
 
         try {

@@ -10,7 +10,7 @@ import net.minecraft.util.StatCollector;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 /**
@@ -21,8 +21,8 @@ import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 public class LangHelpers {
 
     public static final int MAX_TOOLTIP_LINE_LENGTH = 25;
-    private static final String KEY_ENABLED = "general." + LibMisc.MOD_ID + ".info.enabled";
-    private static final String KEY_DISABLED = "general." + LibMisc.MOD_ID + ".info.disabled";
+    private static final String KEY_ENABLED = "general." + Reference.MOD_ID + ".info.enabled";
+    private static final String KEY_DISABLED = "general." + Reference.MOD_ID + ".info.disabled";
 
     /**
      * Localize a key that has values in language files.
@@ -85,7 +85,7 @@ public class LangHelpers {
                 list.add(
                     localize(
                         ChatFormatting.GRAY.toString() + ChatFormatting.ITALIC.toString()
-                            + localize("general." + LibMisc.MOD_ID + ".tooltip.info")));
+                            + localize("general." + Reference.MOD_ID + ".tooltip.info")));
             }
         }
     }

@@ -110,7 +110,7 @@ public class GuiManager {
         syncManager.syncValue("processProgress", progressSyncer);
         syncManager.syncValue("processMaxProgress", maxProgressSyncer);
 
-        EnumSyncValue<ErrorReason> errorReasonSyncer = new EnumSyncValue<>(
+        EnumSyncValue<ErrorReason, ?> errorReasonSyncer = new EnumSyncValue<>(
             ErrorReason.class,
             controller::getLastProcessErrorReason,
             controller::setLastProcessErrorReason);
@@ -162,7 +162,7 @@ public class GuiManager {
 
     private void addRedstoneButton(ModularPanel panel, PanelSyncManager syncManager, int x, int y) {
 
-        EnumSyncValue<RedstoneMode> redstoneMode = new EnumSyncValue<>(
+        EnumSyncValue<RedstoneMode, ?> redstoneMode = new EnumSyncValue<>(
             RedstoneMode.class,
             controller::getRedstoneMode,
             controller::setRedstoneMode);

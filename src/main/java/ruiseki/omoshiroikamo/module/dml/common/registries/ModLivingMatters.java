@@ -5,10 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistryItem;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLLivingMatterReader;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLLivingMatterWriter;
 
@@ -22,7 +21,7 @@ public class ModLivingMatters {
     }
 
     public List<LivingRegistryItem> tryRegisterLivings() {
-        File configFile = new File("config/" + LibMisc.MOD_ID + "/dml/" + configFileName);
+        File configFile = new File("config/" + Reference.MOD_ID + "/dml/" + configFileName);
         DMLLivingMatterReader reader = new DMLLivingMatterReader(configFile);
 
         if (!configFile.exists()) {
@@ -59,7 +58,7 @@ public class ModLivingMatters {
     }
 
     public LivingRegistryItem addLiving(int id, String displayName, String texture, int xpValue) {
-        return new LivingRegistryItem(id, displayName, LibResources.PREFIX_MOD + "dml/living/" + texture, xpValue);
+        return new LivingRegistryItem(id, displayName, Reference.PREFIX_MOD + "dml/living/" + texture, xpValue);
     }
 
     protected int nextID() {
@@ -67,7 +66,7 @@ public class ModLivingMatters {
     }
 
     protected int fixedID(String name) {
-        int hash = (LibMisc.MOD_ID + ":" + name).toLowerCase()
+        int hash = (Reference.MOD_ID + ":" + name).toLowerCase()
             .hashCode();
         return Math.abs(hash % (30000));
     }

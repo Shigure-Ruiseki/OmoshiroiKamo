@@ -15,9 +15,9 @@ import net.minecraft.world.World;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortME;
 
@@ -48,7 +48,7 @@ public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortM
     public void registerPortOverlays(IIconRegister reg) {
         IconRegistry.addIcon(
             "overlay_fluidoutput_me",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_me"));
+            reg.registerIcon(Reference.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_me"));
     }
 
     @Override

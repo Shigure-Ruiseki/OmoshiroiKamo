@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
@@ -28,7 +29,6 @@ import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
@@ -64,7 +64,7 @@ public class ItemCowSpawnEgg extends ItemOK {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        baseIcon = register.registerIcon(LibResources.PREFIX_MOD + "cow/cow_displayer");
+        baseIcon = register.registerIcon(Reference.PREFIX_MOD + "cow/cow_displayer");
     }
 
     @Override
@@ -186,14 +186,14 @@ public class ItemCowSpawnEgg extends ItemOK {
         TooltipUtils builder = TooltipUtils.builder();
 
         // Tier
-        builder.addLang(LibResources.TOOLTIP + "spawn_egg.tier", cow.getTier());
+        builder.addLang(Reference.TOOLTIP + "spawn_egg.tier", cow.getTier());
 
         // Milk fluid
         builder.addLangIf(
             milk != null && milk.getFluid() != null,
-            LibResources.TOOLTIP + "spawn_egg.milkfluid",
+            Reference.TOOLTIP + "spawn_egg.milkfluid",
             milk.getLocalizedName());
-        builder.addLangIf(milk.getFluid() == null, LibResources.TOOLTIP + "spawn_egg.nomilkfluid");
+        builder.addLangIf(milk.getFluid() == null, Reference.TOOLTIP + "spawn_egg.nomilkfluid");
 
         EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
         EnumChatFormatting valueColor;
@@ -209,16 +209,14 @@ public class ItemCowSpawnEgg extends ItemOK {
         }
 
         builder.addLabelWithLangValue(
-            LibResources.TOOLTIP + "spawn_egg.spawnType",
+            Reference.TOOLTIP + "spawn_egg.spawnType",
             labelColor,
             spawnType.toString(),
             valueColor);
 
         // Breedable
-        builder.addColoredLangIf(
-            !cow.isBreedable(),
-            EnumChatFormatting.RED,
-            LibResources.TOOLTIP + "spawn_egg.notbreedable");
+        builder
+            .addColoredLangIf(!cow.isBreedable(), EnumChatFormatting.RED, Reference.TOOLTIP + "spawn_egg.notbreedable");
 
         // Breedable with parents
         if (cow.isBreedable() && cow.getParent1() != null && cow.getParent2() != null) {
@@ -230,7 +228,7 @@ public class ItemCowSpawnEgg extends ItemOK {
                     .getDisplayName()).getFormattedText();
 
             builder.addLabelWithValue(
-                new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
+                new ChatComponentTranslation(Reference.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
                 EnumChatFormatting.YELLOW,
                 parent1 + " & " + parent2,
                 EnumChatFormatting.GOLD);

@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.core.common.structure;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.Reference;
 
 /**
  * Utility for block ID compatibility following name refactoring (camelCase to snake_case).
@@ -11,13 +11,13 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 public class BlockCompat {
 
     private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("([a-z])([A-Z])");
-    private static final String MOD_PREFIX = LibMisc.MOD_ID + ":";
+    private static final String MOD_PREFIX = Reference.MOD_ID + ":";
 
     /**
      * Converts a block ID from camelCase to snake_case if it belongs to this mod.
      * Example: "omoshiroikamo:blockCrystal" -> "omoshiroikamo:block_crystal"
      * Example: "omoshiroikamo:blockCrystal:0" -> "omoshiroikamo:block_crystal:0"
-     * 
+     *
      * This method is idempotent: if it's already snake_case, it returns the same string.
      *
      * @param id The block ID string to remap

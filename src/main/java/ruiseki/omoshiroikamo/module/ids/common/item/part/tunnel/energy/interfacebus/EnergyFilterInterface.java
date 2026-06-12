@@ -41,13 +41,13 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.ILogicNet;
@@ -272,9 +272,9 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModel() {
-        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
-        active = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/energy_filter_interface_active.png");
-        inactive = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/energy_filter_interface_inactive.png");
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.PREFIX_MODEL + "ids/base_bus.obj"));
+        active = new ResourceLocation(Reference.PREFIX_ITEM + "ids/part/energy_filter_interface_active.png");
+        inactive = new ResourceLocation(Reference.PREFIX_ITEM + "ids/part/energy_filter_interface_inactive.png");
     }
 
     @Override

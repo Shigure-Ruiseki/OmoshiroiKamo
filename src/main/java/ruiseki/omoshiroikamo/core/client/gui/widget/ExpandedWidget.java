@@ -3,12 +3,12 @@ package ruiseki.omoshiroikamo.core.client.gui.widget;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.widget.ParentWidget;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.Reference;
 
 public class ExpandedWidget extends ParentWidget<ExpandedWidget> {
 
     public static final UITexture RIGHT_BG = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(238, 0, 18, 256)
         .adaptable(4)
@@ -16,7 +16,7 @@ public class ExpandedWidget extends ParentWidget<ExpandedWidget> {
         .build();
 
     public static final UITexture LEFT_BG = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(128, 0, 18, 256)
         .adaptable(4)
@@ -24,7 +24,7 @@ public class ExpandedWidget extends ParentWidget<ExpandedWidget> {
         .build();
 
     public static final UITexture TOP_BG = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(128, 0, 128, 18)
         .adaptable(4)
@@ -32,7 +32,7 @@ public class ExpandedWidget extends ParentWidget<ExpandedWidget> {
         .build();
 
     public static final UITexture DOWN_BG = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(128, 238, 128, 18)
         .adaptable(4)

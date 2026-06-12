@@ -19,9 +19,9 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPart;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKey;
@@ -69,7 +69,7 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
     }
 
     public static final UITexture INFO_BG = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/part_reader")
+        .location(Reference.MOD_ID, "gui/ids/part_reader")
         .imageSize(256, 256)
         .xy(8, 17, 162, 36)
         .adaptable(1)

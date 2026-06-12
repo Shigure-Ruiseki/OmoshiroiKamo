@@ -17,6 +17,7 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.api.modular.ModularTier;
@@ -25,7 +26,6 @@ import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierConfigLoader;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
@@ -121,7 +121,7 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
         // so we don't register standard icons via super.
         // Instead, we register tier-based base textures for use in JSON models
         for (int i = 0; i < TIERS; i++) {
-            tierIcons[i] = reg.registerIcon(LibResources.PREFIX_MOD + "modular/tier_" + i + "_base");
+            tierIcons[i] = reg.registerIcon(Reference.PREFIX_MOD + "modular/tier_" + i + "_base");
         }
     }
 

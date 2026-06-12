@@ -2,8 +2,8 @@ package ruiseki.omoshiroikamo.module.ids.common.item.logic.key;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypes;
 
@@ -120,7 +120,7 @@ public class LogicKeys {
                 String typeFolder = type.getId();
                 IconRegistry.addIcon(
                     "logickey." + id,
-                    register.registerIcon(LibResources.PREFIX_MOD + "ids/logickey/" + typeFolder + "/" + texture));
+                    register.registerIcon(Reference.PREFIX_MOD + "ids/logickey/" + typeFolder + "/" + texture));
             }
         });
     }

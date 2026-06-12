@@ -9,9 +9,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssentiaInputPortME;
 
@@ -41,9 +41,9 @@ public class BlockEssentiaInputPortME extends AbstractPortBlock<TEEssentiaInputP
     public void registerPortOverlays(IIconRegister reg) {
         IconRegistry.addIcon(
             "overlay_essentiainput_me",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_essentiainput_me"));
+            reg.registerIcon(Reference.PREFIX_MOD + "modularmachineryOverlay/overlay_essentiainput_me"));
         IconRegistry
-            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+            .addIcon("overlay_port_disabled", reg.registerIcon(Reference.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

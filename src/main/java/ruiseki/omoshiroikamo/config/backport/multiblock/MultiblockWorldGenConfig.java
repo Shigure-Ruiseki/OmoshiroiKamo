@@ -2,28 +2,27 @@ package ruiseki.omoshiroikamo.config.backport.multiblock;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Main MultiBlock WorldGen Settings")
-@Config.LangKey(LibResources.CONFIG + "eTWorldGenConfig")
+@Config.LangKey(Reference.CONFIG + "eTWorldGenConfig")
 @Config(
-    modid = LibMisc.MOD_ID,
+    modid = Reference.MOD_ID,
     category = "worldGen",
-    configSubDirectory = LibMisc.MOD_ID + "/multiblock",
+    configSubDirectory = Reference.MOD_ID + "/multiblock",
     filename = "worldgen")
 public class MultiblockWorldGenConfig {
 
     @Config.Comment("Hardened Stone generation settings")
-    @Config.LangKey(LibResources.CONFIG + "hardenedStoneGen")
+    @Config.LangKey(Reference.CONFIG + "hardenedStoneGen")
     public static final StoneGenSettings hardenedStone = new StoneGenSettings(true, 15, 6, 0, 6);
 
     @Config.Comment("Alabaster generation settings")
-    @Config.LangKey(LibResources.CONFIG + "alabasterGen")
+    @Config.LangKey(Reference.CONFIG + "alabasterGen")
     public static final StoneGenSettings alabaster = new StoneGenSettings(true, 30, 22, 40, 200);
 
     @Config.Comment("Basalt generation settings")
-    @Config.LangKey(LibResources.CONFIG + "basaltGen")
+    @Config.LangKey(Reference.CONFIG + "basaltGen")
     public static final StoneGenSettings basalt = new StoneGenSettings(true, 28, 14, 8, 32);
 
     public static class StoneGenSettings {

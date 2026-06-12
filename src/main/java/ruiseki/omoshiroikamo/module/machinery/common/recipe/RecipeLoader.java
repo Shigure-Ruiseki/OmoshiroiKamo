@@ -9,11 +9,11 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class RecipeLoader {
 
@@ -74,7 +74,7 @@ public class RecipeLoader {
         JsonErrorCollector.getInstance()
             .clear();
         JsonErrorCollector.getInstance()
-            .setConfigDir(new File(configDir, LibMisc.MOD_ID));
+            .setConfigDir(new File(configDir, Reference.MOD_ID));
 
         Logger.info("Reloading recipes...");
         recipeVersion++;
@@ -140,7 +140,7 @@ public class RecipeLoader {
      */
     public static List<String> scanGroupNames(File configDir) {
         RecipeLoader instance = getInstance();
-        File recipesDir = new File(configDir, LibMisc.MOD_ID + "/modular/recipes");
+        File recipesDir = new File(configDir, Reference.MOD_ID + "/modular/recipes");
 
         if (instance.reader == null || !instance.reader.getPath()
             .equals(recipesDir)) {

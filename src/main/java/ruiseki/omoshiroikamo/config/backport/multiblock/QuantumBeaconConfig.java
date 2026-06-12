@@ -2,32 +2,31 @@ package ruiseki.omoshiroikamo.config.backport.multiblock;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Quantum Beacon Settings")
-@Config.LangKey(LibResources.CONFIG + "quantumBeaconConfig")
+@Config.LangKey(Reference.CONFIG + "quantumBeaconConfig")
 @Config(
-    modid = LibMisc.MOD_ID,
+    modid = Reference.MOD_ID,
     category = "beacon",
-    configSubDirectory = LibMisc.MOD_ID + "/multiblock",
+    configSubDirectory = Reference.MOD_ID + "/multiblock",
     filename = "beacon")
 public class QuantumBeaconConfig {
 
     @Config.Comment("General beacon settings")
-    @Config.LangKey(LibResources.CONFIG + "beaconGeneral")
+    @Config.LangKey(Reference.CONFIG + "beaconGeneral")
     public static final GeneralSettings general = new GeneralSettings();
 
     @Config.Comment("Energy cost per modifier effect (RF/t)")
-    @Config.LangKey(LibResources.CONFIG + "modifierEnergyCost")
+    @Config.LangKey(Reference.CONFIG + "modifierEnergyCost")
     public static final ModifierEnergyCost modifierEnergyCost = new ModifierEnergyCost();
 
     @Config.Comment("Effect levels per tier")
-    @Config.LangKey(LibResources.CONFIG + "beaconEffectLevels")
+    @Config.LangKey(Reference.CONFIG + "beaconEffectLevels")
     public static final EffectLevels effectLevels = new EffectLevels();
 
     @Config.Comment("Effect range per tier")
-    @Config.LangKey(LibResources.CONFIG + "beaconRange")
+    @Config.LangKey(Reference.CONFIG + "beaconRange")
     public static final RangeSettings rangeSettings = new RangeSettings();
 
     public static class GeneralSettings {

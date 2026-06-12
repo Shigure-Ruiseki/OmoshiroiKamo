@@ -12,12 +12,12 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
@@ -33,18 +33,16 @@ public class ItemVariableCard extends ItemOK {
 
     @Override
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "ids/variable");
+        itemIcon = register.registerIcon(Reference.PREFIX_MOD + "ids/variable");
 
-        IconRegistry.addIcon("valuetype.any", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/any"));
-        IconRegistry.addIcon("valuetype.named", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/named"));
+        IconRegistry.addIcon("valuetype.any", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/any"));
+        IconRegistry.addIcon("valuetype.named", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/named"));
         IconRegistry
-            .addIcon("valuetype.nullable", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/nullable"));
+            .addIcon("valuetype.nullable", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/nullable"));
+        IconRegistry.addIcon("valuetype.number", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/number"));
+        IconRegistry.addIcon("valuetype.object", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/object"));
         IconRegistry
-            .addIcon("valuetype.number", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/number"));
-        IconRegistry
-            .addIcon("valuetype.object", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/object"));
-        IconRegistry
-            .addIcon("valuetype.operator", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/operator"));
+            .addIcon("valuetype.operator", register.registerIcon(Reference.PREFIX_MOD + "ids/valuetype/operator"));
 
         LogicTypeRegistry.registerIcons(register);
         LogicKeyRegistry.registerIcons(register);

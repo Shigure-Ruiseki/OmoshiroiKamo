@@ -7,10 +7,9 @@ import java.util.List;
 
 import cpw.mods.fml.common.Loader;
 import lombok.Getter;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLBaseModelReader;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLBaseModelWriter;
 
@@ -53,7 +52,7 @@ public abstract class BaseModelHandler {
         }
         Logger.info("Loading {} models...", modName);
 
-        File configFile = new File("config/" + LibMisc.MOD_ID + "/dml/" + configFileName);
+        File configFile = new File("config/" + Reference.MOD_ID + "/dml/" + configFileName);
         DMLBaseModelReader reader = new DMLBaseModelReader(configFile);
 
         if (!configFile.exists()) {
@@ -93,7 +92,7 @@ public abstract class BaseModelHandler {
         ModelRegistryItem item = new ModelRegistryItem(
             finalID,
             displayName,
-            LibResources.PREFIX_MOD + "dml/model/" + this.texturesLocation + texture,
+            Reference.PREFIX_MOD + "dml/model/" + this.texturesLocation + texture,
             entityDisplay,
             numberOfHearts,
             interfaceScale,
@@ -102,7 +101,7 @@ public abstract class BaseModelHandler {
             mobTrivia);
 
         item.setPristineTexture(
-            LibResources.PREFIX_MOD + "dml/pristine/" + this.texturesLocation + "pristine_matter_" + texture);
+            Reference.PREFIX_MOD + "dml/pristine/" + this.texturesLocation + "pristine_matter_" + texture);
 
         return item;
     }

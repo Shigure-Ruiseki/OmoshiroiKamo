@@ -8,9 +8,9 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class DMLBaseModelReader extends AbstractJsonReader<List<ModelRegistryItem>> {
 
@@ -41,19 +41,19 @@ public class DMLBaseModelReader extends AbstractJsonReader<List<ModelRegistryIte
         // Texture normalization
         if (model.getTexture() == null) {
             model.setTexture(
-                LibResources.PREFIX_MOD + "dml/model/base/"
+                Reference.PREFIX_MOD + "dml/model/base/"
                     + model.getDisplayName()
                         .toLowerCase());
         } else if (!model.getTexture()
             .contains(":")) {
-                model.setTexture(LibResources.PREFIX_MOD + model.getTexture());
+                model.setTexture(Reference.PREFIX_MOD + model.getTexture());
             }
 
         if (model.getPristineTexture() == null) {
             model.setPristineTexture(model.getTexture() + "_pristine");
         } else if (!model.getPristineTexture()
             .contains(":")) {
-                model.setPristineTexture(LibResources.PREFIX_MOD + model.getPristineTexture());
+                model.setPristineTexture(Reference.PREFIX_MOD + model.getPristineTexture());
             }
     }
 

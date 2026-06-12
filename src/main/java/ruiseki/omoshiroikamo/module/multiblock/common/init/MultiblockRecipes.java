@@ -10,7 +10,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.base.BlockCrystal;
 
 public class MultiblockRecipes {

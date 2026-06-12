@@ -40,11 +40,10 @@ import ruiseki.omoshiroikamo.core.event.MemoryEventHandler;
 import ruiseki.omoshiroikamo.core.event.UpdateNotificationHandler;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.integration.LibMods;
 import ruiseki.omoshiroikamo.core.integration.nei.NEIConfig;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.core.update.UpdateChecker;
 import ruiseki.omoshiroikamo.module.chickens.ChickensModule;
@@ -64,11 +63,11 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockItems;
 
 @Mod(
-    modid = LibMisc.MOD_ID,
-    name = LibMisc.MOD_NAME,
-    version = LibMisc.VERSION,
-    dependencies = LibMisc.DEPENDENCIES,
-    guiFactory = LibMisc.GUI_FACTORY)
+    modid = Reference.MOD_ID,
+    name = Reference.MOD_NAME,
+    version = Reference.VERSION,
+    dependencies = Reference.DEPENDENCIES,
+    guiFactory = Reference.GUI_FACTORY)
 public class OmoshiroiKamo extends ModBase {
 
     static {
@@ -79,15 +78,15 @@ public class OmoshiroiKamo extends ModBase {
         }
     }
 
-    @SidedProxy(serverSide = LibMisc.PROXY_COMMON, clientSide = LibMisc.PROXY_CLIENT)
+    @SidedProxy(serverSide = Reference.PROXY_COMMON, clientSide = Reference.PROXY_CLIENT)
     public static ICommonProxy proxy;
 
-    @Instance(LibMisc.MOD_ID)
+    @Instance(Reference.MOD_ID)
     public static OmoshiroiKamo instance;
 
     public OmoshiroiKamo() {
-        super(LibMisc.MOD_ID, LibMisc.MOD_NAME);
-        putGenericReference(REFKEY_MOD_VERSION, LibMisc.VERSION);
+        super(Reference.MOD_ID, Reference.MOD_NAME);
+        putGenericReference(REFKEY_MOD_VERSION, Reference.VERSION);
     }
 
     @EventHandler
@@ -116,7 +115,7 @@ public class OmoshiroiKamo extends ModBase {
         super.preInit(event);
         MemoryEventHandler.INSTANCE.register();
         if (MinecraftHelpers.isClientSide()) {
-            ModelRegistry.registerModid(LibMisc.MOD_ID);
+            ModelRegistry.registerModid(Reference.MOD_ID);
             if (LibMods.NotEnoughItems.isLoaded()) {
                 NEIConfig config = new NEIConfig();
                 MinecraftForge.EVENT_BUS.register(config);
@@ -143,7 +142,8 @@ public class OmoshiroiKamo extends ModBase {
         super.postInit(event);
         StructureCompat.postInit();
         if (MinecraftHelpers.isClientSide()) {
-            TextureLoader.loadFromConfig(LibMisc.MOD_ID, LibMisc.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
+            TextureLoader
+                .loadFromConfig(Reference.MOD_ID, Reference.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
             UpdateChecker.checkUpdates();
         }
     }

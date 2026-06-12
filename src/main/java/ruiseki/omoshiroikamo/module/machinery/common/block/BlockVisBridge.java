@@ -10,9 +10,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.TileVisBridge;
 
 /**
@@ -30,7 +30,7 @@ public class BlockVisBridge extends BlockOK {
         setHarvestLevel("pickaxe", 0);
         // setCreativeTab(LibMisc.MACHINERY_TAB);
         // Use base port texture for now
-        setBlockTextureName(LibMisc.MOD_ID + ":modularmachineryOverlay/base_modularports");
+        setBlockTextureName(Reference.MOD_ID + ":modularmachineryOverlay/base_modularports");
     }
 
     public static BlockVisBridge create() {

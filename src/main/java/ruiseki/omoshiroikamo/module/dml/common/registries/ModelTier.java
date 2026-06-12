@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLModelTierReader;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLModelTierWriter;
 
@@ -20,7 +20,7 @@ public class ModelTier {
     }
 
     public List<ModelTierRegistryItem> tryRegisterTiers() {
-        File configFile = new File("config/" + LibMisc.MOD_ID + "/dml/" + configFileName);
+        File configFile = new File("config/" + Reference.MOD_ID + "/dml/" + configFileName);
         DMLModelTierReader reader = new DMLModelTierReader(configFile);
 
         if (!configFile.exists()) {
