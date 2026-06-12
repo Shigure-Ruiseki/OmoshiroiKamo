@@ -23,7 +23,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
 public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
@@ -84,7 +84,7 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
 
     @Override
     public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
-        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+        return new ModularScreen(Reference.MOD_ID, mainPanel);
     }
 
     @Override

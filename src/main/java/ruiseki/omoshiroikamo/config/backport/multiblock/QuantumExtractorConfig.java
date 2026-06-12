@@ -2,15 +2,15 @@ package ruiseki.omoshiroikamo.config.backport.multiblock;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Main Quantum Extractor Settings")
 @Config.LangKey(LibResources.CONFIG + "quantumExtractorConfig")
 @Config(
-    modid = LibMisc.MOD_ID,
+    modid = Reference.MOD_ID,
     category = "extractor",
-    configSubDirectory = LibMisc.MOD_ID + "/multiblock",
+    configSubDirectory = Reference.MOD_ID + "/multiblock",
     filename = "extractor")
 public class QuantumExtractorConfig {
 

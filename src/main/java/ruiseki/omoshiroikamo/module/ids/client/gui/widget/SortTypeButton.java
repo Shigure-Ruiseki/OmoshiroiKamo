@@ -9,24 +9,24 @@ import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class SortTypeButton extends CyclicVariantButtonWidget {
 
     public static final UITexture NAME_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/terminal_icons")
+        .location(Reference.MOD_ID, "gui/ids/terminal_icons")
         .imageSize(256, 256)
         .xy(18, 18, 18, 18)
         .build();
 
     public static final UITexture ID_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/terminal_icons")
+        .location(Reference.MOD_ID, "gui/ids/terminal_icons")
         .imageSize(256, 256)
         .xy(0, 18, 18, 18)
         .build();
 
     public static final UITexture COUNT_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/terminal_icons")
+        .location(Reference.MOD_ID, "gui/ids/terminal_icons")
         .imageSize(256, 256)
         .xy(36, 18, 18, 18)
         .build();
@@ -36,7 +36,7 @@ public class SortTypeButton extends CyclicVariantButtonWidget {
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.sort_type.by_mod_id"), ID_SORT),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.sort_type.by_count"), COUNT_SORT));
 
-    public SortTypeButton(EnumSyncValue<SortType> syncValue) {
+    public SortTypeButton(EnumSyncValue<SortType, ?> syncValue) {
         super(
             VARIANTS,
             syncValue.getValue()

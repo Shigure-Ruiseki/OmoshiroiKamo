@@ -22,7 +22,7 @@ import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.util.SlotDefinition;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
@@ -97,7 +97,7 @@ public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<Po
 
     @Override
     public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
-        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+        return new ModularScreen(Reference.MOD_ID, mainPanel);
     }
 
     @Override

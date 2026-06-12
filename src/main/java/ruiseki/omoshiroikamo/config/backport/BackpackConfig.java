@@ -2,15 +2,15 @@ package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Main Backpack Settings")
 @Config.LangKey(LibResources.CONFIG + "backpackConfig")
 @Config(
-    modid = LibMisc.MOD_ID,
+    modid = Reference.MOD_ID,
     category = "backpack",
-    configSubDirectory = LibMisc.MOD_ID + "/backpack",
+    configSubDirectory = Reference.MOD_ID + "/backpack",
     filename = "backpack")
 public class BackpackConfig {
 

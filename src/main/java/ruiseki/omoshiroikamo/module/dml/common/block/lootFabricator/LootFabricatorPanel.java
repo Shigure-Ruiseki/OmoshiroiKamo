@@ -21,7 +21,6 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
-import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.FloatSyncValue;
@@ -43,14 +42,14 @@ import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.MathHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeWidget;
 
 public class LootFabricatorPanel extends ModularPanel {
 
     public static final AdaptableUITexture BASE_TEXTURE = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/loot_fabricator")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/loot_fabricator")
         .imageSize(256, 256)
         .xy(0, 0, 177, 83)
         .adaptable(4)
@@ -58,7 +57,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture ENERGY_BAR = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/loot_fabricator")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/loot_fabricator")
         .imageSize(256, 256)
         .xy(0, 83, 7, 71)
         .adaptable(1)
@@ -66,7 +65,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture PROGRESS_BAR = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/loot_fabricator")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/loot_fabricator")
         .imageSize(256, 256)
         .xy(7, 83, 6, 35)
         .adaptable(1)
@@ -74,7 +73,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture ERROR_BAR = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/loot_fabricator")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/loot_fabricator")
         .imageSize(256, 256)
         .xy(13, 83, 6, 35)
         .adaptable(1)
@@ -82,7 +81,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture LEFT_BUTTON = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_page_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_page_select")
         .imageSize(256, 256)
         .xy(0, 12, 31, 12)
         .adaptable(1)
@@ -90,7 +89,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture RIGHT_BUTTON = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_page_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_page_select")
         .imageSize(256, 256)
         .xy(31, 12, 31, 12)
         .adaptable(1)
@@ -98,7 +97,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture HOVER_LEFT_BUTTON = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_page_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_page_select")
         .imageSize(256, 256)
         .xy(0, 24, 31, 12)
         .adaptable(1)
@@ -106,7 +105,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture HOVER_RIGHT_BUTTON = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_page_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_page_select")
         .imageSize(256, 256)
         .xy(31, 24, 31, 12)
         .adaptable(1)
@@ -114,7 +113,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture BUTTON_SELECT = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_select")
         .imageSize(256, 256)
         .xy(18, 18, 18, 18)
         .adaptable(1)
@@ -122,7 +121,7 @@ public class LootFabricatorPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture HOVER_BUTTON_SELECT = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_select")
         .imageSize(256, 256)
         .xy(18, 36, 18, 18)
         .adaptable(1)
@@ -163,7 +162,7 @@ public class LootFabricatorPanel extends ModularPanel {
     private static final int ITEMS_PER_PAGE = 9;
     private static final int OUTPUT_SELECT_LIST_GUTTER = 1;
     private static final int OUTPUT_SELECT_BUTTON_SIZE = 18;
-    private final GenericSyncValue<ItemStack> outputSyncer;
+    private final GenericSyncValue<ItemStack, ?> outputSyncer;
 
     public LootFabricatorPanel(TELootFabricator tileEntity, PosGuiData data, PanelSyncManager syncManager,
         UISettings settings) {
@@ -183,13 +182,9 @@ public class LootFabricatorPanel extends ModularPanel {
         syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
         FloatSyncValue processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress);
         syncManager.syncValue("processSyncer", processSyncer);
-        outputSyncer = GenericSyncValue.builder(ItemStack.class)
-            .getter(tileEntity::getOutputItem)
-            .setter(tileEntity::setOutputItem)
-            .adapter(ByteBufAdapters.ITEM_STACK)
-            .build();
+        outputSyncer = GenericSyncValue.forItem(tileEntity::getOutputItem, tileEntity::setOutputItem);
         syncManager.syncValue("outputSyncer", outputSyncer);
-        EnumSyncValue<RedstoneMode> redstoneModeSyncer = new EnumSyncValue<>(
+        EnumSyncValue<RedstoneMode, ?> redstoneModeSyncer = new EnumSyncValue<>(
             RedstoneMode.class,
             tileEntity::getRedstoneMode,
             tileEntity::setRedstoneMode);

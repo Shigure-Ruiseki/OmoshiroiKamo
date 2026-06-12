@@ -48,7 +48,7 @@ import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartVis;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.RecipeLayoutPart;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.INEIPositionedRenderer;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedText;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
@@ -364,7 +364,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                         @Override
                         public void draw() {
                             Minecraft.getMinecraft().renderEngine
-                                .bindTexture(new ResourceLocation(LibMisc.MOD_ID, "textures/gui/icons.png"));
+                                .bindTexture(new ResourceLocation(Reference.MOD_ID, "textures/gui/icons.png"));
                             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                             // Assume blueprint icon at 0, 140 in icons.png
                             Gui.func_146110_a(blueprintRect.x, blueprintRect.y, 0, 140, 16, 16, 256.0f, 256.0f);
@@ -444,7 +444,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                 @Override
                 public void draw() {
                     Minecraft.getMinecraft().renderEngine
-                        .bindTexture(new ResourceLocation(LibMisc.MOD_ID, "textures/gui/icons.png"));
+                        .bindTexture(new ResourceLocation(Reference.MOD_ID, "textures/gui/icons.png"));
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                     Gui.func_146110_a(166 / 2 - 6, arrowY, 12, 156, 12, 12, 256.0f, 256.0f);
                 }

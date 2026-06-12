@@ -9,8 +9,8 @@ import cpw.mods.fml.common.Loader;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLBaseModelReader;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLBaseModelWriter;
 
@@ -53,7 +53,7 @@ public abstract class BaseModelHandler {
         }
         Logger.info("Loading {} models...", modName);
 
-        File configFile = new File("config/" + LibMisc.MOD_ID + "/dml/" + configFileName);
+        File configFile = new File("config/" + Reference.MOD_ID + "/dml/" + configFileName);
         DMLBaseModelReader reader = new DMLBaseModelReader(configFile);
 
         if (!configFile.exists()) {

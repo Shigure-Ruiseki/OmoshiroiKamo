@@ -10,8 +10,8 @@ import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.multiblock.common.registries.FocusableHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.registries.FocusableRegistry;
 
@@ -169,7 +169,7 @@ public class QuantumExtractorRecipes {
     }
 
     private static void loadOreConfig() {
-        File file = new File("config/" + LibMisc.MOD_ID + "/multiblock/oreList.json");
+        File file = new File("config/" + Reference.MOD_ID + "/multiblock/oreList.json");
 
         if (file.exists()) {
             cachedOreList = FocusableHandler.loadListFromJson(file);
@@ -185,7 +185,7 @@ public class QuantumExtractorRecipes {
     }
 
     private static void loadResConfig() {
-        File file = new File("config/" + LibMisc.MOD_ID + "/multiblock/resourceList.json");
+        File file = new File("config/" + Reference.MOD_ID + "/multiblock/resourceList.json");
 
         if (file.exists()) {
             cachedResList = FocusableHandler.loadListFromJson(file);

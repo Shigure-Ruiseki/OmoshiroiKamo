@@ -2,15 +2,15 @@ package ruiseki.omoshiroikamo.config.backport.multiblock;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Main Solar Array Settings")
 @Config.LangKey(LibResources.CONFIG + "solarArrayConfig")
 @Config(
-    modid = LibMisc.MOD_ID,
+    modid = Reference.MOD_ID,
     category = "solar",
-    configSubDirectory = LibMisc.MOD_ID + "/multiblock",
+    configSubDirectory = Reference.MOD_ID + "/multiblock",
     filename = "solararray")
 public class SolarArrayConfig {
 

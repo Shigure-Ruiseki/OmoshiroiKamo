@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import cpw.mods.fml.common.registry.GameData;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Manages dimension configuration for NEI display.
@@ -33,7 +33,7 @@ public class NEIDimensionConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
         .disableHtmlEscaping()
         .create();
-    private static final String CONFIG_PATH = "config/" + LibMisc.MOD_ID + "/multiblock/NEIdimensions.json";
+    private static final String CONFIG_PATH = "config/" + Reference.MOD_ID + "/multiblock/NEIdimensions.json";
 
     /** Special value for "Common" filter (dimensions == null only) */
     public static final int DIMENSION_COMMON = Integer.MIN_VALUE;
@@ -106,7 +106,7 @@ public class NEIDimensionConfig {
 
     /**
      * Get the dimension ID associated with a catalyst item from config.
-     * 
+     *
      * @param stack The catalyst item stack to check
      * @return The dimension ID, or DIMENSION_COMMON if no match found
      */

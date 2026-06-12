@@ -8,7 +8,7 @@ import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 
 import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class SortOrderButton extends CyclicVariantButtonWidget {
 
@@ -16,13 +16,13 @@ public class SortOrderButton extends CyclicVariantButtonWidget {
     private static final int DESC = 1;
 
     public static final UITexture ASC_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/terminal_icons")
+        .location(Reference.MOD_ID, "gui/ids/terminal_icons")
         .imageSize(256, 256)
         .xy(198, 36, 18, 18)
         .build();
 
     public static final UITexture DESC_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/terminal_icons")
+        .location(Reference.MOD_ID, "gui/ids/terminal_icons")
         .imageSize(256, 256)
         .xy(180, 36, 18, 18)
         .build();

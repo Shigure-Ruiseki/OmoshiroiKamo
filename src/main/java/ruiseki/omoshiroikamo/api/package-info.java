@@ -1,6 +1,6 @@
 
-@API(apiVersion = "1.0.0", owner = LibMisc.MOD_ID, provides = LibMisc.MOD_ID + "|core")
+@API(apiVersion = "1.0.0", owner = Reference.MOD_ID, provides = Reference.MOD_ID + "|core")
 package ruiseki.omoshiroikamo.api;
 
 import cpw.mods.fml.common.API;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;

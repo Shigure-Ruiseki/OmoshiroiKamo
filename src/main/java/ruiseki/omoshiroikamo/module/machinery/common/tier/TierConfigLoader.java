@@ -15,7 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Loads and manages tier display names from JSON config.
@@ -27,7 +27,7 @@ public class TierConfigLoader {
     public static final TierConfigLoader INSTANCE = new TierConfigLoader();
 
     private static final String DEFAULT_LOCALE = "en_US";
-    private static final String CONFIG_RELATIVE_PATH = LibMisc.MOD_ID + "/modular/tiers.json";
+    private static final String CONFIG_RELATIVE_PATH = Reference.MOD_ID + "/modular/tiers.json";
 
     // tierID -> locale -> displayName
     private final Map<Integer, Map<String, String>> tierNames = new HashMap<>();
@@ -119,9 +119,9 @@ public class TierConfigLoader {
             try (FileWriter writer = new FileWriter(file)) {
                 gson.toJson(root, writer);
             }
-            Logger.info("[{}] Generated default tier config: {}", LibMisc.MOD_ID, file.getPath());
+            Logger.info("[{}] Generated default tier config: {}", Reference.MOD_ID, file.getPath());
         } catch (IOException e) {
-            Logger.error("[{}] Failed to write default tier config: {}", LibMisc.MOD_ID, e.getMessage());
+            Logger.error("[{}] Failed to write default tier config: {}", Reference.MOD_ID, e.getMessage());
         }
     }
 
@@ -154,9 +154,9 @@ public class TierConfigLoader {
                 }
                 tierNames.put(id, locales);
             }
-            Logger.info("[{}] Loaded tier config: {} tiers", LibMisc.MOD_ID, tierNames.size());
+            Logger.info("[{}] Loaded tier config: {} tiers", Reference.MOD_ID, tierNames.size());
         } catch (Exception e) {
-            Logger.error("[{}] Failed to read tier config: {}", LibMisc.MOD_ID, e.getMessage());
+            Logger.error("[{}] Failed to read tier config: {}", Reference.MOD_ID, e.getMessage());
         }
     }
 }

@@ -4,12 +4,12 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Main Backport settings")
 @Config.LangKey(LibResources.CONFIG + "backportConfig")
-@Config(modid = LibMisc.MOD_ID, category = "backports", configSubDirectory = LibMisc.MOD_ID, filename = "backports")
+@Config(modid = Reference.MOD_ID, category = "backports", configSubDirectory = Reference.MOD_ID, filename = "backports")
 public class BackportConfigs {
 
     @Config.DefaultBoolean(true)

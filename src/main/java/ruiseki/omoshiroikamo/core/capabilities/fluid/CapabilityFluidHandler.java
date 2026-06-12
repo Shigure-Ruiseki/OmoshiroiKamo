@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.core.fluid.FluidHandlerItemStack;
 import ruiseki.omoshiroikamo.core.fluid.IFluidHandlerItem;
 import ruiseki.omoshiroikamo.core.fluid.SmartTank;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class CapabilityFluidHandler {
 
@@ -52,7 +52,7 @@ public class CapabilityFluidHandler {
             if (stack.getItem() instanceof IFluidContainerItem containerItem) {
                 int capacity = containerItem.getCapacity(stack);
                 event.addCapability(
-                    new ResourceLocation(LibMisc.MOD_ID, "fluid_handler"),
+                    new ResourceLocation(Reference.MOD_ID, "fluid_handler"),
                     new FluidHandlerItemStack(stack, capacity));
             }
         }

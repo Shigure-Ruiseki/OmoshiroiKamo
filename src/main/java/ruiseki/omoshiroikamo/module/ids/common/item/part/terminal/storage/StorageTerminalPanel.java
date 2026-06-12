@@ -40,7 +40,7 @@ import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.integration.nei.NEISearchField;
 import ruiseki.omoshiroikamo.core.item.CraftingFilter;
 import ruiseki.omoshiroikamo.core.item.ItemStackKey;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.CraftingSlotSH;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.IDsItemSlotSH;
@@ -210,7 +210,7 @@ public class StorageTerminalPanel extends ModularPanel {
     }
 
     private void buildLeftBar() {
-        EnumSyncValue<SortType> sortTypeSyncer = new EnumSyncValue<>(
+        EnumSyncValue<SortType, ?> sortTypeSyncer = new EnumSyncValue<>(
             SortType.class,
             terminal::getSortType,
             this::changeSortType);
@@ -222,7 +222,7 @@ public class StorageTerminalPanel extends ModularPanel {
         BooleanSyncValue syncNEISyncer = new BooleanSyncValue(terminal::getSyncNEI, terminal::setSyncNEI);
         syncManager.syncValue("syncNEI", syncNEISyncer);
 
-        EnumSyncValue<CraftingFilter> craftingSyncer = new EnumSyncValue<>(
+        EnumSyncValue<CraftingFilter, ?> craftingSyncer = new EnumSyncValue<>(
             CraftingFilter.class,
             terminal::getCraftingFilter,
             this::changeCraftingFilter);
@@ -410,35 +410,35 @@ public class StorageTerminalPanel extends ModularPanel {
     }
 
     private static final UITexture CLEAR = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/terminal_icons")
+        .location(Reference.MOD_ID, "gui/ids/terminal_icons")
         .imageSize(256, 256)
         .xy(0, 44, 8, 8)
         .adaptable(1)
         .build();
 
     private static final UITexture BTN = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/terminal_icons")
+        .location(Reference.MOD_ID, "gui/ids/terminal_icons")
         .imageSize(256, 256)
         .xy(0, 36, 8, 8)
         .adaptable(1)
         .build();
 
     private static final UITexture ARROW = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(47, 220, 24, 18)
         .adaptable(1)
         .build();
 
     private static final UITexture CRAFTING_SLOT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(71, 216, 26, 26)
         .adaptable(1)
         .build();
 
     public static final UITexture SYNC_NEI = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/terminal_icons")
+        .location(Reference.MOD_ID, "gui/ids/terminal_icons")
         .imageSize(256, 256)
         .xy(162, 36, 18, 18)
         .build();

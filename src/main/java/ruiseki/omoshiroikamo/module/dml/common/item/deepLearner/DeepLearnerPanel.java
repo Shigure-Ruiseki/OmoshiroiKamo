@@ -45,7 +45,7 @@ import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.dml.client.gui.container.DeepLearnerContainer;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
@@ -53,7 +53,7 @@ import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
 public class DeepLearnerPanel extends ModularPanel {
 
     public static final AdaptableUITexture BASE_TEXTURE = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/deep_learner")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/deep_learner")
         .imageSize(256, 256)
         .xy(0, 0, 256, 140)
         .adaptable(4)
@@ -61,7 +61,7 @@ public class DeepLearnerPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture EXTRA_TEXTURE = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/deep_learner")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/deep_learner")
         .imageSize(256, 256)
         .xy(0, 140, 75, 101)
         .adaptable(1)
@@ -69,7 +69,7 @@ public class DeepLearnerPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture LEFT_BUTTON = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_deep_learner_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_deep_learner_select")
         .imageSize(256, 256)
         .xy(0, 24, 24, 24)
         .adaptable(1)
@@ -77,7 +77,7 @@ public class DeepLearnerPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture RIGHT_BUTTON = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_deep_learner_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_deep_learner_select")
         .imageSize(256, 256)
         .xy(24, 24, 24, 24)
         .adaptable(1)
@@ -85,7 +85,7 @@ public class DeepLearnerPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture HOVER_LEFT_BUTTON = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_deep_learner_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_deep_learner_select")
         .imageSize(256, 256)
         .xy(0, 48, 24, 24)
         .adaptable(1)
@@ -93,7 +93,7 @@ public class DeepLearnerPanel extends ModularPanel {
         .build();
 
     public static final AdaptableUITexture HOVER_RIGHT_BUTTON = (AdaptableUITexture) UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_deep_learner_select")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/buttons/button_deep_learner_select")
         .imageSize(256, 256)
         .xy(24, 48, 24, 24)
         .adaptable(1)
@@ -101,13 +101,13 @@ public class DeepLearnerPanel extends ModularPanel {
         .build();
 
     public static final UITexture DEEP_LEARNER_SLOT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/deep_learner")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/deep_learner")
         .imageSize(256, 256)
         .xy(215, 99, 18, 18)
         .build();
 
     public static final UITexture HEART = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/deepMobLearning/deep_learner")
+        .location(Reference.MOD_ID, "gui/deepMobLearning/deep_learner")
         .imageSize(256, 256)
         .xy(75, 140, 9, 9)
         .build();

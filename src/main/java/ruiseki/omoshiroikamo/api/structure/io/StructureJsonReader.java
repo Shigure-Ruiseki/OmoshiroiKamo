@@ -31,7 +31,7 @@ import ruiseki.omoshiroikamo.core.common.structure.migration.StructureMigrationR
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
 import ruiseki.omoshiroikamo.core.json.ParsingContext;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Reader that parses JSON into IStructureEntry.
@@ -82,7 +82,7 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
             JsonElement root = new JsonParser().parse(reader);
 
             // Apply migrations
-            fileData.dirty = StructureMigrationRegistry.migrate(root, LibMisc.VERSION);
+            fileData.dirty = StructureMigrationRegistry.migrate(root, Reference.VERSION);
 
             // Directly use the existing readFile method which handles
             // both Object and Array formats.
@@ -105,7 +105,7 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
         try {
             JsonElement root = readJsonElement(file);
             if (root == null) return null;
-            boolean migrationApplied = StructureMigrationRegistry.migrate(root, LibMisc.VERSION);
+            boolean migrationApplied = StructureMigrationRegistry.migrate(root, Reference.VERSION);
             FileData data = readFile(root, file);
             if (data != null && migrationApplied) {
                 data.dirty = true;

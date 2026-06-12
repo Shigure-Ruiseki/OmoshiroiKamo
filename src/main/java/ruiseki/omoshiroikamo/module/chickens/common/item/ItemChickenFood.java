@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class ItemChickenFood extends ItemOK {
 
@@ -51,7 +51,7 @@ public class ItemChickenFood extends ItemOK {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister reg) {
-        this.itemIcon = reg.registerIcon(LibMisc.MOD_ID + ":chicken/chicken_food");
+        this.itemIcon = reg.registerIcon(Reference.MOD_ID + ":chicken/chicken_food");
     }
 
     @Override

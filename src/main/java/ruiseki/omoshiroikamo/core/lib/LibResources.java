@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.core.lib;
 
 public class LibResources {
 
-    public static final String PREFIX_MOD = LibMisc.MOD_ID + ":";
+    public static final String PREFIX_MOD = Reference.MOD_ID + ":";
 
     public static final String PREFIX_GUI = PREFIX_MOD + "textures/gui/";
     public static final String PREFIX_BLOCK = PREFIX_MOD + "textures/blocks/";
@@ -10,7 +10,7 @@ public class LibResources {
     public static final String PREFIX_MODEL = PREFIX_MOD + "models/";
     public static final String CONFIG = "config.";
     public static final String TOOLTIP = "tooltip.";
-    public static final String ACHIEVEMENT = "achievement." + LibMisc.MOD_ID + ".";
+    public static final String ACHIEVEMENT = "achievement." + Reference.MOD_ID + ".";
 
     public static final String GUI_NEI_BLANK = PREFIX_GUI + "nei/neiBlank.png";
     public static final String GUI_CHICKEN_LAYING = PREFIX_GUI + "nei/chicken/laying.png";

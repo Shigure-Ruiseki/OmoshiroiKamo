@@ -2,15 +2,15 @@ package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Modular Machinery settings")
 @Config.LangKey(LibResources.CONFIG + "modularConfig")
 @Config(
-    modid = LibMisc.MOD_ID,
+    modid = Reference.MOD_ID,
     category = "Modular",
-    configSubDirectory = LibMisc.MOD_ID + "/modular",
+    configSubDirectory = Reference.MOD_ID + "/modular",
     filename = "modular")
 public class MachineryConfig {
 

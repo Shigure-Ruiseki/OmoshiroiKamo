@@ -29,7 +29,7 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.BaseVariableWidget;
 import ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.EmptyVariable;
@@ -129,7 +129,7 @@ public class ProgrammerPanel extends ModularPanel {
     }
 
     private static final UITexture LIST_ITEM_BG = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/ids/logic_programmer")
+        .location(Reference.MOD_ID, "gui/ids/logic_programmer")
         .imageSize(256, 256)
         .xy(18, 17, 58, 18)
         .adaptable(1)

@@ -4,15 +4,15 @@ import net.minecraft.util.MathHelper;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Main Chicken Settings")
 @Config.LangKey(LibResources.CONFIG + "chickenConfig")
 @Config(
-    modid = LibMisc.MOD_ID,
+    modid = Reference.MOD_ID,
     category = "chicken",
-    configSubDirectory = LibMisc.MOD_ID + "/chicken",
+    configSubDirectory = Reference.MOD_ID + "/chicken",
     filename = "chicken")
 public class ChickenConfig {
 

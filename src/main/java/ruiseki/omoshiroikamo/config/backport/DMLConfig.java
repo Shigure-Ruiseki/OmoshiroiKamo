@@ -2,12 +2,12 @@ package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Main Deep Mob Learning Settings")
 @Config.LangKey(LibResources.CONFIG + "deepMobLearningConfig")
-@Config(modid = LibMisc.MOD_ID, category = "dml", configSubDirectory = LibMisc.MOD_ID + "/dml", filename = "dml")
+@Config(modid = Reference.MOD_ID, category = "dml", configSubDirectory = Reference.MOD_ID + "/dml", filename = "dml")
 public class DMLConfig {
 
     @Config.DefaultBoolean(false)

@@ -12,7 +12,7 @@ import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.widget.Widget;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class IDsScrollBar extends Widget<IDsScrollBar> implements Interactable {
 
@@ -21,7 +21,7 @@ public class IDsScrollBar extends Widget<IDsScrollBar> implements Interactable {
     private static final int TRACK_PADDING = 1;
 
     public static final UITexture SCROLL = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(29, 131, 12, 15)
         .adaptable(1)
@@ -30,7 +30,7 @@ public class IDsScrollBar extends Widget<IDsScrollBar> implements Interactable {
         .build();
 
     public static final UITexture DISABLE_SCROLL = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(41, 131, 12, 15)
         .adaptable(1)
@@ -39,7 +39,7 @@ public class IDsScrollBar extends Widget<IDsScrollBar> implements Interactable {
         .build();
 
     public static final UITexture SCROLL_BG = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .location(Reference.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(96, 146, 14, 56)
         .adaptable(1)

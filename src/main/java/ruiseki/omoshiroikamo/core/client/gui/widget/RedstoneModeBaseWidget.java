@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 public class RedstoneModeBaseWidget extends CyclicVariantButtonWidget {
 
     public RedstoneModeBaseWidget(List<Variant> variants, int iconOffset, int iconSize,
-        EnumSyncValue<RedstoneMode> syncValue) {
+        EnumSyncValue<RedstoneMode, ?> syncValue) {
         super(
             variants,
             syncValue.getValue()

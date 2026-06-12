@@ -2,15 +2,15 @@ package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Main Storage Settings")
 @Config.LangKey(LibResources.CONFIG + "storageConfig")
 @Config(
-    modid = LibMisc.MOD_ID,
+    modid = Reference.MOD_ID,
     category = "storage",
-    configSubDirectory = LibMisc.MOD_ID + "/storage",
+    configSubDirectory = Reference.MOD_ID + "/storage",
     filename = "storage")
 public class StorageConfig {
 

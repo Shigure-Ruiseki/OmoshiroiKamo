@@ -12,7 +12,7 @@ import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.core.common.util.VersionComparator;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonWriter;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Writer that serializes IStructureEntry objects to JSON files.
@@ -105,7 +105,7 @@ public class StructureJsonWriter extends AbstractJsonWriter<IStructureEntry> {
         }
 
         // Add all structure entries, stamping modVersion so migration is not re-applied
-        String baseVersion = VersionComparator.toBaseVersion(LibMisc.VERSION);
+        String baseVersion = VersionComparator.toBaseVersion(Reference.VERSION);
         for (IStructureEntry structure : structures) {
             JsonObject structureJson = structure.serialize();
             structureJson.addProperty("modVersion", baseVersion);

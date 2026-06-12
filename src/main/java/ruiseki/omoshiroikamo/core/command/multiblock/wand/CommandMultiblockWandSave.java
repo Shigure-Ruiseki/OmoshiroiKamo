@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.core.common.structure.StructureScanner;
 import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 public class CommandMultiblockWandSave extends CommandMod {
 
@@ -63,7 +63,7 @@ public class CommandMultiblockWandSave extends CommandMod {
             FMLCommonHandler.instance()
                 .getMinecraftServerInstance()
                 .getFile("."),
-            "config/" + LibMisc.MOD_ID);
+            "config/" + Reference.MOD_ID);
 
         StructureScanner.ScanResult result = StructureScanner.scan(
             player.worldObj,

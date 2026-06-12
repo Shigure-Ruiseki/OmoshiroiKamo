@@ -22,7 +22,7 @@ import ruiseki.omoshiroikamo.config.backport.DMLConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMachineTE;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPristineMatter;
@@ -170,7 +170,7 @@ public class TELootFabricator extends AbstractMachineTE
     @Override
     public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
 
-        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+        return new ModularScreen(Reference.MOD_ID, mainPanel);
     }
 
     @Override

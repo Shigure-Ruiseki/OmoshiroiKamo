@@ -4,12 +4,12 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 @Config.Comment("Main Block settings")
 @Config.LangKey(LibResources.CONFIG + "blockConfig")
-@Config(modid = LibMisc.MOD_ID, category = "general.blocks", configSubDirectory = LibMisc.MOD_ID)
+@Config(modid = Reference.MOD_ID, category = "general.blocks", configSubDirectory = Reference.MOD_ID)
 public class BlockConfigs {
 
     public static void registerConfig() throws ConfigException {

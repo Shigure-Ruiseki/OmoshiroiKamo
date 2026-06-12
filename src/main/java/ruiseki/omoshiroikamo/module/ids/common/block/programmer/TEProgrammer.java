@@ -11,7 +11,7 @@ import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 
@@ -34,7 +34,7 @@ public class TEProgrammer extends AbstractTE implements IGuiHolder<PosGuiData> {
     @Override
     public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
 
-        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+        return new ModularScreen(Reference.MOD_ID, mainPanel);
     }
 
     @Override

@@ -43,7 +43,7 @@ import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
 import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.datastructure.EnumFacingMap;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTickingTE;
 import ruiseki.omoshiroikamo.module.ids.common.capabilities.SidedDynamicLight;
@@ -679,7 +679,7 @@ public class TECable extends AbstractTickingTE
 
     @Override
     public ModularScreen createScreen(SidedPosGuiData data, ModularPanel mainPanel) {
-        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+        return new ModularScreen(Reference.MOD_ID, mainPanel);
     }
 
     @Override

@@ -20,7 +20,7 @@ import ruiseki.omoshiroikamo.api.structure.visitor.StructureValidationVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.Reference;
 
 /**
  * Main manager for the custom structure system.
@@ -67,7 +67,7 @@ public class StructureManager {
         if (initialized) return;
 
         try {
-            this.configDir = new File(minecraftDir, LibMisc.MOD_ID);
+            this.configDir = new File(minecraftDir, Reference.MOD_ID);
             if (!configDir.exists()) {
                 configDir.mkdirs();
             }
