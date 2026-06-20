@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.core.integration.nei.NEIConfig;
+import ruiseki.omoshiroikamo.integration.nei.NEIConfig;
 import ruiseki.omoshiroikamo.core.network.ExtendedBuffer;
 import ruiseki.omoshiroikamo.core.network.PacketCodec;
 

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.integration.nei;
+package ruiseki.omoshiroikamo.integration.nei;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
 import codechicken.nei.recipe.HandlerInfo;
+import ruiseki.omoshiroikamo.core.integration.nei.IRecipeHandlerBase;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
