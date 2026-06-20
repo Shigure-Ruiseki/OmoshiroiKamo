@@ -4,10 +4,10 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.recipe.core.AbstractRecipeProcess;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
-import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 
 /**
  * Visitor that handles the actual execution of a recipe.
@@ -24,12 +24,12 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
 
     private final Mode mode;
     private final List<IModularPort> ports;
-    private final ProcessAgent agent;
+    private final AbstractRecipeProcess agent;
     private final ConditionContext context;
     private int batchSize = 1;
     private boolean satisfied = true;
 
-    public RecipeExecutionVisitor(Mode mode, List<IModularPort> ports, ProcessAgent agent, ConditionContext context) {
+    public RecipeExecutionVisitor(Mode mode, List<IModularPort> ports, AbstractRecipeProcess agent, ConditionContext context) {
         this.mode = mode;
         this.ports = ports;
         this.agent = agent;
@@ -40,7 +40,7 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
         this.batchSize = batchSize;
     }
 
-    public ProcessAgent getAgent() {
+    public AbstractRecipeProcess getAgent() {
         return agent;
     }
 
