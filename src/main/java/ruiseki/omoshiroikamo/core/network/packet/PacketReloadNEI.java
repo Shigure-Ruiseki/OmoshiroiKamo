@@ -6,9 +6,9 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.integration.nei.NEIConfig;
 import ruiseki.omoshiroikamo.core.network.ExtendedBuffer;
 import ruiseki.omoshiroikamo.core.network.PacketCodec;
+import ruiseki.omoshiroikamo.integration.nei.NEIConfig;
 
 /**
  * Packet to trigger NEI recipe reload on the client side.
