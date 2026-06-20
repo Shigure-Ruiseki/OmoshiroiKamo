@@ -9,6 +9,7 @@ import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
@@ -27,7 +28,7 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
     public void construct(ItemStack triggerStack, boolean hintsOnly, TEMachineController ctx, ExtendedFacing facing) {
         String structureName = getStructureName(triggerStack, ctx);
 
-        IStructureDefinition<TEMachineController> def = getStructureDefinition(structureName, ctx);
+        IStructureDefinition<IMachineController> def = getStructureDefinition(structureName, ctx);
         if (def == null) {
             notifyStructureNotFound(ctx, structureName);
             return;
@@ -61,7 +62,7 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
         TEMachineController ctx, ExtendedFacing facing) {
         String structureName = getStructureName(triggerStack, ctx);
 
-        IStructureDefinition<TEMachineController> def = getStructureDefinition(structureName, ctx);
+        IStructureDefinition<IMachineController> def = getStructureDefinition(structureName, ctx);
         if (def == null) {
             notifyStructureNotFound(ctx, structureName);
             return 0;
@@ -157,10 +158,10 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
     /**
      * Get the structure definition for the given structure name.
      */
-    private IStructureDefinition<TEMachineController> getStructureDefinition(String structureName,
+    private IStructureDefinition<IMachineController> getStructureDefinition(String structureName,
         TEMachineController ctx) {
         if (structureName != null && !structureName.isEmpty()) {
-            IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(structureName);
+            IStructureDefinition<IMachineController> def = CustomStructureRegistry.getDefinition(structureName);
             if (def != null) {
                 return def;
             }

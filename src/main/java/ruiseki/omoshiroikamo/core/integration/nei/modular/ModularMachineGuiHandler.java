@@ -18,6 +18,7 @@ import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 import blockrenderer6343.api.utils.CreativeItemSource;
 import blockrenderer6343.client.utils.ConstructableData;
 import blockrenderer6343.integration.nei.GuiMultiblockHandler;
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.visitor.StructureValidationVisitor;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
@@ -78,7 +79,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         StructureTintCache.clearDimension(Integer.MAX_VALUE);
 
         String structureName = currentStructure.getStructureName();
-        IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(structureName);
+        IStructureDefinition<IMachineController> def = CustomStructureRegistry.getDefinition(structureName);
 
         if (def == null) {
             def = currentStructure.getDefinition();

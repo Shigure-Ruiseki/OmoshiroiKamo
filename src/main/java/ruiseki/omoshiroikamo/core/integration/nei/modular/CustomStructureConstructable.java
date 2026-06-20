@@ -11,7 +11,7 @@ import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 
 /**
  * IConstructable implementation for each custom structure.
@@ -20,11 +20,11 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 public class CustomStructureConstructable implements ISurvivalConstructable {
 
     private final String structureName;
-    private final IStructureDefinition<TEMachineController> definition;
+    private final IStructureDefinition<IMachineController> definition;
     private final int[] offset;
     private final Map<String, Integer> componentTiers = new HashMap<>();
 
-    public CustomStructureConstructable(String name, IStructureDefinition<TEMachineController> def, int[] offset) {
+    public CustomStructureConstructable(String name, IStructureDefinition<IMachineController> def, int[] offset) {
         this.structureName = name;
         this.definition = def;
         this.offset = offset != null ? offset : new int[] { 0, 0, 0 };
@@ -34,7 +34,7 @@ public class CustomStructureConstructable implements ISurvivalConstructable {
         return structureName;
     }
 
-    public IStructureDefinition<TEMachineController> getDefinition() {
+    public IStructureDefinition<IMachineController> getDefinition() {
         return definition;
     }
 

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -20,24 +21,34 @@ import com.gtnewhorizon.structurelib.structure.IStructureElement;
 import com.gtnewhorizon.structurelib.structure.IStructureElementChain;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
-import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 /**
- * Registers CustomStructures with StructureLib using the new IStructureEntry
- * API.
+ * Registers CustomStructures with StructureLib using the new IStructureEntry API.
  */
 public class CustomStructureRegistry {
 
-    private static final Map<String, IStructureDefinition<TEMachineController>> structureDefinitions = new HashMap<>();
+    private static final Map<String, IStructureDefinition<IMachineController>> structureDefinitions = new HashMap<>();
     private static final Map<String, int[]> controllerOffsets = new HashMap<>();
+
+    // Registered by MachineryModule.preInit()
+    private static Block controllerBlock = null;
+    // Registered by MultiBlockModule (or any module providing a default structure block)
+    private static Block defaultStructureBlock = null;
+
+    public static void registerControllerBlock(Block block) {
+        controllerBlock = block;
+    }
+
+    public static void registerDefaultStructureBlock(Block block) {
+        defaultStructureBlock = block;
+    }
 
     public static void registerAll() {
         structureDefinitions.clear();
@@ -93,14 +104,25 @@ public class CustomStructureRegistry {
             int[] offset = findControllerOffset(processedShape);
             controllerOffsets.put(entry.getName(), offset);
 
-            StructureDefinition.Builder<TEMachineController> builder = StructureDefinition.builder();
+            StructureDefinition.Builder<IMachineController> builder = StructureDefinition.builder();
             builder.addShape(entry.getName(), transpose(processedShape));
-            builder.addElement('Q', ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0));
+
+            if (controllerBlock == null) {
+                Logger.warn(
+                    "CustomStructureRegistry: no controller block registered — call registerControllerBlock() in preInit");
+            } else {
+                builder.addElement('Q', ofBlock(controllerBlock, 0));
+            }
             builder.addElement('_', isAir());
 
             if (!entry.getMappings()
                 .containsKey('F')) {
-                builder.addElement('F', wrapTracking('F', ofBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock(), 0)));
+                if (defaultStructureBlock == null) {
+                    Logger.warn(
+                        "CustomStructureRegistry: no default structure block registered — 'F' symbol will be skipped");
+                } else {
+                    builder.addElement('F', wrapTracking('F', ofBlock(defaultStructureBlock, 0)));
+                }
             }
 
             // Add dynamic mappings
@@ -109,7 +131,7 @@ public class CustomStructureRegistry {
                 char symbol = mapEntry.getKey();
                 if (symbol == 'Q' || symbol == '_' || symbol == ' ') continue;
 
-                IStructureElement<TEMachineController> element = createElementFromMapping(mapEntry.getValue());
+                IStructureElement<IMachineController> element = createElementFromMapping(mapEntry.getValue());
                 if (element != null) {
                     builder.addElement(symbol, wrapTracking(symbol, element));
                 } else {
@@ -121,7 +143,7 @@ public class CustomStructureRegistry {
                 }
             }
 
-            IStructureDefinition<TEMachineController> definition = builder.build();
+            IStructureDefinition<IMachineController> definition = builder.build();
             structureDefinitions.put(entry.getName(), definition);
             Logger.info("CustomStructureRegistry: SUCCESS - Structure '" + entry.getName() + "' registered!");
 
@@ -130,7 +152,7 @@ public class CustomStructureRegistry {
         }
     }
 
-    public static IStructureDefinition<TEMachineController> getDefinition(String name) {
+    public static IStructureDefinition<IMachineController> getDefinition(String name) {
         return structureDefinitions.get(name);
     }
 
@@ -142,12 +164,12 @@ public class CustomStructureRegistry {
         return controllerOffsets.getOrDefault(name, new int[] { 0, 0, 0 });
     }
 
-    private static IStructureElement<TEMachineController> wrapTracking(char symbol,
-        IStructureElement<TEMachineController> element) {
-        return new IStructureElementChain<TEMachineController>() {
+    private static IStructureElement<IMachineController> wrapTracking(char symbol,
+        IStructureElement<IMachineController> element) {
+        return new IStructureElementChain<IMachineController>() {
 
             @Override
-            public boolean check(TEMachineController t, World world, int x, int y, int z) {
+            public boolean check(IMachineController t, World world, int x, int y, int z) {
                 t.trackSymbolPosition(symbol, x, y, z);
                 boolean result = element.check(t, world, x, y, z);
                 if (result) {
@@ -157,29 +179,30 @@ public class CustomStructureRegistry {
             }
 
             @Override
-            public boolean spawnHint(TEMachineController t, World world, int x, int y, int z, ItemStack trigger) {
+            public boolean spawnHint(IMachineController t, World world, int x, int y, int z, ItemStack trigger) {
                 return element.spawnHint(t, world, x, y, z, trigger);
             }
 
             @Override
-            public boolean placeBlock(TEMachineController t, World world, int x, int y, int z, ItemStack trigger) {
+            public boolean placeBlock(IMachineController t, World world, int x, int y, int z, ItemStack trigger) {
                 return element.placeBlock(t, world, x, y, z, trigger);
             }
 
             @Override
-            public BlocksToPlace getBlocksToPlace(TEMachineController t, World world, int x, int y, int z,
+            public BlocksToPlace getBlocksToPlace(IMachineController t, World world, int x, int y, int z,
                 ItemStack trigger, AutoPlaceEnvironment env) {
                 return element.getBlocksToPlace(t, world, x, y, z, trigger, env);
             }
 
             @Override
-            public IStructureElement<TEMachineController>[] fallbacks() {
+            @SuppressWarnings("unchecked")
+            public IStructureElement<IMachineController>[] fallbacks() {
                 return new IStructureElement[] { element };
             }
         };
     }
 
-    private static IStructureElement<TEMachineController> createElementFromMapping(ISymbolMapping mapping) {
+    private static IStructureElement<IMachineController> createElementFromMapping(ISymbolMapping mapping) {
         if (mapping instanceof BlockMapping) {
             BlockMapping bm = (BlockMapping) mapping;
             if (bm.getBlockId() != null) {

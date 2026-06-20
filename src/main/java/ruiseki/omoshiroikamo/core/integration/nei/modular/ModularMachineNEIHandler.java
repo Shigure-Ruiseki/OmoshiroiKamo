@@ -20,6 +20,7 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import it.unimi.dsi.fastutil.objects.ObjectSets;
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
@@ -27,7 +28,6 @@ import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * NEI handler for a single ModularMachine structure preview.
@@ -60,7 +60,7 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
         this.guiHandler = (ModularMachineGuiHandler) super.getGuiHandler();
         this.structureName = structureName;
 
-        IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(structureName);
+        IStructureDefinition<IMachineController> def = CustomStructureRegistry.getDefinition(structureName);
         IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureName);
         int[] offset = (entry != null && entry.getControllerOffset() != null) ? entry.getControllerOffset()

@@ -33,13 +33,25 @@ public interface IMachineController {
      */
     Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> getExternalPortConfigs();
 
-    // ---- Structure scanning (BlockResolver) ----
+    // ---- Structure scanning (BlockResolver / CustomStructureRegistry) ----
 
     /**
      * Returns the structure symbol character at the given world position, or null
      * if the position is not part of the structure.
      */
     Character getSymbolAt(int x, int y, int z);
+
+    /**
+     * Record a position → symbol mapping during structure checking.
+     * Called by CustomStructureRegistry.wrapTracking() before block check.
+     */
+    void trackSymbolPosition(char symbol, int x, int y, int z);
+
+    /**
+     * Finalize a position → symbol list mapping on successful block check.
+     * Called by CustomStructureRegistry.wrapTracking() after block check passes.
+     */
+    void finalizeSymbolPosition(char symbol, int x, int y, int z);
 
     /**
      * Returns the name of the structure piece this controller is currently formed as.

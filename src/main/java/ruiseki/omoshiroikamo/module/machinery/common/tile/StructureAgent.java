@@ -22,6 +22,7 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.PortRegistrationVisitor;
@@ -55,10 +56,10 @@ public class StructureAgent {
 
     // ========== Structure Definition ==========
 
-    public IStructureDefinition<TEMachineController> getStructureDefinition() {
+    public IStructureDefinition<IMachineController> getStructureDefinition() {
         // Check for custom structure first
         if (customStructureName != null && !customStructureName.isEmpty()) {
-            IStructureDefinition<TEMachineController> customDef = CustomStructureRegistry
+            IStructureDefinition<IMachineController> customDef = CustomStructureRegistry
                 .getDefinition(customStructureName);
             if (customDef != null) {
                 return customDef;
@@ -169,7 +170,7 @@ public class StructureAgent {
 
         clearInternalData();
 
-        IStructureDefinition<TEMachineController> def = getStructureDefinition();
+        IStructureDefinition<IMachineController> def = getStructureDefinition();
         if (def == null) {
             Logger.error("StructureAgent: Structure definition is null for piece '{}'!", piece);
             return false;
@@ -252,7 +253,7 @@ public class StructureAgent {
 
         // Retrieve definition to get mapped elements
         // This is a bit redundant but we need the exact elements used in validation
-        IStructureDefinition<TEMachineController> def = getStructureDefinition();
+        IStructureDefinition<IMachineController> def = getStructureDefinition();
         if (def == null) return LangHelpers.localize("gui.status.missing_definition");
 
         return LangHelpers.localize("gui.status.block_mismatch");
@@ -423,7 +424,7 @@ public class StructureAgent {
      * Checks if a sub-structure matches at the given relative position.
      */
     private boolean checkSubStructure(IStructureEntry subDef, TierStructureRef.OffsetPair offsetPair) {
-        IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(subDef.getName());
+        IStructureDefinition<IMachineController> def = CustomStructureRegistry.getDefinition(subDef.getName());
         if (def == null) return false;
 
         // target is relative to base machine controller in world coordinates

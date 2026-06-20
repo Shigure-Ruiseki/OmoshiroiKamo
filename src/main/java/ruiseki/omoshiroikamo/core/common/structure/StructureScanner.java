@@ -16,12 +16,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
 import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * Utility that scans a structure in the world and converts it to JSON.
@@ -84,7 +84,7 @@ public class StructureScanner {
                     }
 
                     // Special Case: Controller
-                    if (tile instanceof TEMachineController) {
+                    if (tile instanceof IMachineController) {
                         row.append('Q');
                         if (!symbolToBlock.containsKey('Q')) {
                             symbolToBlock.put('Q', getBlockId(block, meta));

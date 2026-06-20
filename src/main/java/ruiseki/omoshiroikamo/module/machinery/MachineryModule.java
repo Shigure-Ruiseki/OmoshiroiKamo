@@ -16,6 +16,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.BlockResolver;
+import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
@@ -83,6 +84,7 @@ public class MachineryModule extends ModModuleBase {
         MachineryIntegration.preInit();
         MachineryBlocks.preInit();
         BlockResolver.registerHintBlock(MachineryBlocks.MACHINE_CASING.getBlock());
+        CustomStructureRegistry.registerControllerBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
         MachineryItems.preInit();
         MachineryOreDict.init();
 

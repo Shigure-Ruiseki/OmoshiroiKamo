@@ -246,8 +246,12 @@ public class TEMachineController extends AbstractMBModifierTE
     // ========== Structure Definition ==========
 
     @Override
+    @SuppressWarnings("unchecked")
     public IStructureDefinition<TEMachineController> getStructureDefinition() {
-        return structureAgent.getStructureDefinition();
+        // StructureAgent returns IStructureDefinition<IMachineController>; safe because
+        // TEMachineController is the only IMachineController that ever calls this.
+        return (IStructureDefinition<TEMachineController>) (IStructureDefinition<?>) structureAgent
+            .getStructureDefinition();
     }
 
     @Override
@@ -311,11 +315,13 @@ public class TEMachineController extends AbstractMBModifierTE
         posToSymbol.clear();
     }
 
+    @Override
     public void trackSymbolPosition(char symbol, int x, int y, int z) {
         ChunkCoordinates coord = new ChunkCoordinates(x, y, z);
         posToSymbol.put(coord, symbol);
     }
 
+    @Override
     public void finalizeSymbolPosition(char symbol, int x, int y, int z) {
         ChunkCoordinates coord = new ChunkCoordinates(x, y, z);
         symbolPositions.computeIfAbsent(symbol, k -> new ArrayList<>())
