@@ -20,11 +20,9 @@ import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
 import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
 import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.ModelQuadView;
 import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.properties.ModelQuadFacing;
-import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
 
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 
-@ThreadSafeISBRH(perThread = true)
 public class JsonModelISBRH extends ModelISBRH {
 
     public static final JsonModelISBRH INSTANCE = new JsonModelISBRH();

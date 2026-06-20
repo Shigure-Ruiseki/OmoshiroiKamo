@@ -18,8 +18,6 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.apache.logging.log4j.Level;
 
-import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
-
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -31,7 +29,6 @@ import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
 import ruiseki.omoshiroikamo.core.client.render.JsonModelISBRH;
 
 @SideOnly(Side.CLIENT)
-@ThreadSafeISBRH(perThread = true)
 @SuppressWarnings("unchecked")
 public final class WorldRender implements ISimpleBlockRenderingHandler {
 

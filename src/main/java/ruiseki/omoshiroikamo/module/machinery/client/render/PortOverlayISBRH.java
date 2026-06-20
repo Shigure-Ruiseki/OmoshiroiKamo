@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
-import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -34,7 +33,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * Note: BlockMachineController uses ItemPortRenderer for inventory rendering.
  */
 @SideOnly(Side.CLIENT)
-@ThreadSafeISBRH(perThread = false)
 public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
     public static final PortOverlayISBRH INSTANCE = new PortOverlayISBRH();

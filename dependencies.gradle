@@ -35,14 +35,14 @@
  */
 dependencies {
 
-    implementation("com.github.GTNewHorizons:GTNHLib:0.11.9:dev")
-    implementation("com.github.GTNewHorizons:StructureLib:1.4.38:dev")
-    implementation("com.github.GTNewHorizons:ModularUI2:2.3.73-1.7.10:dev")
+    implementation("com.github.GTNewHorizons:GTNHLib:0.11.19:dev")
+    implementation("com.github.GTNewHorizons:StructureLib:1.4.39:dev")
+    implementation("com.github.GTNewHorizons:ModularUI2:2.3.75-1.7.10:dev")
 
     devOnlyNonPublishable('com.github.GTNewHorizons:Baubles-Expanded:2.2.21-GTNH:dev')
     devOnlyNonPublishable("com.github.GTNewHorizons:BlockRenderer6343:1.4.14:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.102-GTNH:dev")
-    devOnlyNonPublishable('com.github.GTNewHorizons:Angelica:2.1.36:dev') { transitive = false }
+    // devOnlyNonPublishable('com.github.GTNewHorizons:Angelica:2.1.36:dev') { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:waila:1.19.30:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:Botania:1.13.25-GTNH:dev") { transitive = false }
