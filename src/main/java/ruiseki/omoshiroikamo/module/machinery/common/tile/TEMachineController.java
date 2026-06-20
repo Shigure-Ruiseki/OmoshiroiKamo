@@ -40,6 +40,7 @@ import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.enums.CraftingState;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
@@ -68,7 +69,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.agent.MachineStateAgen
  * TODO: Improve holo indicator
  */
 public class TEMachineController extends AbstractMBModifierTE
-    implements IAlignment, IGuiHolder<PosGuiData>, IRecipeContext, IModularPort, ITieredMachine {
+    implements IAlignment, IGuiHolder<PosGuiData>, IRecipeContext, IModularPort, ITieredMachine, IMachineController {
 
     // ========== Blueprint Inventory ==========
     public static final int BLUEPRINT_SLOT = 0;
@@ -1134,6 +1135,11 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public PortManager getPortManager() {
         return portManager;
+    }
+
+    @Override
+    public void addPort(IModularPort port, boolean isInput) {
+        portManager.addPort(port, isInput);
     }
 
     public ProcessAgent getProcessAgent() {
