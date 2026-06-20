@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
+import ruiseki.omoshiroikamo.api.modular.port.IEssentiaPort;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectContainer;
 
@@ -79,8 +79,8 @@ public class EssentiaOutput extends AbstractModularRecipeOutput {
             int currentAmount = container.containerContains(aspect);
             int maxCapacity = 0;
 
-            if (port instanceof AbstractEssentiaPortTE) {
-                maxCapacity = ((AbstractEssentiaPortTE) port).getMaxCapacityPerAspect();
+            if (port instanceof IEssentiaPort essentiaPort) {
+                maxCapacity = essentiaPort.getMaxCapacityPerAspect();
             } else {
                 maxCapacity = 64; // Fallback for external containers (Standard Jar size)
             }

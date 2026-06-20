@@ -26,7 +26,7 @@ import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
+import ruiseki.omoshiroikamo.api.modular.port.IItemPort;
 
 public class ItemInput extends AbstractModularRecipeInput {
 
@@ -118,11 +118,9 @@ public class ItemInput extends AbstractModularRecipeInput {
         int min = 0;
         int max = itemPort.getSizeInventory() - 1;
 
-        if (itemPort instanceof AbstractItemIOPortTE iiPort) {
-            min = iiPort.getSlotDefinition()
-                .getMinItemInput();
-            max = iiPort.getSlotDefinition()
-                .getMaxItemInput();
+        if (itemPort instanceof IItemPort iiPort) {
+            min = iiPort.getMinItemInput();
+            max = iiPort.getMaxItemInput();
         }
 
         if (min < 0) return 0;

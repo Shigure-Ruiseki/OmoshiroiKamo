@@ -34,6 +34,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.port.IItemPort;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -50,7 +51,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  * Extends AbstractStorageTE to leverage existing inventory management system.
  * TODO: enable both IO from NONE side to export catalyst items like GTNH
  */
-public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort, IGuiHolder<PosGuiData> {
+public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort, IGuiHolder<PosGuiData>, IItemPort {
 
     @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
@@ -62,6 +63,26 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
         super(new SlotDefinition().setItemSlots(numInputs, numOutput));
         Arrays.fill(sides, EnumIO.NONE);
         // Default IO is NONE, handled by Block.onBlockPlacedBy
+    }
+
+    @Override
+    public int getMinItemInput() {
+        return slotDefinition.getMinItemInput();
+    }
+
+    @Override
+    public int getMaxItemInput() {
+        return slotDefinition.getMaxItemInput();
+    }
+
+    @Override
+    public int getMinItemOutput() {
+        return slotDefinition.getMinItemOutput();
+    }
+
+    @Override
+    public int getMaxItemOutput() {
+        return slotDefinition.getMaxItemOutput();
     }
 
     @Override

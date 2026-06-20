@@ -27,7 +27,7 @@ import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
+import ruiseki.omoshiroikamo.api.modular.port.IItemPort;
 
 public class ItemOutput extends AbstractModularRecipeOutput {
 
@@ -84,11 +84,9 @@ public class ItemOutput extends AbstractModularRecipeOutput {
 
             int startSlot = 0;
             int endSlot = itemPort.getSizeInventory() - 1;
-            if (itemPort instanceof AbstractItemIOPortTE) {
-                startSlot = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
-                    .getMinItemOutput();
-                endSlot = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
-                    .getMaxItemOutput();
+            if (itemPort instanceof IItemPort iiPort) {
+                startSlot = iiPort.getMinItemOutput();
+                endSlot = iiPort.getMaxItemOutput();
             }
 
             for (int i = startSlot; i <= endSlot && remaining > 0; i++) {
@@ -198,11 +196,9 @@ public class ItemOutput extends AbstractModularRecipeOutput {
         int limit = Math.min(invLimit, maxStackSize);
         int min = 0;
         int max = itemPort.getSizeInventory();
-        if (itemPort instanceof AbstractItemIOPortTE) {
-            min = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
-                .getMinItemOutput();
-            max = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
-                .getMaxItemOutput();
+        if (itemPort instanceof IItemPort iiPort) {
+            min = iiPort.getMinItemOutput();
+            max = iiPort.getMaxItemOutput();
         }
 
         long available = 0;

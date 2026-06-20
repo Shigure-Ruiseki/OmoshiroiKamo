@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
+import ruiseki.omoshiroikamo.api.modular.port.IVisPort;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectContainer;
 
@@ -80,8 +80,8 @@ public class VisOutput extends AbstractModularRecipeOutput {
             int currentAmount = container.containerContains(aspect);
             int maxCapacity = 0;
 
-            if (port instanceof AbstractVisPortTE) {
-                maxCapacity = ((AbstractVisPortTE) port).getMaxVisPerAspect();
+            if (port instanceof IVisPort visPort) {
+                maxCapacity = visPort.getMaxVisPerAspect();
             } else {
                 maxCapacity = 100; // Default capacity for Vis if not specific TE
             }
