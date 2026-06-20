@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.core.item;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -35,7 +37,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.client.render.item.MaskedBlockItemTexture;
-import ruiseki.omoshiroikamo.module.machinery.common.fluid.EnumFluidMaterial;
 
 /**
  * Universal container for gases and liquids.
@@ -43,6 +44,12 @@ import ruiseki.omoshiroikamo.module.machinery.common.fluid.EnumFluidMaterial;
  * Can be used like a bucket to place/pick up fluids.
  */
 public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, ItemWithTextures {
+
+    private static final Map<String, Integer> fluidColorMap = new HashMap<>();
+
+    public static void registerFluidColor(String fluidName, int color) {
+        fluidColorMap.put(fluidName.toLowerCase(), color);
+    }
 
     public ItemFluidCanister() {
         super("fluid_canister");
@@ -67,22 +74,13 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
             IIcon fluidIcon = fluid.getFluid()
                 .getStillIcon();
 
-            int color = 0xFFFFFF;
-            boolean found = false;
-            for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
-                if (mat.getName()
-                    .equalsIgnoreCase(
-                        fluid.getFluid()
-                            .getName())) {
-                    color = mat.getColor();
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                color = fluid.getFluid()
+            String fluidKey = fluid.getFluid()
+                .getName()
+                .toLowerCase();
+            Integer registeredColor = fluidColorMap.get(fluidKey);
+            int color = registeredColor != null ? registeredColor
+                : fluid.getFluid()
                     .getColor(fluid);
-            }
 
             RGBColor tint = RGBColor.fromRGB(color);
             // Use the actual fluid texture clipped to the mask shape (no overflow).
@@ -219,18 +217,13 @@ public class ItemFluidCanister extends ItemOK implements IFluidContainerItem, It
         String fluidName = fluid.getFluid()
             .getLocalizedName(fluid);
 
-        // Try to find if we have a custom name for this fluid in our Enum
         String registryName = FluidRegistry.getFluidName(fluid);
-        for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
-            if (!mat.getName()
-                .equalsIgnoreCase(registryName)) continue;
-
-            // Force our mod's localized name if it match our material
-            String local = StatCollector.translateToLocal("fluid." + mat.getName());
-            if (local != null && !local.equals("fluid." + mat.getName())) {
+        if (registryName != null && fluidColorMap.containsKey(registryName.toLowerCase())) {
+            String locKey = "fluid." + registryName;
+            String local = StatCollector.translateToLocal(locKey);
+            if (local != null && !local.equals(locKey)) {
                 fluidName = local;
             }
-            break;
         }
 
         return super.getItemStackDisplayName(stack) + " (" + fluidName + ")";

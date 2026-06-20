@@ -1,11 +1,8 @@
 package ruiseki.omoshiroikamo.core.integration.structureLib;
 
-import com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer;
-
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon.QuantumBeaconStructure;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.QuantumOreExtractorStructure;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.res.QuantumResExtractorStructure;
@@ -22,10 +19,8 @@ public class StructureCompat {
         }
 
         // Register custom structures from JSON
+        // Note: IMultiblockInfoContainer for TEMachineController is registered by MachineryModule.postInit()
         CustomStructureRegistry.registerAll();
-
-        // Register StructureLib info container for in-game hologram building
-        IMultiblockInfoContainer.registerTileClass(TEMachineController.class, new MachineControllerInfoContainer());
     }
 
     /**

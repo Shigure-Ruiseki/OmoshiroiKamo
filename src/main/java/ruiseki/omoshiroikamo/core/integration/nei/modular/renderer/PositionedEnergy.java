@@ -3,28 +3,23 @@ package ruiseki.omoshiroikamo.core.integration.nei.modular.renderer;
 import java.awt.Rectangle;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 
 public class PositionedEnergy implements INEIPositionedRenderer {
 
     private final int amount;
     private final boolean perTick;
     private final Rectangle position;
-    private final ItemStack displayStack;
 
-    public PositionedEnergy(int amount, boolean perTick, boolean isInput, Rectangle position) {
+    public PositionedEnergy(int amount, boolean perTick, Rectangle position) {
         this.amount = amount;
         this.perTick = perTick;
         this.position = position;
-        this.displayStack = isInput ? MachineryBlocks.ENERGY_INPUT_PORT.newItemStack()
-            : MachineryBlocks.ENERGY_OUTPUT_PORT.newItemStack();
     }
 
     @Override

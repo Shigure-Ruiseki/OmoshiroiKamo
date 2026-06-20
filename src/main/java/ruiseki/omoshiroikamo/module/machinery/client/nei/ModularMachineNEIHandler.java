@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.integration.nei.modular;
+package ruiseki.omoshiroikamo.module.machinery.client.nei;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -178,7 +178,7 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
 
     /**
      * Override loadCraftingRecipes to NOT respond to any Recipe lookups.
-     * Structure preview should only show on Usage lookup, not Recipe.
+     * Structure preview should only show on Usage (U key)
      */
     @Override
     public void loadCraftingRecipes(ItemStack result) {

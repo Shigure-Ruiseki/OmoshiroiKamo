@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.integration.nei.modular;
+package ruiseki.omoshiroikamo.module.machinery.client.nei;
 
 import java.awt.Point;
 import java.awt.Rectangle;

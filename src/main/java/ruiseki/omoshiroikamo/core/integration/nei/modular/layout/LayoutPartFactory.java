@@ -57,12 +57,12 @@ public class LayoutPartFactory {
         register(EnergyInput.class, in -> {
             EnergyInput energyIn = (EnergyInput) in;
             return new LayoutPartEnergy(
-                new PositionedEnergy(energyIn.getAmount(), energyIn.isPerTick(), true, new Rectangle(0, 0, 16, 64)));
+                new PositionedEnergy(energyIn.getAmount(), energyIn.isPerTick(), new Rectangle(0, 0, 16, 64)));
         });
         register(EnergyOutput.class, out -> {
             EnergyOutput energyOut = (EnergyOutput) out;
             return new LayoutPartEnergy(
-                new PositionedEnergy(energyOut.getAmount(), energyOut.isPerTick(), false, new Rectangle(0, 0, 16, 64)));
+                new PositionedEnergy(energyOut.getAmount(), energyOut.isPerTick(), new Rectangle(0, 0, 16, 64)));
         });
 
         // --- Mana ---

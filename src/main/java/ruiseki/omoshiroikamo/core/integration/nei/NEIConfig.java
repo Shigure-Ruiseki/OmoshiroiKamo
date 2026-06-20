@@ -27,8 +27,6 @@ import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.LibMods;
-import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
-import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularRecipeNEIHandler;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
@@ -43,6 +41,8 @@ import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContaine
 import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalOverlay;
 import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalPositioner;
 import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
+import ruiseki.omoshiroikamo.module.machinery.client.nei.ModularMachineNEIHandler;
+import ruiseki.omoshiroikamo.module.machinery.client.nei.ModularRecipeNEIHandler;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;

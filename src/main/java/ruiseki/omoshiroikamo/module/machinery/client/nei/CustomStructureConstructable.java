@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.integration.nei.modular;
+package ruiseki.omoshiroikamo.module.machinery.client.nei;
 
 import java.util.HashMap;
 import java.util.Map;

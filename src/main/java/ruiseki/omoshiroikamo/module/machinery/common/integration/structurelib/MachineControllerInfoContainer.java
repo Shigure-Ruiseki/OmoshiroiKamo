@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.integration.structureLib;
+package ruiseki.omoshiroikamo.module.machinery.common.integration.structurelib;
 
 import java.util.NoSuchElementException;
 

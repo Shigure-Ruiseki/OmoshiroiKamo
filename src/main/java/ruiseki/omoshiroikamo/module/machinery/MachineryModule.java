@@ -10,6 +10,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -18,19 +20,25 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.BlockResolver;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.event.MemoryEventHandler;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
+import ruiseki.omoshiroikamo.core.item.ItemFluidCanister;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.network.packet.PacketReloadNEI;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.module.machinery.common.command.CommandModular;
+import ruiseki.omoshiroikamo.module.machinery.common.fluid.EnumFluidMaterial;
 import ruiseki.omoshiroikamo.module.machinery.common.fluid.ModFluidGases;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryOreDict;
 import ruiseki.omoshiroikamo.module.machinery.common.integration.MachineryIntegration;
+import ruiseki.omoshiroikamo.module.machinery.common.integration.structurelib.MachineControllerInfoContainer;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierConfigLoader;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 public class MachineryModule extends ModModuleBase {
 
@@ -88,6 +96,12 @@ public class MachineryModule extends ModModuleBase {
         MachineryItems.preInit();
         MachineryOreDict.init();
 
+        for (EnumFluidMaterial mat : EnumFluidMaterial.values()) {
+            ItemFluidCanister.registerFluidColor(mat.getName(), mat.getColor());
+        }
+        MemoryEventHandler.registerOnWorldUnload(world -> StructureTintCache.clearDimension(world));
+        MemoryEventHandler.registerOnClientDisconnect(StructureTintCache::clearAll);
+
         // Pre-scan recipe group names so NEI can register handlers
         // before RecipeLoader.loadAll() runs in postInit
         cachedGroupNames = RecipeLoader.scanGroupNames(configDir);
@@ -103,6 +117,7 @@ public class MachineryModule extends ModModuleBase {
         TierConfigLoader.INSTANCE.load(configDir);
         RecipeLoader.getInstance()
             .loadAll(configDir);
+        IMultiblockInfoContainer.registerTileClass(TEMachineController.class, new MachineControllerInfoContainer());
     }
 
     @Override
