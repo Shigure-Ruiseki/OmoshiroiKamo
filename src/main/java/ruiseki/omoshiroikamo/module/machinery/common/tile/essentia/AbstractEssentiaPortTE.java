@@ -20,7 +20,8 @@ import thaumcraft.api.aspects.IAspectContainer;
 /**
  * Stores multiple Aspects using AspectList with unified 16-tier system.
  */
-public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModularPort, IAspectContainer, IEssentiaPort {
+public abstract class AbstractEssentiaPortTE extends AbstractTE
+    implements IModularPort, IAspectContainer, IEssentiaPort {
 
     @NBTPersist
     protected int tier = 0; // 0-15 (display: 1-16)

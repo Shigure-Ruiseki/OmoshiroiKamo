@@ -13,11 +13,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.item.IToolHammer;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
-import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.core.network.PacketToggleSide;
+import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 
 /**
  * Item Wrench - config ISidedIO.

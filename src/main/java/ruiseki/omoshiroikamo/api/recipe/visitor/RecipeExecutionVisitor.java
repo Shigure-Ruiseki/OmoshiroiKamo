@@ -29,7 +29,8 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
     private int batchSize = 1;
     private boolean satisfied = true;
 
-    public RecipeExecutionVisitor(Mode mode, List<IModularPort> ports, AbstractRecipeProcess agent, ConditionContext context) {
+    public RecipeExecutionVisitor(Mode mode, List<IModularPort> ports, AbstractRecipeProcess agent,
+        ConditionContext context) {
         this.mode = mode;
         this.ports = ports;
         this.agent = agent;

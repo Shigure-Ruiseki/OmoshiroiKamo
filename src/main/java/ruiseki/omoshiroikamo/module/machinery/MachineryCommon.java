@@ -5,10 +5,10 @@ import net.minecraftforge.common.MinecraftForge;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.network.PacketToggleSide;
 import ruiseki.omoshiroikamo.core.proxy.CommonProxyComponent;
 import ruiseki.omoshiroikamo.module.machinery.common.handler.FluidPhysicsHandler;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
-import ruiseki.omoshiroikamo.core.network.PacketToggleSide;
 
 /**
  * Modular Machinery Backport module entry point.

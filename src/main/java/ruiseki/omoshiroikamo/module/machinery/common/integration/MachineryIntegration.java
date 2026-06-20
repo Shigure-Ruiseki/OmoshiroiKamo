@@ -5,7 +5,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 import ruiseki.omoshiroikamo.core.common.structure.BlockResolver;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.core.energy.capability.EnergyIntegrationRegistry;
@@ -25,6 +24,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisBridge;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalEnergyProxy;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalEssentiaProxy;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalFluidProxy;
