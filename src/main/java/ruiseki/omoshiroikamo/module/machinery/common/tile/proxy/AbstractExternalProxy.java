@@ -36,6 +36,7 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
     protected TileEntity targetTileEntity;
     protected EnumIO ioMode;
     protected ForgeDirection cachedSide = ForgeDirection.UNKNOWN;
+    private int assignedIndex = -1;
 
     public AbstractExternalProxy(TEMachineController controller, ChunkCoordinates targetPosition, EnumIO ioMode) {
         this.controller = controller;
@@ -99,6 +100,16 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
     }
 
     // ========== IModularPort Implementation ==========
+
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
+    }
 
     @Override
     public void accept(IRecipeVisitor visitor) {
