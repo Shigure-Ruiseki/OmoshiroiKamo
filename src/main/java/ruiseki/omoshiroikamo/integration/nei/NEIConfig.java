@@ -213,28 +213,40 @@ public class NEIConfig implements IConfigureNEI {
             registerHandler(new SimulationChamberRecipeHandler());
         }
 
-        // Register Modular Machine structure preview handlers (one per structure)
-        // TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
-        // TODO: Enable 'P' button in structure preview (Name is currently null)
         if (BackportConfigs.enableMachinery) {
-            if (LibMods.BlockRenderer6343.isLoaded()) {
-                for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
-                    ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
-                    API.registerUsageHandler(handler);
-
-                    String recipeID = handler.getHandlerId();
-                    ItemStack blueprint = ItemMachineBlueprint
-                        .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
-                    ItemStack controller = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
-
-                    API.addRecipeCatalyst(blueprint, recipeID);
-                    API.addRecipeCatalyst(controller, recipeID);
-                }
-            }
+            // Structure preview handlers are registered later (after CustomStructureRegistry.registerAll())
+            // via registerStructurePreviews() called from OmoshiroiKamo.postInit()
 
             // Register Modular Machine Recipes (JSON)
             registerModularMachineryRecipes();
         }
+    }
+
+    /**
+     * Register ModularMachineNEIHandler instances for each known structure.
+     * Must be called AFTER CustomStructureRegistry.registerAll() (i.e., after StructureCompat.postInit()).
+     *
+     * TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
+     * TODO: Enable 'P' button in structure preview (Name is currently null)
+     */
+    public static void registerStructurePreviews() {
+        if (!BackportConfigs.enableMachinery || !LibMods.BlockRenderer6343.isLoaded()) return;
+        if (!FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
+
+        for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
+            ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
+            API.registerUsageHandler(handler);
+
+            String recipeID = handler.getHandlerId();
+            ItemStack blueprint = ItemMachineBlueprint
+                .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
+            ItemStack controller = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
+
+            API.addRecipeCatalyst(blueprint, recipeID);
+            API.addRecipeCatalyst(controller, recipeID);
+        }
+
+        Logger.info("NEIConfig: registered {} structure preview handler(s)", CustomStructureRegistry.getRegisteredNames().size());
     }
 
     private static Set<String> registeredModularGroups = new HashSet<>();

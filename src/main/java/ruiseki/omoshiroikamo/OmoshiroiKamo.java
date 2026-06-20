@@ -141,7 +141,11 @@ public class OmoshiroiKamo extends ModBase {
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
         StructureCompat.postInit();
+        MachineryModule.postInitStructures();
         if (MinecraftHelpers.isClientSide()) {
+            if (LibMods.NotEnoughItems.isLoaded()) {
+                NEIConfig.registerStructurePreviews();
+            }
             TextureLoader
                 .loadFromConfig(Reference.MOD_ID, Reference.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
             UpdateChecker.checkUpdates();

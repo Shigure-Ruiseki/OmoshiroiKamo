@@ -117,6 +117,14 @@ public class MachineryModule extends ModModuleBase {
         TierConfigLoader.INSTANCE.load(configDir);
         RecipeLoader.getInstance()
             .loadAll(configDir);
+    }
+
+    /**
+     * Register StructureLib's IMultiblockInfoContainer after CustomStructureRegistry.registerAll()
+     * so that structures are available when StructureLib queries them for NEI display.
+     * Called from OmoshiroiKamo.postInit() after StructureCompat.postInit().
+     */
+    public static void postInitStructures() {
         IMultiblockInfoContainer.registerTileClass(TEMachineController.class, new MachineControllerInfoContainer());
     }
 
