@@ -5,6 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 import ruiseki.omoshiroikamo.core.common.structure.BlockResolver;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.core.energy.capability.EnergyIntegrationRegistry;
@@ -70,7 +71,7 @@ public class MachineryIntegration {
         // Item Proxy
         BlockResolver.registerProxyFactory(IPortType.Type.ITEM, (controller, coords, tile, io) -> {
             if (tile instanceof IInventory) {
-                return new ExternalItemProxy(controller, coords, io);
+                return new ExternalItemProxy((TEMachineController) controller, coords, io);
             }
             return null;
         });
@@ -78,7 +79,7 @@ public class MachineryIntegration {
         // Fluid Proxy (Forge standard)
         BlockResolver.registerProxyFactory(IPortType.Type.FLUID, (controller, coords, tile, io) -> {
             if (tile instanceof IFluidHandler) {
-                return new ExternalFluidProxy(controller, coords, io);
+                return new ExternalFluidProxy((TEMachineController) controller, coords, io);
             }
             return null;
         });
@@ -87,7 +88,7 @@ public class MachineryIntegration {
         BlockResolver.registerProxyFactory(IPortType.Type.ENERGY, (controller, coords, tile, io) -> {
             if (tile instanceof IOKEnergyTile || tile instanceof cofh.api.energy.IEnergyReceiver
                 || tile instanceof cofh.api.energy.IEnergyProvider) {
-                return new ExternalEnergyProxy(controller, coords, io);
+                return new ExternalEnergyProxy((TEMachineController) controller, coords, io);
             }
             return null;
         });
@@ -119,7 +120,7 @@ public class MachineryIntegration {
             // Gas Proxy (Mekanism integration)
             BlockResolver.registerProxyFactory(IPortType.Type.GAS, (controller, coords, tile, io) -> {
                 if (tile instanceof IGasHandler) {
-                    return new ExternalGasProxy(controller, coords, io);
+                    return new ExternalGasProxy((TEMachineController) controller, coords, io);
                 }
                 return null;
             });
@@ -135,7 +136,7 @@ public class MachineryIntegration {
             // Mana Proxy (Botania integration)
             BlockResolver.registerProxyFactory(IPortType.Type.MANA, (controller, coords, tile, io) -> {
                 if (tile instanceof vazkii.botania.api.mana.IManaPool) {
-                    return new ExternalManaProxy(controller, coords, io);
+                    return new ExternalManaProxy((TEMachineController) controller, coords, io);
                 }
                 return null;
             });
@@ -154,7 +155,7 @@ public class MachineryIntegration {
             // Essentia Proxy (Thaumcraft integration)
             BlockResolver.registerProxyFactory(IPortType.Type.ESSENTIA, (controller, coords, tile, io) -> {
                 if (tile instanceof thaumcraft.api.aspects.IAspectContainer) {
-                    return new ExternalEssentiaProxy(controller, coords, io);
+                    return new ExternalEssentiaProxy((TEMachineController) controller, coords, io);
                 }
                 return null;
             });

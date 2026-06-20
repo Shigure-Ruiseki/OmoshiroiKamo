@@ -23,13 +23,12 @@ import com.gtnewhorizon.structurelib.structure.IStructureElementChain;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * Utility for resolving Block objects from block ID strings
@@ -43,13 +42,20 @@ public class BlockResolver {
     @FunctionalInterface
     public interface IProxyFactory {
 
-        IModularPort create(TEMachineController controller, ChunkCoordinates coords, TileEntity tile, EnumIO io);
+        IModularPort create(IMachineController controller, ChunkCoordinates coords, TileEntity tile, EnumIO io);
     }
 
     private static final Map<IPortType.Type, IProxyFactory> PROXY_FACTORIES = new HashMap<>();
 
     public static void registerProxyFactory(IPortType.Type type, IProxyFactory factory) {
         PROXY_FACTORIES.put(type, factory);
+    }
+
+    // Hint block used by ofTileAdder — registered by MachineryModule.preInit()
+    private static Block hintBlock = null;
+
+    public static void registerHintBlock(Block block) {
+        hintBlock = block;
     }
 
     /**
@@ -199,22 +205,26 @@ public class BlockResolver {
      * @return IStructureElement using ofChain with TileAdder, or null if all invalid
      */
     @SuppressWarnings("unchecked")
-    public static IStructureElement<TEMachineController> createChainElementWithTileAdder(List<String> blockStrings) {
+    public static <T extends IMachineController> IStructureElement<T> createChainElementWithTileAdder(
+        List<String> blockStrings) {
         if (blockStrings == null || blockStrings.isEmpty()) {
             return null;
         }
 
-        List<IStructureElement<TEMachineController>> elements = new ArrayList<>();
-        Block hintBlock = MachineryBlocks.MACHINE_CASING.getBlock();
+        List<IStructureElement<T>> elements = new ArrayList<>();
 
-        // First, add TileAdder to detect and collect ports
-        // Wrap in NoHintStructureElement to prevent it from rendering a default
-        // casing, which causes Z-fighting with the actual block element.
-        elements.add(new NoHintStructureElement<>(ofTileAdder(BlockResolver::collectPort, hintBlock, 0)));
+        if (hintBlock == null) {
+            Logger.warn("BlockResolver: no hint block registered — call registerHintBlock() in preInit");
+        }
+
+        // TileAdder uses IMachineController; safe to cast since T extends IMachineController
+        elements.add(
+            new NoHintStructureElement<>(
+                (IStructureElement<T>) (IStructureElement<?>) ofTileAdder(BlockResolver::collectPort, hintBlock, 0)));
 
         // Then add block checks for each valid block type
         for (String blockString : blockStrings) {
-            IStructureElement<TEMachineController> element = createElement(blockString);
+            IStructureElement<T> element = createElement(blockString);
             if (element != null) {
                 elements.add(element);
             }
@@ -237,7 +247,7 @@ public class BlockResolver {
      * @return true if the position is valid (port found), false to let block check
      *         handle it
      */
-    public static boolean collectPort(TEMachineController controller, TileEntity tile) {
+    public static boolean collectPort(IMachineController controller, TileEntity tile) {
         if (tile == null) {
             return false;
         }
@@ -275,12 +285,11 @@ public class BlockResolver {
     /**
      * Helper to register a port in the controller based on its direction.
      */
-    private static boolean registerPort(TEMachineController controller, IModularPort port, int x, int y, int z) {
+    private static boolean registerPort(IMachineController controller, IModularPort port, int x, int y, int z) {
         // Resolve index from symbol at position
         Character symbol = controller.getSymbolAt(x, y, z);
         if (symbol != null) {
-            String structureName = controller.getStructureAgent()
-                .getStructurePieceName();
+            String structureName = controller.getStructurePieceName();
             IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(structureName);
             if (entry != null) {
@@ -370,7 +379,7 @@ public class BlockResolver {
             boolean result = wrappedElement.check(t, world, x, y, z);
 
             if (result) {
-                if (t instanceof TEMachineController controller) {
+                if (t instanceof IMachineController controller) {
                     controller.trackStructureBlock(x, y, z);
 
                     // Always try to collect port if it's a valid structure block

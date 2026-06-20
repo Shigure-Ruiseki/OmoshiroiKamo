@@ -8,7 +8,7 @@ import ruiseki.omoshiroikamo.core.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.proxy.CommonProxyComponent;
 import ruiseki.omoshiroikamo.module.machinery.common.handler.FluidPhysicsHandler;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
-import ruiseki.omoshiroikamo.module.machinery.common.network.PacketToggleSide;
+import ruiseki.omoshiroikamo.core.network.PacketToggleSide;
 
 /**
  * Modular Machinery Backport module entry point.

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.machinery.common.network;
+package ruiseki.omoshiroikamo.core.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -6,8 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.network.CodecField;
-import ruiseki.omoshiroikamo.core.network.PacketCodec;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 
 public class PacketToggleSide extends PacketCodec {

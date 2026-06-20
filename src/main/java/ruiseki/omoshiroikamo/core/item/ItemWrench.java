@@ -16,8 +16,8 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
-import ruiseki.omoshiroikamo.module.machinery.common.network.PacketToggleSide;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
+import ruiseki.omoshiroikamo.api.modular.IMachineController;
+import ruiseki.omoshiroikamo.core.network.PacketToggleSide;
 
 /**
  * Item Wrench - config ISidedIO.
@@ -41,7 +41,7 @@ public class ItemWrench extends ItemOK implements IToolHammer {
         // 1. Shift + Right Click on Block: Linking / Registration
         if (player.isSneaking()) {
             // Case A: Controller linking
-            if (te instanceof TEMachineController) {
+            if (te instanceof IMachineController) {
                 if (!world.isRemote) {
                     NBTTagCompound nbt = stack.getTagCompound();
                     if (nbt == null) {
@@ -72,9 +72,9 @@ public class ItemWrench extends ItemOK implements IToolHammer {
 
                 if (world.provider.dimensionId == cDim && (cx != x || cy != y || cz != z)) {
                     TileEntity cte = world.getTileEntity(cx, cy, cz);
-                    if (cte instanceof TEMachineController) {
+                    if (cte instanceof IMachineController) {
                         if (!world.isRemote) {
-                            TEMachineController controller = (TEMachineController) cte;
+                            IMachineController controller = (IMachineController) cte;
                             controller.registerExternalPort(x, y, z, getSelectedPortType(stack), player);
                             return true;
                         }

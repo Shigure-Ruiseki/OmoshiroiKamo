@@ -138,10 +138,12 @@ public class TEMachineController extends AbstractMBModifierTE
     // External Port Configurations
     private final Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> externalPortConfigs = new HashMap<>();
 
+    @Override
     public Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> getExternalPortConfigs() {
         return externalPortConfigs;
     }
 
+    @Override
     public boolean registerExternalPort(int px, int py, int pz, IPortType.Type portType, EntityPlayer player) {
         if (worldObj == null || worldObj.isRemote) return false;
 
@@ -320,6 +322,7 @@ public class TEMachineController extends AbstractMBModifierTE
             .add(coord);
     }
 
+    @Override
     public Character getSymbolAt(int x, int y, int z) {
         return posToSymbol.get(new ChunkCoordinates(x, y, z));
     }
@@ -336,6 +339,7 @@ public class TEMachineController extends AbstractMBModifierTE
      * @param port    The port to add
      * @param isInput True for input list, false for output list
      */
+    @Override
     public void addPortFromStructure(IModularPort port, boolean isInput) {
         portManager.addPort(port, isInput);
         // Also add the port's position to structure block positions
@@ -349,6 +353,7 @@ public class TEMachineController extends AbstractMBModifierTE
      * Called by BlockResolver to track all structure blocks (casings, etc.)
      * for tinting purposes.
      */
+    @Override
     public void trackStructureBlock(int x, int y, int z) {
         structureAgent.addStructurePosition(x, y, z);
     }
