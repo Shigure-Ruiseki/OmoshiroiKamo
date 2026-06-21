@@ -37,7 +37,8 @@ public class BlockCompat {
         if (newName == null) return null;
 
         StringBuilder sb = new StringBuilder(MOD_PREFIX).append(newName);
-        if (parts.length > 2) sb.append(":").append(parts[2]);
+        if (parts.length > 2) sb.append(":")
+            .append(parts[2]);
         return sb.toString();
     }
 

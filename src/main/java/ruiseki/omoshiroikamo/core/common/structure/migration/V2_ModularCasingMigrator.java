@@ -43,7 +43,8 @@ public class V2_ModularCasingMigrator implements IDataMigrator {
         for (Map.Entry<String, JsonElement> entry : mappings.entrySet()) {
             JsonElement element = entry.getValue();
 
-            if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+            if (element.isJsonPrimitive() && element.getAsJsonPrimitive()
+                .isString()) {
                 String newId = BlockCompat.remapRemovedBlocks(element.getAsString());
                 if (newId != null) {
                     mappings.addProperty(entry.getKey(), newId);
@@ -53,7 +54,9 @@ public class V2_ModularCasingMigrator implements IDataMigrator {
             } else if (element.isJsonObject()) {
                 JsonObject obj = element.getAsJsonObject();
                 if (obj.has("block")) {
-                    String newId = BlockCompat.remapRemovedBlocks(obj.get("block").getAsString());
+                    String newId = BlockCompat.remapRemovedBlocks(
+                        obj.get("block")
+                            .getAsString());
                     if (newId != null) {
                         obj.addProperty("block", newId);
                     }
@@ -69,7 +72,8 @@ public class V2_ModularCasingMigrator implements IDataMigrator {
         JsonArray newArray = new JsonArray();
         boolean changed = false;
         for (JsonElement item : array) {
-            if (item.isJsonPrimitive() && item.getAsJsonPrimitive().isString()) {
+            if (item.isJsonPrimitive() && item.getAsJsonPrimitive()
+                .isString()) {
                 String newId = BlockCompat.remapRemovedBlocks(item.getAsString());
                 if (newId != null) {
                     newArray.add(new JsonPrimitive(newId));
