@@ -296,7 +296,8 @@ public class BlockResolver {
                 ISymbolMapping mapping = entry.getMappings()
                     .get(symbol);
                 if (mapping != null) {
-                    port.setAssignedIndex(mapping.getPortIndex());
+                    int portIdx = mapping.getPortIndex();
+                    port.setAssignedIndex(portIdx);
                 }
             }
         }

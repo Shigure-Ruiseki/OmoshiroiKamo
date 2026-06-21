@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.parser.DecoratorParser;
 import ruiseki.omoshiroikamo.api.recipe.parser.RecipeParserRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
@@ -123,6 +124,23 @@ public class MachineryRecipeLoader {
             }
 
             IModularRecipe recipe = builder.build();
+
+            // Validate outputs — catch typos in item/block names before they silently break at runtime
+            for (IRecipeOutput output : recipe.getOutputs()) {
+                if (!output.validate()) {
+                    String fileName = ParsingContext.getCurrentFileName();
+                    String warnMsg = String.format(
+                        "Recipe '%s' in %s has an invalid output (%s). Skipping.",
+                        registryName,
+                        fileName,
+                        output.getClass()
+                            .getSimpleName());
+                    Logger.warn(warnMsg);
+                    JsonErrorCollector.getInstance()
+                        .collect("MachineryRecipeLoader", warnMsg);
+                    return null;
+                }
+            }
 
             // Apply decorators (decorators usually wrap the recipe instance)
             if (json.has("decorators")) {

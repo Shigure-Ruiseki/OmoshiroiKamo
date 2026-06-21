@@ -231,7 +231,9 @@ public class NEIConfig implements IConfigureNEI {
      */
     public static void registerStructurePreviews() {
         if (!BackportConfigs.enableMachinery || !LibMods.BlockRenderer6343.isLoaded()) return;
-        if (!FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
+        if (!FMLCommonHandler.instance()
+            .getEffectiveSide()
+            .isClient()) return;
 
         for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
             ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
@@ -246,7 +248,10 @@ public class NEIConfig implements IConfigureNEI {
             API.addRecipeCatalyst(controller, recipeID);
         }
 
-        Logger.info("NEIConfig: registered {} structure preview handler(s)", CustomStructureRegistry.getRegisteredNames().size());
+        Logger.info(
+            "NEIConfig: registered {} structure preview handler(s)",
+            CustomStructureRegistry.getRegisteredNames()
+                .size());
     }
 
     private static Set<String> registeredModularGroups = new HashSet<>();
