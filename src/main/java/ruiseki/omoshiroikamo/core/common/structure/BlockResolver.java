@@ -79,6 +79,11 @@ public class BlockResolver {
             return new ResolvedBlock(null, 0, false, false, true);
         }
 
+        String remapped = BlockCompat.remapRemovedBlocks(blockId);
+        if (remapped != null) {
+            blockId = remapped;
+        }
+
         String[] parts = blockId.split(":");
         if (parts.length < 2) {
             return null;

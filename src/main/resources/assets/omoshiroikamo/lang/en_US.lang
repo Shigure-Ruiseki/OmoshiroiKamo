@@ -1282,7 +1282,6 @@ omoshiroikamo.nei.tier_format=Tier %d
 
 
 # Tiles
-tile.modular_machine_casing.name=Machine Casing
 tile.modular_machine_controller.name=Machine Controller
 tile.vis_bridge.name=Vis Bridge
 

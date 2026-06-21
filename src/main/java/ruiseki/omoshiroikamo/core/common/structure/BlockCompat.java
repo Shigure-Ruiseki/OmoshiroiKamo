@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.structure;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +14,32 @@ public class BlockCompat {
 
     private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("([a-z])([A-Z])");
     private static final String MOD_PREFIX = Reference.MOD_ID + ":";
+
+    private static final Map<String, String> REMOVED_BLOCK_REMAPS = new HashMap<>();
+    static {
+        REMOVED_BLOCK_REMAPS.put("modular_machine_casing", "casing_plain");
+    }
+
+    /**
+     * Remaps a removed or renamed block ID to its replacement.
+     * Returns the new full block ID (with meta suffix preserved) if a remap exists,
+     * or {@code null} if no remap is needed.
+     *
+     * Example: "omoshiroikamo:modular_machine_casing:0" -> "omoshiroikamo:casing_plain:0"
+     */
+    public static String remapRemovedBlocks(String id) {
+        if (id == null || !id.startsWith(MOD_PREFIX)) return null;
+
+        String[] parts = id.split(":", 3);
+        if (parts.length < 2) return null;
+
+        String newName = REMOVED_BLOCK_REMAPS.get(parts[1]);
+        if (newName == null) return null;
+
+        StringBuilder sb = new StringBuilder(MOD_PREFIX).append(newName);
+        if (parts.length > 2) sb.append(":").append(parts[2]);
+        return sb.toString();
+    }
 
     /**
      * Converts a block ID from camelCase to snake_case if it belongs to this mod.

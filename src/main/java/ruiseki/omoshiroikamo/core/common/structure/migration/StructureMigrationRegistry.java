@@ -19,6 +19,7 @@ public class StructureMigrationRegistry {
 
     static {
         MIGRATORS.add(new V1_SnakeCaseMigrator()); // v1.5.4.1
+        MIGRATORS.add(new V2_ModularCasingMigrator()); // v2.0.1
     }
 
     /**

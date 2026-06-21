@@ -30,7 +30,6 @@ public enum MachineryBlocks {
     // spotless: off
 
     // Core blocks (always available)
-    MACHINE_CASING(BlockMachineCasing.create()),
     CASING_PLAIN(BlockMachineCasing.create("plain")),
     CASING_REINFORCED(BlockMachineCasing.create("reinforced")),
     CASING_VENTED(BlockMachineCasing.create("vented")),

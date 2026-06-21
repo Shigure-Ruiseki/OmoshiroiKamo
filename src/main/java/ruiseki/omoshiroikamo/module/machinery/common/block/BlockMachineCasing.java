@@ -18,7 +18,6 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.api.modular.ModularTier;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
@@ -42,17 +41,6 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
 
     private String designName = "";
     private final IIcon[] tierIcons = new IIcon[TIERS];
-
-    protected BlockMachineCasing() {
-        super(ModObject.MODULAR_MACHINE_CASING.name);
-        setHardness(5.0F);
-        setResistance(10.0F);
-        this.hasSubtypes = false;
-    }
-
-    public static BlockMachineCasing create() {
-        return new BlockMachineCasing();
-    }
 
     protected BlockMachineCasing(String designName) {
         super("casing_" + designName);
@@ -136,10 +124,6 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
 
     @Override
     public String getTextureName() {
-        if (designName == "") {
-            // Backward compatibility
-            return "modular_machine_casing";
-        }
         return "modular/casing_" + designName;
     }
 
@@ -179,12 +163,6 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
             // e.g. "Revolutionary" "Machine Casing"
             String locale = MinecraftHelpers.isClientSide() ? Minecraft.getMinecraft().gameSettings.language : "en_US";
             String tier = TierConfigLoader.INSTANCE.getTierName(modularTier.getMeta(), locale);
-
-            // Handle backward compatibility: MACHINE_CASING has no design name
-            if (block.designName.isEmpty()) {
-                String casingName = LangHelpers.localize("machinery.casing.modular");
-                return LangHelpers.localize("machinery.casing.format", tier, casingName);
-            }
 
             String design = LangHelpers.localize("machinery.design." + block.designName);
             return LangHelpers.localize("machinery.casing.format", tier, design);

@@ -63,7 +63,6 @@ public enum ModObject {
     blockModularVisInput("modular_vis_input"),
     blockModularVisOutput("modular_vis_output"),
     blockVisBridge("vis_bridge"),
-    MODULAR_MACHINE_CASING("modular_machine_casing"),
     MODULAR_MACHINE_CONTROLLER("modular_machine_controller"),
 
     STRUCTURE_WAND("structure_wand"),

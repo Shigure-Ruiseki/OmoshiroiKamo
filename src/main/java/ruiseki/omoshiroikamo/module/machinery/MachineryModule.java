@@ -91,7 +91,7 @@ public class MachineryModule extends ModModuleBase {
         ModFluidGases.preInit();
         MachineryIntegration.preInit();
         MachineryBlocks.preInit();
-        BlockResolver.registerHintBlock(MachineryBlocks.MACHINE_CASING.getBlock());
+        BlockResolver.registerHintBlock(MachineryBlocks.CASING_PLAIN.getBlock());
         CustomStructureRegistry.registerControllerBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
         MachineryItems.preInit();
         MachineryOreDict.init();
