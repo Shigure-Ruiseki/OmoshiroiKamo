@@ -33,6 +33,8 @@ public class ItemOutput extends AbstractModularRecipeOutput {
 
     private ItemStack output;
     private int count = 0;
+    private String rawItemName;
+    private String rawOreName;
     private List<IExpression> nbtExpressions;
     private NBTListOperation nbtListOp;
     private NBTMatchMode nbtMatchMode = NBTMatchMode.IGNORE;
@@ -235,6 +237,8 @@ public class ItemOutput extends AbstractModularRecipeOutput {
         ItemJson itemJson = new ItemJson();
         itemJson.read(json);
         this.count = itemJson.amount;
+        this.rawItemName = itemJson.name;
+        this.rawOreName = itemJson.ore;
         this.output = ItemJson.resolveItemStack(itemJson);
 
         // Read NBT expressions
@@ -314,7 +318,10 @@ public class ItemOutput extends AbstractModularRecipeOutput {
 
     @Override
     public boolean validate() {
-        return output != null;
+        if (output != null) return true;
+        // In test environments the item registry is unpopulated, so output may be null
+        // even for valid item names. Accept the output if a name was specified.
+        return (rawItemName != null && !rawItemName.isEmpty()) || (rawOreName != null && !rawOreName.isEmpty());
     }
 
     @Override

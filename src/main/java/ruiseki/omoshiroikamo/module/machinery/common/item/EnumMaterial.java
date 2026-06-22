@@ -193,7 +193,8 @@ public enum EnumMaterial {
     CHLONOX(1300, "chlonox", "Chlonox"),
     LEVIATHAN(1310, "leviathan", "Leviathan"),
     PERFECT(1500, "perfect", "Perfect"),
-        // EGYPTIAN
+    
+    // EGYPTIAN
     SOLARIUM(1600, "solarium", "Solarium", "ingot"),
     OSIRIUM(1601, "osirium", "Osirium", "ingot"),
     KHEPHRITE(1602, "khephrite", "Khephrite", "ingot"),
