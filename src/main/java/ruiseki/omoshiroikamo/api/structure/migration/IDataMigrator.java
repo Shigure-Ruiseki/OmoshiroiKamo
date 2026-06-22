@@ -14,9 +14,9 @@ public interface IDataMigrator {
 
     /**
      * Performs the migration on the given JSON object.
-     * This should be idempotent if possible.
      *
      * @param json The JSON object to transform
+     * @return true if any content was actually changed, false if nothing needed to be done
      */
-    void migrate(JsonObject json);
+    boolean migrate(JsonObject json);
 }

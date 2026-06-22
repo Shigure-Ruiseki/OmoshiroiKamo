@@ -24,27 +24,26 @@ public class V1_SnakeCaseMigrator implements IDataMigrator {
     }
 
     @Override
-    public void migrate(JsonObject json) {
-        // 1. Process mappings in the current object
+    public boolean migrate(JsonObject json) {
+        boolean changed = false;
         if (json.has("mappings")) {
-            migrateMappings(json.getAsJsonObject("mappings"));
+            changed |= migrateMappings(json.getAsJsonObject("mappings"));
         }
-
-        // 2. Process tierStructures if present
         if (json.has("tierStructures")) {
             JsonElement tierStructures = json.get("tierStructures");
             if (tierStructures.isJsonArray()) {
-                JsonArray array = tierStructures.getAsJsonArray();
-                for (JsonElement element : array) {
+                for (JsonElement element : tierStructures.getAsJsonArray()) {
                     if (element.isJsonObject()) {
-                        migrate(element.getAsJsonObject()); // Recursive call for inner mappings
+                        changed |= migrate(element.getAsJsonObject());
                     }
                 }
             }
         }
+        return changed;
     }
 
-    private void migrateMappings(JsonObject mappings) {
+    private boolean migrateMappings(JsonObject mappings) {
+        boolean changed = false;
         for (Map.Entry<String, JsonElement> entry : mappings.entrySet()) {
             JsonElement element = entry.getValue();
 
@@ -54,31 +53,28 @@ public class V1_SnakeCaseMigrator implements IDataMigrator {
                 String newId = BlockCompat.camelToSnake(oldId);
                 if (!oldId.equals(newId)) {
                     mappings.addProperty(entry.getKey(), newId);
+                    changed = true;
                 }
             } else if (element.isJsonArray()) {
                 JsonArray array = element.getAsJsonArray();
                 JsonArray newArray = new JsonArray();
-                boolean changed = false;
-
+                boolean arrayChanged = false;
                 for (JsonElement item : array) {
                     if (item.isJsonPrimitive() && item.getAsJsonPrimitive()
                         .isString()) {
                         String oldId = item.getAsString();
                         String newId = BlockCompat.camelToSnake(oldId);
                         newArray.add(new JsonPrimitive(newId));
-                        if (!oldId.equals(newId)) {
-                            changed = true;
-                        }
+                        if (!oldId.equals(newId)) arrayChanged = true;
                     } else {
                         newArray.add(item);
                     }
                 }
-
-                if (changed) {
+                if (arrayChanged) {
                     mappings.add(entry.getKey(), newArray);
+                    changed = true;
                 }
             } else if (element.isJsonObject()) {
-                // Handle object format: {"block": "mod:name"} or {"blocks": [...]}
                 JsonObject obj = element.getAsJsonObject();
                 if (obj.has("block")) {
                     String oldId = obj.get("block")
@@ -86,28 +82,31 @@ public class V1_SnakeCaseMigrator implements IDataMigrator {
                     String newId = BlockCompat.camelToSnake(oldId);
                     if (!oldId.equals(newId)) {
                         obj.addProperty("block", newId);
+                        changed = true;
                     }
                 }
                 if (obj.has("blocks")) {
                     JsonArray blocks = obj.getAsJsonArray("blocks");
                     JsonArray newBlocks = new JsonArray();
-                    boolean changed = false;
+                    boolean arrayChanged = false;
                     for (JsonElement item : blocks) {
                         if (item.isJsonPrimitive() && item.getAsJsonPrimitive()
                             .isString()) {
                             String oldId = item.getAsString();
                             String newId = BlockCompat.camelToSnake(oldId);
                             newBlocks.add(new JsonPrimitive(newId));
-                            if (!oldId.equals(newId)) changed = true;
+                            if (!oldId.equals(newId)) arrayChanged = true;
                         } else {
                             newBlocks.add(item);
                         }
                     }
-                    if (changed) {
+                    if (arrayChanged) {
                         obj.add("blocks", newBlocks);
+                        changed = true;
                     }
                 }
             }
         }
+        return changed;
     }
 }

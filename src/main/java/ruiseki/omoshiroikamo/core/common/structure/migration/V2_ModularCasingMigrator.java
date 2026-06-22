@@ -12,34 +12,36 @@ import ruiseki.omoshiroikamo.core.common.structure.BlockCompat;
 
 /**
  * Migrator that replaces the removed modular_machine_casing block with casing_plain.
- * Target mod version: 2.0.1
+ * Target mod version: 26.06.22.0.
  */
 public class V2_ModularCasingMigrator implements IDataMigrator {
 
     @Override
     public String getTargetModVersion() {
-        return "2.0.1";
+        return "26.06.22.0";
     }
 
     @Override
-    public void migrate(JsonObject json) {
+    public boolean migrate(JsonObject json) {
+        boolean changed = false;
         if (json.has("mappings")) {
-            migrateMappings(json.getAsJsonObject("mappings"));
+            changed |= migrateMappings(json.getAsJsonObject("mappings"));
         }
-
         if (json.has("tierStructures")) {
             JsonElement tierStructures = json.get("tierStructures");
             if (tierStructures.isJsonArray()) {
                 for (JsonElement element : tierStructures.getAsJsonArray()) {
                     if (element.isJsonObject()) {
-                        migrate(element.getAsJsonObject());
+                        changed |= migrate(element.getAsJsonObject());
                     }
                 }
             }
         }
+        return changed;
     }
 
-    private void migrateMappings(JsonObject mappings) {
+    private boolean migrateMappings(JsonObject mappings) {
+        boolean changed = false;
         for (Map.Entry<String, JsonElement> entry : mappings.entrySet()) {
             JsonElement element = entry.getValue();
 
@@ -48,9 +50,10 @@ public class V2_ModularCasingMigrator implements IDataMigrator {
                 String newId = BlockCompat.remapRemovedBlocks(element.getAsString());
                 if (newId != null) {
                     mappings.addProperty(entry.getKey(), newId);
+                    changed = true;
                 }
             } else if (element.isJsonArray()) {
-                migrateArray(mappings, entry.getKey(), element.getAsJsonArray());
+                changed |= migrateArray(mappings, entry.getKey(), element.getAsJsonArray());
             } else if (element.isJsonObject()) {
                 JsonObject obj = element.getAsJsonObject();
                 if (obj.has("block")) {
@@ -59,16 +62,18 @@ public class V2_ModularCasingMigrator implements IDataMigrator {
                             .getAsString());
                     if (newId != null) {
                         obj.addProperty("block", newId);
+                        changed = true;
                     }
                 }
                 if (obj.has("blocks")) {
-                    migrateArray(obj, "blocks", obj.getAsJsonArray("blocks"));
+                    changed |= migrateArray(obj, "blocks", obj.getAsJsonArray("blocks"));
                 }
             }
         }
+        return changed;
     }
 
-    private void migrateArray(JsonObject parent, String key, JsonArray array) {
+    private boolean migrateArray(JsonObject parent, String key, JsonArray array) {
         JsonArray newArray = new JsonArray();
         boolean changed = false;
         for (JsonElement item : array) {
@@ -88,5 +93,6 @@ public class V2_ModularCasingMigrator implements IDataMigrator {
         if (changed) {
             parent.add(key, newArray);
         }
+        return changed;
     }
 }

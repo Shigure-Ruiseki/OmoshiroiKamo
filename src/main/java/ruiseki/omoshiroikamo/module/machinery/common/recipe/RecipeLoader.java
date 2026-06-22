@@ -48,6 +48,8 @@ public class RecipeLoader {
 
         recipesByGroup.clear();
 
+        RecipeMigration.migrateAll(recipesDir);
+
         if (reader == null || !reader.getPath()
             .equals(recipesDir)) {
             reader = new MachineryJsonReader(recipesDir);

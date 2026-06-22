@@ -64,15 +64,17 @@ public class StructureMigrationRegistry {
 
             // If file is older than the target version of this migrator
             if (VersionComparator.compare(fileVersion, targetVer) < 0) {
-                Logger.info(
-                    "[Migration] Applying migrator to version " + targetVer
-                        + " for structure: "
-                        + (json.has("name") ? json.get("name")
-                            .getAsString() : "unknown"));
-                migrator.migrate(json);
+                boolean changed = migrator.migrate(json);
                 fileVersion = targetVer;
                 thisObjectMigrated = true;
                 migratedFlag[0] = true;
+                if (changed) {
+                    Logger.info(
+                        "[Migration] Applied migrator to version " + targetVer
+                            + " for structure: "
+                            + (json.has("name") ? json.get("name")
+                                .getAsString() : "unknown"));
+                }
             }
         }
 
