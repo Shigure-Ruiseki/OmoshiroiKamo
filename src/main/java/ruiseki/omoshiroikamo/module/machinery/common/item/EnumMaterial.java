@@ -1,10 +1,18 @@
 package ruiseki.omoshiroikamo.module.machinery.common.item;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import lombok.Getter;
 
 /**
  * Define the type of intermediate material.
  * This is a template of new materials.
+ *
+ * The optional {@code forms} vararg restricts which part types (e.g. "ingot",
+ * "plate", "dust") this material produces. Omit it to support all forms.
  */
 public enum EnumMaterial {
 
@@ -185,6 +193,11 @@ public enum EnumMaterial {
     CHLONOX(1300, "chlonox", "Chlonox"),
     LEVIATHAN(1310, "leviathan", "Leviathan"),
     PERFECT(1500, "perfect", "Perfect"),
+        // EGYPTIAN
+    SOLARIUM(1600, "solarium", "Solarium", "ingot"),
+    OSIRIUM(1601, "osirium", "Osirium", "ingot"),
+    KHEPHRITE(1602, "khephrite", "Khephrite", "ingot"),
+    ANUBIUM(1603, "anubium", "Anubium", "ingot"),
 
     ;
 
@@ -194,11 +207,23 @@ public enum EnumMaterial {
     private final String name; // internal name, texture name, translation key
     @Getter
     private final String oreName; // suffix for ore dictionary
+    private final Set<String> forms; // empty = all forms supported
 
-    EnumMaterial(int meta, String name, String oreName) {
+    /**
+     * @param forms part types this material supports ("ingot", "plate", "dust").
+     *              Omit to support all forms.
+     */
+    EnumMaterial(int meta, String name, String oreName, String... forms) {
         this.meta = meta;
         this.name = name;
         this.oreName = oreName;
+        this.forms = forms.length == 0 ? Collections.emptySet()
+            : Collections.unmodifiableSet(new HashSet<>(Arrays.asList(forms)));
+    }
+
+    /** Returns true if this material produces items of the given part type. */
+    public boolean supportsForm(String form) {
+        return forms.isEmpty() || forms.contains(form);
     }
 
     public static EnumMaterial byMetadata(int meta) {

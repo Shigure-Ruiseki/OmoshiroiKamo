@@ -11,14 +11,11 @@ public class MachineryOreDict {
 
     public static void init() {
         for (EnumMaterial material : EnumMaterial.values()) {
-
-            OreDictionary
+            if (material.supportsForm("ingot")) OreDictionary
                 .registerOre("ingot" + material.getOreName(), MachineryItems.INGOT.newItemStack(1, material.getMeta()));
-
-            OreDictionary
+            if (material.supportsForm("plate")) OreDictionary
                 .registerOre("plate" + material.getOreName(), MachineryItems.PLATE.newItemStack(1, material.getMeta()));
-
-            OreDictionary
+            if (material.supportsForm("dust")) OreDictionary
                 .registerOre("dust" + material.getOreName(), MachineryItems.DUST.newItemStack(1, material.getMeta()));
         }
     }

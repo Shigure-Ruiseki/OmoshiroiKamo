@@ -67,6 +67,7 @@ public class ItemMaterialPart extends ItemOK {
         // while others are in their respective subdirectories.
         String folder = partType.equals("ingot") ? "" : partType + "/";
         for (EnumMaterial material : EnumMaterial.values()) {
+            if (!material.supportsForm(partType)) continue;
             icons.put(
                 material.getMeta(),
                 register.registerIcon(Reference.PREFIX_MOD + "modular/" + folder + partType + material.getOreName()));
@@ -85,6 +86,7 @@ public class ItemMaterialPart extends ItemOK {
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
         for (EnumMaterial material : EnumMaterial.values()) {
+            if (!material.supportsForm(partType)) continue;
             list.add(new ItemStack(item, 1, material.getMeta()));
         }
     }
