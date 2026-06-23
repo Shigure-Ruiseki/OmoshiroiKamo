@@ -8,6 +8,7 @@ public class Reference {
     public static final String DEPENDENCIES = "required-after:gtnhlib@[0.11.9,);"
         + "required-after:structurelib@[1.4.38,);"
         + "required-after:modularui2@[2.3.73-1.7.10,);"
+        + "required-after:okcore;"
         + "after:Baubles|Expanded;"
         + "after:Baubles;"
         + "after:NotEnoughItems;"
