@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.core.util;
 
 /**
- * Utility for comparing semantic version strings.
+ * Utility for comparing semantic and date-based version strings (e.g., 26.06.21.0).
  */
 public class VersionComparator {
 
@@ -9,27 +9,30 @@ public class VersionComparator {
      * Strips build metadata and pre-release identifiers from a version string,
      * returning only the numeric base version.
      * Examples:
-     * "1.5.4-JSONrefact.15+c4a815807b-dirty" -> "1.5.4"
-     * "1.5.4" -> "1.5.4"
-     * "v1.5.4" -> "1.5.4"
+     * "26.06.21.0-alpha+build123" -> "26.06.21.0"
+     * "v26.06.21.0" -> "26.06.21.0"
+     * "26.06.21.0" -> "26.06.21.0"
      *
      * @param version The version string to normalize
-     * @return The base numeric version string (e.g., "1.5.4")
+     * @return The base numeric version string (e.g., "26.06.21.0")
      */
     public static String toBaseVersion(String version) {
-        if (version == null || version.isEmpty()) return "0.0.0";
+        if (version == null || version.isEmpty()) return "0.0.0.0";
+
         // Strip build metadata first ("+...")
         int plus = version.indexOf('+');
         if (plus != -1) version = version.substring(0, plus);
+
         // Strip pre-release identifier ("-...")
         int hyphen = version.indexOf('-');
         if (hyphen != -1) version = version.substring(0, hyphen);
+
         return normalize(version);
     }
 
     /**
-     * Compares two version strings.
-     * Handles build metadata and pre-release identifiers (e.g., "1.5.4-foo+bar").
+     * Compares two version strings based on dots.
+     * Handles leading zeros safely (e.g., "06" is treated as 6).
      *
      * @param v1 The first version string
      * @param v2 The second version string
@@ -39,8 +42,8 @@ public class VersionComparator {
         v1 = toBaseVersion(v1);
         v2 = toBaseVersion(v2);
 
-        if (v1.isEmpty()) v1 = "0.0.0";
-        if (v2.isEmpty()) v2 = "0.0.0";
+        if (v1.isEmpty()) v1 = "0.0.0.0";
+        if (v2.isEmpty()) v2 = "0.0.0.0";
 
         String[] parts1 = v1.split("\\.");
         String[] parts2 = v2.split("\\.");
@@ -70,12 +73,9 @@ public class VersionComparator {
 
     private static int parseSafe(String s) {
         try {
-            // Handle versions like "1.2.3-beta" by taking the prefix
-            int hyphen = s.indexOf('-');
-            if (hyphen != -1) {
-                s = s.substring(0, hyphen);
-            }
-            return Integer.parseInt(s.replaceAll("[^0-9]", ""));
+            String cleaned = s.replaceAll("[^0-9]", "");
+            if (cleaned.isEmpty()) return 0;
+            return Integer.parseInt(cleaned);
         } catch (NumberFormatException e) {
             return 0;
         }
