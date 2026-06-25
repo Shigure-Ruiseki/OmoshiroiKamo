@@ -16,18 +16,17 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.helper.ItemNBTHelpers;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
-import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
+import ruiseki.omoshiroikamo.core.compat.ModCompatInformation;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
 
 public class ItemChickenSpawnEgg extends ItemOK {
@@ -36,7 +35,7 @@ public class ItemChickenSpawnEgg extends ItemOK {
     protected IIcon baseIcon, overlayIcon;
 
     public ItemChickenSpawnEgg() {
-        super(ModObject.CHICKEN_SPAWN_EGG);
+        super(ModObject.CHICKEN_SPAWN_EGG.name);
         setHasSubtypes(true);
     }
 
@@ -160,45 +159,40 @@ public class ItemChickenSpawnEgg extends ItemOK {
 
         ItemStack layItem = chicken.createLayItem();
         SpawnType spawnType = chicken.getSpawnType();
-        TooltipUtils builder = TooltipUtils.builder();
 
-        // Tier
-        builder.addLang(Reference.TOOLTIP + "spawn_egg.tier", chicken.getTier());
+        list.add(LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.tier", chicken.getTier()));
 
-        // Lay item
-        builder.addLangIf(
-            layItem != null && layItem.getItem() != null,
-            Reference.TOOLTIP + "spawn_egg.layitem",
-            layItem.getDisplayName());
-        builder.addLangIf(layItem == null || layItem.getItem() == null, Reference.TOOLTIP + "spawn_egg.nolayitem");
-
-        // Spawn type (chỉ hiển thị nếu khác NONE)
-        EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
-        EnumChatFormatting valueColor;
-
-        if (spawnType == SpawnType.NORMAL) {
-            valueColor = EnumChatFormatting.GREEN;
-        } else if (spawnType == SpawnType.HELL) {
-            valueColor = EnumChatFormatting.RED;
-        } else if (spawnType == SpawnType.SNOW) {
-            valueColor = EnumChatFormatting.AQUA;
+        if (layItem != null && layItem.getItem() != null) {
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.layitem", layItem.getDisplayName()));
         } else {
-            valueColor = EnumChatFormatting.WHITE;
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.nolayitem"));
         }
 
-        builder.addLabelWithLangValue(
-            Reference.TOOLTIP + "spawn_egg.spawnType",
-            labelColor,
-            spawnType.toString(),
-            valueColor);
+        EnumChatFormatting valueColor;
+        switch (spawnType) {
+            case NORMAL:
+                valueColor = EnumChatFormatting.GREEN;
+                break;
+            case HELL:
+                valueColor = EnumChatFormatting.RED;
+                break;
+            case SNOW:
+                valueColor = EnumChatFormatting.AQUA;
+                break;
+            default:
+                valueColor = EnumChatFormatting.WHITE;
+                break;
+        }
 
-        // Not breedable
-        builder.addColoredLangIf(
-            !chicken.isBreedable(),
-            EnumChatFormatting.RED,
-            Reference.TOOLTIP + "spawn_egg.notbreedable");
+        EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
+        String labelKey = Reference.TOOLTIP + "spawn_egg.spawnType";
+        String label = new ChatComponentTranslation(labelKey).getFormattedText();
+        list.add(labelColor + label + ": " + valueColor + String.valueOf(spawnType) + EnumChatFormatting.RESET);
 
-        // Breedable with parents
+        if (!chicken.isBreedable()) {
+            list.add(EnumChatFormatting.RED + LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.notbreedable"));
+        }
+
         if (chicken.isBreedable() && chicken.getParent1() != null && chicken.getParent2() != null) {
             String parent1 = new ChatComponentTranslation(
                 chicken.getParent1()
@@ -207,20 +201,25 @@ public class ItemChickenSpawnEgg extends ItemOK {
                 chicken.getParent2()
                     .getDisplayName()).getFormattedText();
 
-            builder.addLabelWithValue(
-                new ChatComponentTranslation(Reference.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
-                EnumChatFormatting.YELLOW,
-                parent1 + " & " + parent2,
-                EnumChatFormatting.GOLD);
+            String breedableLabel = new ChatComponentTranslation(Reference.TOOLTIP + "spawn_egg.breedable")
+                .getFormattedText();
+
+            list.add(
+                EnumChatFormatting.YELLOW + breedableLabel
+                    + ": "
+                    + EnumChatFormatting.GOLD
+                    + parent1
+                    + " & "
+                    + parent2
+                    + EnumChatFormatting.RESET);
         }
 
-        // Mod compat tooltips
         if (ModCompatInformation.TOOLTIP.containsKey(chicken.getId())) {
             ModCompatInformation info = ModCompatInformation.TOOLTIP.get(chicken.getId());
-            builder.addAll(info.getToolTip());
+            if (info != null && info.getToolTip() != null) {
+                list.addAll(info.getToolTip());
+            }
         }
-
-        list.addAll(builder.build());
     }
 
 }

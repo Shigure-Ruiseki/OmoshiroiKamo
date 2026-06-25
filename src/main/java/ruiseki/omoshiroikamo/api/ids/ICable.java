@@ -10,9 +10,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.capabilities.ICapabilityProvider;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergyIO;
-import ruiseki.omoshiroikamo.core.tileentity.ITile;
+import ruiseki.okcore.capabilities.ICapabilityProvider;
+import ruiseki.okcore.energy.IOKEnergyIO;
+import ruiseki.okcore.tileentity.ITile;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractCableNetwork;
 
 public interface ICable extends ITile, IOKEnergyIO, ICapabilityProvider {

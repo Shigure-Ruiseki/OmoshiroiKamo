@@ -52,7 +52,7 @@ public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME>
     }
 
     @Override
-    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
+    public Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockItemOutputPortME.class;
     }
 
@@ -71,7 +71,7 @@ public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME>
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity te = accessor.getTileEntity();
         if (te instanceof TEItemOutputPortME meTile) {

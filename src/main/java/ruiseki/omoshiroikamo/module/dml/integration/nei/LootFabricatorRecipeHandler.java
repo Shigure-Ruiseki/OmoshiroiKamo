@@ -10,12 +10,12 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import ruiseki.okcore.addon.nei.RecipeHandlerBase;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator.BlockLootFabricator;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
@@ -73,7 +73,7 @@ public class LootFabricatorRecipeHandler extends RecipeHandlerBase {
         super.loadCraftingRecipes(result);
         for (ModelRegistryItem model : ModelRegistry.INSTANCE.getItems()) {
             for (ItemStack loot : model.getLootItems()) {
-                if (ItemUtils.areStacksEqual(result, loot)) {
+                if (ItemStackHelpers.areStacksEqual(result, loot)) {
                     ItemStack pristine = model.getPristineMatter();
                     arecipes.add(new CachedLootFabricatorRecipe(pristine, loot));
                 }

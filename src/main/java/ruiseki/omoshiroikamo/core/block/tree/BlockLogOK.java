@@ -13,8 +13,8 @@ import net.minecraft.util.IIcon;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.block.IBlock;
 import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.core.block.IBlock;
 
 public class BlockLogOK extends BlockLog implements IBlock {
 
@@ -43,6 +43,11 @@ public class BlockLogOK extends BlockLog implements IBlock {
         return false;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
         list.add(new ItemStack(itemIn, 1, 0));
@@ -62,7 +67,7 @@ public class BlockLogOK extends BlockLog implements IBlock {
     public void registerBlockIcons(IIconRegister reg) {
         this.field_150167_a = new IIcon[1];
         this.field_150166_b = new IIcon[1];
-        this.field_150167_a = new IIcon[] { reg.registerIcon(Reference.PREFIX_MOD + getTextureName()) };
-        this.field_150166_b = new IIcon[] { reg.registerIcon(Reference.PREFIX_MOD + getTextureName() + "_top") };
+        this.field_150167_a = new IIcon[] { reg.registerIcon(getTextureName()) };
+        this.field_150166_b = new IIcon[] { reg.registerIcon(getTextureName() + "_top") };
     }
 }

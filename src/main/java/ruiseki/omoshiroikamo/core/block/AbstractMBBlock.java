@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.okcore.color.EnumDye;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 
@@ -26,7 +26,8 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
     }
 
     @Override
-    protected void registerBlockColor() {
+    public void registerComponent() {
+        super.registerComponent();
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override

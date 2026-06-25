@@ -2,9 +2,9 @@ package ruiseki.omoshiroikamo.module.multiblock;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.init.ModBase;
+import ruiseki.okcore.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.module.multiblock.client.render.QuantumBeaconTESR;
 import ruiseki.omoshiroikamo.module.multiblock.client.render.QuantumExtractorTESR;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon.TEQuantumBeacon;

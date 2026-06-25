@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus;
 
-import ruiseki.omoshiroikamo.core.energy.capability.EnergySource;
+import ruiseki.okcore.energy.capability.IEnergySource;
 
-public class InterfaceEnergySource implements EnergySource {
+public class InterfaceEnergySource implements IEnergySource {
 
     private final IEnergyInterface iFace;
 

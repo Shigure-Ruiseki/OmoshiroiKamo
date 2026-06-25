@@ -8,14 +8,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.okcore.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 public class EnergyOutput extends AbstractModularRecipeOutput {
 
@@ -53,9 +53,8 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
 
             if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
 
-            if (!(port instanceof IOKEnergySink)) continue;
+            if (!(port instanceof IOKEnergySink energyPort)) continue;
 
-            IOKEnergySink energyPort = (IOKEnergySink) port;
             int accepted = energyPort
                 .receiveEnergy(ForgeDirection.UNKNOWN, (int) Math.min(remaining, (long) Integer.MAX_VALUE), false);
             remaining -= accepted;

@@ -3,10 +3,10 @@ package ruiseki.omoshiroikamo.core.command.multiblock;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
 
-import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.init.ModBase;
+import ruiseki.omoshiroikamo.core.structure.StructureManager;
 
 public class CommandMultiblockStatus extends CommandMod {
 

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
@@ -19,16 +20,16 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemDeepLearner extends ItemOK implements IGuiHolder<PlayerInventoryGuiData> {
 
     public ItemDeepLearner() {
         super(ModObject.DEEP_LEARNER.name);
         setMaxStackSize(1);
-        setTextureName("dml/deep_learner");
+        setTextureName(Reference.PREFIX_MOD + "dml/deep_learner");
     }
 
     @Override

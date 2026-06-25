@@ -35,19 +35,19 @@ import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
-import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
-import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.IItemStackPredicate;
+import ruiseki.okcore.item.ItemTransfer;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.ILogicNet;
@@ -399,7 +399,7 @@ public class ItemExporter extends AbstractWriterPart implements IItemPart {
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderHelpers.bindTexture(activeSlot != -1 ? active : inactive);
+        RenderUtils.bindTexture(activeSlot != -1 ? active : inactive);
 
         rotateForSide(getSide());
 
@@ -430,7 +430,7 @@ public class ItemExporter extends AbstractWriterPart implements IItemPart {
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(inactive);
+        RenderUtils.bindTexture(inactive);
         model.renderAll();
 
         GL11.glPopMatrix();
@@ -464,7 +464,7 @@ public class ItemExporter extends AbstractWriterPart implements IItemPart {
 
             transfer.source(new InterfaceItemSource((IItemInterface) iFace));
 
-            transfer.sink(ItemUtils.getItemSink(getTargetTE(), side.getOpposite()));
+            transfer.sink(ItemStackHelpers.getItemSink(getTargetTE(), side.getOpposite()));
 
             boolean success = executeTransferByMode(transfer, value, mode);
             if (success) rrCursor = (rrCursor + 1) % size;
@@ -474,7 +474,7 @@ public class ItemExporter extends AbstractWriterPart implements IItemPart {
 
                 transfer.source(new InterfaceItemSource((IItemInterface) iFace));
 
-                transfer.sink(ItemUtils.getItemSink(getTargetTE(), side.getOpposite()));
+                transfer.sink(ItemStackHelpers.getItemSink(getTargetTE(), side.getOpposite()));
 
                 executeTransferByMode(transfer, value, mode);
             }
@@ -540,16 +540,16 @@ public class ItemExporter extends AbstractWriterPart implements IItemPart {
         return false;
     }
 
-    private ItemStackPredicate buildPredicate(ItemStack stack) {
-        ItemStackPredicate match;
+    private IItemStackPredicate buildPredicate(ItemStack stack) {
+        IItemStackPredicate match;
 
         if (nbt) {
-            match = ItemStackPredicate.matches(stack);
+            match = IItemStackPredicate.matches(stack);
         } else {
-            match = ItemStackPredicate.matches(new ItemStack(stack.getItem(), 1, stack.getItemDamage()));
+            match = IItemStackPredicate.matches(new ItemStack(stack.getItem(), 1, stack.getItemDamage()));
         }
 
-        ItemStackPredicate itemPredicate = blackList ? s -> !match.test(s) : match;
+        IItemStackPredicate itemPredicate = blackList ? s -> !match.test(s) : match;
 
         if (stackSize) {
             itemPredicate = itemPredicate.withStackSize(transferLimit, Integer.MAX_VALUE);

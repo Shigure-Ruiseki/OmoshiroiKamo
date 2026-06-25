@@ -1,0 +1,89 @@
+package ruiseki.omoshiroikamo.core.util;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.SpecialChars;
+import ruiseki.okcore.energy.IOKEnergyTile;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
+import ruiseki.omoshiroikamo.core.gas.IGasHandler;
+import ruiseki.omoshiroikamo.core.tileentity.ICraftingTile;
+import ruiseki.omoshiroikamo.core.tileentity.IProgressTile;
+import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
+import vazkii.botania.api.mana.IManaBlock;
+
+public class WailaUtils {
+
+    public static String getProgress(IProgressTile handler) {
+        float progress = handler.getProgress();
+        return LangHelpers.localize("gui.progress", Math.max(0, progress * 100));
+    }
+
+    public static String getCraftingState(ICraftingTile handler) {
+        return LangHelpers.localize(
+            "gui.craftingState." + handler.getCraftingState()
+                .getName());
+    }
+
+    public static String getEnergyTransfer(IOKEnergyTile handler) {
+        return LangHelpers.localize("gui.energy_transfer", handler.getEnergyTransfer());
+    }
+
+    public static List<String> getGasTooltip(IGasHandler handler) {
+        if (handler == null) return new ArrayList<>();
+
+        List<String> list = new ArrayList<>();
+        GasTankInfo[] tanks = handler.getTankInfo(ForgeDirection.UNKNOWN);
+
+        if (tanks == null) return list;
+
+        for (GasTankInfo tank : tanks) {
+            if (tank == null) continue;
+
+            boolean empty = tank.gas == null;
+
+            list.add(
+                SpecialChars.getRenderString(
+                    "waila.fluid",
+                    empty ? "EMPTYFLUID"
+                        : tank.gas.getGas()
+                            .getName(),
+                    empty ? "EMPTYFLUID"
+                        : tank.gas.getGas()
+                            .getLocalizedName(),
+                    String.valueOf(empty ? 0 : tank.gas.amount),
+                    String.valueOf(tank.capacity)));
+        }
+        return list;
+    }
+
+    public static String getManaToolTip(IManaBlock handler) {
+        return LangHelpers.localize("gui.mana_info", handler.getCurrentMana());
+    }
+
+    public static String getSideIOTooltip(ISidedIO handler, ForgeDirection direction) {
+        if (handler == null) return null;
+        EnumIO io = handler.getSideIO(direction);
+        return LangHelpers.localize(io.getName());
+    }
+
+    public static Vec3 getLocalHit(IWailaDataAccessor accessor) {
+        if (accessor == null) return null;
+
+        MovingObjectPosition mop = accessor.getPosition();
+        if (mop == null || mop.hitVec == null) return null;
+
+        return Vec3.createVectorHelper(
+            mop.hitVec.xCoord - mop.blockX,
+            mop.hitVec.yCoord - mop.blockY,
+            mop.hitVec.zCoord - mop.blockZ);
+    }
+
+}

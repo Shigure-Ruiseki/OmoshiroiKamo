@@ -7,20 +7,22 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import cofh.api.energy.IEnergyStorage;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
+import ruiseki.okcore.capabilities.Capability;
+import ruiseki.okcore.datastructure.LazyOptional;
+import ruiseki.okcore.energy.EnergyStorage;
+import ruiseki.okcore.energy.IOKEnergyIO;
+import ruiseki.okcore.energy.capability.CapabilityEnergy;
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
-import ruiseki.omoshiroikamo.core.capabilities.Capability;
-import ruiseki.omoshiroikamo.core.capabilities.energy.CapabilityEnergy;
-import ruiseki.omoshiroikamo.core.energy.EnergyStorage;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergyIO;
-import ruiseki.omoshiroikamo.core.network.packet.PacketEnergy;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.network.PacketEnergy;
 
 /**
  * Abstract base class for tile entities that store and manage energy.
@@ -39,6 +41,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyIO
     /** Internal energy storage instance. */
     @NBTPersist
     protected EnergyStorage energyStorage;
+    protected LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> energyStorage);
 
     /** Flag indicating if IC2 registration was completed. */
     public boolean ic2Registered = false;
@@ -124,7 +127,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyIO
 
     @Override
     public int getEnergyTransfer() {
-        return energyStorage == null ? 0 : energyStorage.getMaxReceive();
+        return energyStorage == null ? 0 : energyStorage.getEnergyStored();
     }
 
     @Override
@@ -191,6 +194,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyIO
         if (EnergyConfig.ic2Capability) {
             deregister();
         }
+        energyCap.invalidate();
     }
 
     @Override
@@ -246,18 +250,10 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyIO
     }
 
     @Override
-    public boolean hasCapability(@NotNull Capability<?> capability, @Nullable ForgeDirection facing) {
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability,
+        @Nullable ForgeDirection facing) {
         if (capability == CapabilityEnergy.ENERGY) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getCapability(@NotNull Capability<T> capability, @Nullable ForgeDirection facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
-            return (T) energyStorage;
+            return energyCap.cast();
         }
         return super.getCapability(capability, facing);
     }

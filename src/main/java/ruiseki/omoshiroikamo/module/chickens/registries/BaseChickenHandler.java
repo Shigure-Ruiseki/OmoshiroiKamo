@@ -23,11 +23,11 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
+import ruiseki.omoshiroikamo.core.compat.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.core.json.ItemMaterial;
 import ruiseki.omoshiroikamo.core.json.JsonUtils;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 public abstract class BaseChickenHandler {

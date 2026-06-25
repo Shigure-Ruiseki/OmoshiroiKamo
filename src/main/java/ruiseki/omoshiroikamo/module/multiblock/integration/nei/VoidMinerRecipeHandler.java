@@ -19,14 +19,14 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.IUsageHandler;
+import ruiseki.okcore.addon.nei.PositionedStackAdv;
+import ruiseki.okcore.addon.nei.RecipeHandlerBase;
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.weighted.IFocusableRegistry;
+import ruiseki.okcore.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.nei.PositionedStackAdv;
-import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
-import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
@@ -302,7 +302,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             // Search for this item in this dimension's list
             for (WeightedStackBase ws : dimRegistry.getUnFocusedList()) {
                 ItemStack output = ws.getMainStack();
-                if (output != null && ItemUtils.areStacksEqual(output, item)) {
+                if (output != null && ItemStackHelpers.areStacksEqual(output, item)) {
                     // Found! Add a recipe for this dimension
                     arecipes.add(new CachedVoidRecipe(ws, dimRegistry, tier, dimId));
                     break; // Only add once per dimension

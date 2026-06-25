@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
+import ruiseki.okcore.datastructure.BlockStack;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypes;
 

@@ -38,7 +38,7 @@ public abstract class AbstractTieredMBBlock<T extends AbstractMBModifierTE> exte
     }
 
     @Override
-    protected void registerTileEntity() {
+    public void registerTileEntity() {
         for (Class<? extends TileEntity> teClass : teClasses) {
             // Naming convention: ClassSimpleName + "TileEntity"
             // Example: "TEQuantumOreExtractorT1TileEntity"

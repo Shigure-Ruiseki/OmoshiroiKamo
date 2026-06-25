@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
+import ruiseki.okcore.helper.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypeRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypes;

@@ -8,11 +8,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.Optional;
 import mekanism.api.lasers.ILaserReceptor;
+import ruiseki.okcore.energy.EnergyTransfer;
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
@@ -61,7 +61,7 @@ public class TEEnergyInputPort extends AbstractEnergyIOPortTE implements ILaserR
             int requiredTransfer = MachineryConfig.getEnergyPortTransfer(tier + 1);
             if (energyStorage.getMaxEnergyStored() != requiredCapacity) {
                 energyStorage.setCapacity(requiredCapacity);
-                energyStorage.setMaxReceive(requiredTransfer);
+                energyStorage.setMaxTransfer(requiredTransfer);
             }
             markDirty();
         }
@@ -153,7 +153,7 @@ public class TEEnergyInputPort extends AbstractEnergyIOPortTE implements ILaserR
             int requiredTransfer = MachineryConfig.getEnergyPortTransfer(tier + 1);
             if (energyStorage.getMaxEnergyStored() != requiredCapacity) {
                 energyStorage.setCapacity(requiredCapacity);
-                energyStorage.setMaxReceive(requiredTransfer);
+                energyStorage.setMaxTransfer(requiredTransfer);
             }
         }
         super.readCommon(root);

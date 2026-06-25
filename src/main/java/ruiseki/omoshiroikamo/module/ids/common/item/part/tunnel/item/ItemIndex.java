@@ -3,8 +3,7 @@ package ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item;
 import net.minecraft.item.ItemStack;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import ruiseki.omoshiroikamo.core.item.ItemStackKey;
-import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
+import ruiseki.okcore.inventory.ItemStackKey;
 
 public class ItemIndex {
 
@@ -17,7 +16,7 @@ public class ItemIndex {
     }
 
     public void add(ItemStack stack) {
-        items.addTo(ItemStackKeyPool.get(stack), stack.stackSize);
+        items.addTo(ItemStackKey.of(stack), stack.stackSize);
     }
 
     public int get(ItemStackKey key) {

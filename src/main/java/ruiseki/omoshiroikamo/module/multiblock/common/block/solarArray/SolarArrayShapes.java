@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.solarArray;
 import java.util.Map;
 
 import ruiseki.omoshiroikamo.api.structure.core.StructureShapeWithMappings;
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.structure.StructureManager;
 
 public class SolarArrayShapes {
 

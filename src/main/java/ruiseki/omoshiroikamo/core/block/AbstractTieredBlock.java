@@ -23,7 +23,7 @@ public abstract class AbstractTieredBlock<T extends AbstractTE> extends Abstract
     }
 
     @Override
-    protected void registerTileEntity() {
+    public void registerTileEntity() {
         for (Class<? extends TileEntity> teClass : teClasses) {
             // Naming convention: ClassSimpleName + "TileEntity"
             // Example: "TEQuantumOreExtractorT1TileEntity"

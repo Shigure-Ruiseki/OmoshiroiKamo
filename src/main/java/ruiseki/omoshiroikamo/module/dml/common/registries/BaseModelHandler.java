@@ -9,7 +9,7 @@ import cpw.mods.fml.common.Loader;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLBaseModelReader;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLBaseModelWriter;
 

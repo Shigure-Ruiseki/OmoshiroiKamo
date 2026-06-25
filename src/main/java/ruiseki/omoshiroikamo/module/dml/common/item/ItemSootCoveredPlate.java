@@ -1,13 +1,14 @@
 package ruiseki.omoshiroikamo.module.dml.common.item;
 
+import ruiseki.okcore.item.ItemOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemSootCoveredPlate extends ItemOK {
 
     public ItemSootCoveredPlate() {
         super(ModObject.SOOT_COVERED_PLATE.name);
         setMaxStackSize(64);
-        setTextureName("dml/soot_covered_plate");
+        setTextureName(Reference.PREFIX_MOD + "dml/soot_covered_plate");
     }
 }

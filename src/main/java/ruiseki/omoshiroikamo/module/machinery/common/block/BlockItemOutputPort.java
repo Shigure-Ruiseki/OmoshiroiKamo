@@ -17,12 +17,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.helper.WailaHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPort;
@@ -50,7 +50,7 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
     }
 
     @Override
-    protected void registerTileEntity() {
+    public void registerTileEntity() {
         // Register with remapping for legacy TE classes
         GameRegistry.registerTileEntityWithAlternatives(
             TEItemOutputPort.class,
@@ -98,17 +98,17 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
     }
 
     @Override
-    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
+    public Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockItemOutputPort.class;
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        super.getWailaInfo(tooltip, itemStack, accessor, config);
+        super.getWailaBody(tooltip, itemStack, accessor, config);
         TileEntity tileEntity = accessor.getTileEntity();
         if (tileEntity instanceof IInventory handler) {
-            tooltip.add(WailaUtils.getInventoryTooltip(handler));
+            tooltip.add(WailaHelpers.getInventoryTooltip(handler));
         }
     }
 

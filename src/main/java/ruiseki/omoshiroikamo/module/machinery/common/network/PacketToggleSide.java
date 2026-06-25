@@ -6,8 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.network.CodecField;
-import ruiseki.omoshiroikamo.core.network.PacketCodec;
+import ruiseki.okcore.network.CodecField;
+import ruiseki.okcore.network.PacketCodec;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 
 public class PacketToggleSide extends PacketCodec {

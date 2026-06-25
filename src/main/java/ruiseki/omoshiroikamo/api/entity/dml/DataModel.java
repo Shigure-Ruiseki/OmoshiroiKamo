@@ -11,9 +11,9 @@ import net.minecraft.util.ChatComponentText;
 
 import org.jetbrains.annotations.Nullable;
 
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
+import ruiseki.okcore.helper.ItemNBTHelpers;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
 public class DataModel {
@@ -248,7 +248,7 @@ public class DataModel {
             return false;
         }
 
-        return ItemUtils.areStacksEqual(model.getLivingMatter(), livingMatterStack);
+        return ItemStackHelpers.areStacksEqual(model.getLivingMatter(), livingMatterStack);
     }
 
     public static boolean isDataModelMatchesPristineMatter(ItemStack modelStack, ItemStack pristineMatterStack) {

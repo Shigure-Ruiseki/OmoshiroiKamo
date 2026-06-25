@@ -5,10 +5,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import org.apache.logging.log4j.Level;
+
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.block.IBlock;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.block.IBlock;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.base.BlockAlabasterStructure;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.base.BlockBasaltStructure;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.base.BlockCrystal;
@@ -42,11 +45,11 @@ public enum MultiBlockBlocks {
 
     // spotless: off
 
-    BLOCK_MICA(new BlockOK(ModObject.MICA.name, Material.rock).setTextureName("multiblock/mica")),
+    BLOCK_MICA(new BlockOK(ModObject.MICA.name, Material.rock).setTextureName(Reference.PREFIX_MOD + "multiblock/mica")),
     BLOCK_HARDENED_STONE(
-        new BlockOK(ModObject.HARDENED_STONE.name, Material.rock).setTextureName("multiblock/hardened_stone")),
-    BLOCK_ALABASTER(new BlockOK(ModObject.ALABASTER.name, Material.rock).setTextureName("multiblock/alabaster")),
-    BLOCK_BASALT(new BlockOK(ModObject.BASALT.name, Material.rock).setTextureName("multiblock/basalt")),
+        new BlockOK(ModObject.HARDENED_STONE.name, Material.rock).setTextureName(Reference.PREFIX_MOD + "multiblock/hardened_stone")),
+    BLOCK_ALABASTER(new BlockOK(ModObject.ALABASTER.name, Material.rock).setTextureName(Reference.PREFIX_MOD + "multiblock/alabaster")),
+    BLOCK_BASALT(new BlockOK(ModObject.BASALT.name, Material.rock).setTextureName(Reference.PREFIX_MOD + "multiblock/basalt")),
     QUANTUM_ORE_EXTRACTOR(BlockQuantumOreExtractor.create()),
     QUANTUM_RES_EXTRACTOR(BlockQuantumResExtractor.create()),
     QUANTUM_BEACON(BlockQuantumBeacon.create()),
@@ -85,16 +88,16 @@ public enum MultiBlockBlocks {
         for (MultiBlockBlocks block : VALUES) {
             try {
                 block.block.init();
-                Logger.info("Successfully initialized {}", block.name());
+                OmoshiroiKamo.okLog(Level.INFO, "Successfully initialized {}", block.name());
             } catch (Exception e) {
-                Logger.error("Failed to initialize block: +{}", block.name());
+                OmoshiroiKamo.okLog(Level.ERROR, "Failed to initialize block: +{}", block.name());
             }
         }
     }
 
     private final IBlock block;
 
-    MultiBlockBlocks(BlockOK block) {
+    MultiBlockBlocks(IBlock block) {
         this.block = block;
     }
 

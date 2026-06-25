@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -29,10 +30,9 @@ import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.api.structure.core.TierStructureRef;
 import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
-import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.structure.CustomStructureRegistry;
+import ruiseki.omoshiroikamo.core.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 
 /**

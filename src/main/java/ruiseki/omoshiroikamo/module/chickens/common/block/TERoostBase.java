@@ -6,14 +6,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.network.packet.PacketProgress;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.network.PacketProgress;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.tileentity.IProgressTile;
 import ruiseki.omoshiroikamo.core.util.SlotDefinition;
@@ -278,7 +278,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             }
         }
 
-        if (ItemUtils.areStackMergable(outputStack, stack)) {
+        if (ItemStackHelpers.areStackMergable(outputStack, stack)) {
             int space = max - outputStack.stackSize;
             int move = Math.min(stack.stackSize, space);
 

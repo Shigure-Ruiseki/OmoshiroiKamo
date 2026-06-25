@@ -13,8 +13,8 @@ import net.minecraftforge.common.util.Constants;
 
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.persist.nbt.INBTSerializable;
 
 public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerializable {
 
@@ -116,7 +116,7 @@ public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerial
                 remaining -= Math.min(stack.getMaxStackSize(), remaining);
             }
 
-            else if (ItemUtils.areStacksEqual(slotStack, stack)) {
+            else if (ItemStackHelpers.areStacksEqual(slotStack, stack)) {
                 int space = slotStack.getMaxStackSize() - slotStack.stackSize;
                 if (space > 0) {
                     remaining -= Math.min(space, remaining);

@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Abstract base class for materials that wrap a JsonObject.
@@ -20,6 +20,8 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  * To improve separation of concerns and remove GSON dependency from the API layer,
  * consider moving JSON logic to dedicated Reader/Writer classes.
  */
+// TODO: Change to OK Core
+@Deprecated
 public abstract class AbstractJsonMaterial implements IJsonMaterial {
 
     protected File sourceFile;

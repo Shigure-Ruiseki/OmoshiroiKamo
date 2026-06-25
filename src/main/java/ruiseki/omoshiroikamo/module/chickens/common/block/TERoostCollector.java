@@ -20,9 +20,9 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.util.SlotDefinition;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
@@ -85,7 +85,7 @@ public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<Po
     public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
         ItemStack existing = inv.getStackInSlot(slot);
         if (existing != null) {
-            return ItemUtils.areStackMergable(existing, itemstack);
+            return ItemStackHelpers.areStackMergable(existing, itemstack);
         }
         return isItemValidForSlot(slot, itemstack);
     }

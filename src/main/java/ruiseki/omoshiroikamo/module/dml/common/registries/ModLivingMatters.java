@@ -7,7 +7,7 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistryItem;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLLivingMatterReader;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLLivingMatterWriter;
 

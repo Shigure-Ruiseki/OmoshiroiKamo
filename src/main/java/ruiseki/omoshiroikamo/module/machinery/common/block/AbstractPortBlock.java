@@ -28,10 +28,10 @@ import ruiseki.omoshiroikamo.api.modular.ModularTier;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.block.AbstractTieredBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
+import ruiseki.omoshiroikamo.core.util.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
@@ -62,7 +62,8 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     }
 
     @Override
-    protected void registerBlockColor() {
+    public void registerComponent() {
+        super.registerComponent();
         BlockColor.registerBlockColors(new IModularBlockTint() {
 
             @Override
@@ -175,7 +176,8 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
     public abstract String getOverlayPrefix();
 
-    protected abstract Class<? extends AbstractPortItemBlock> getItemBlockClass();
+    @Override
+    public abstract Class<? extends AbstractPortItemBlock> getItemBlockClass();
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
@@ -229,7 +231,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity te = accessor.getTileEntity();
         if (te instanceof ISidedIO io) {

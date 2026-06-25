@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import crazypants.enderio.conduit.gas.GasUtil;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
-import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
+import ruiseki.okcore.persist.nbt.INBTSerializable;
 
 public class SmartGasTank extends GasTank implements IGasTank, INBTSerializable {
 

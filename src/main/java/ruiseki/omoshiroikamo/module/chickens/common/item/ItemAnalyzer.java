@@ -9,20 +9,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemAnalyzer extends ItemOK {
 
     public ItemAnalyzer() {
-        super(ModObject.ANALYZER);
+        super(ModObject.ANALYZER.name);
         setMaxStackSize(1);
         setMaxDamage(238);
-        setTextureName("chicken/analyzer");
+        setTextureName(Reference.PREFIX_MOD + "chicken/analyzer");
     }
 
     @Override
@@ -64,9 +64,7 @@ public class ItemAnalyzer extends ItemOK {
 
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        TooltipUtils builder = TooltipUtils.builder();
-        builder.addLang(Reference.TOOLTIP + "analyzer.l1");
-        builder.addLang(Reference.TOOLTIP + "analyzer.l2");
-        list.addAll(builder.build());
+        list.add(LangHelpers.localize(Reference.TOOLTIP + "analyzer.l1"));
+        list.add(LangHelpers.localize(Reference.TOOLTIP + "analyzer.l2"));
     }
 }

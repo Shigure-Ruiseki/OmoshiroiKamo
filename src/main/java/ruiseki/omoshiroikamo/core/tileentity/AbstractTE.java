@@ -17,13 +17,15 @@ import lombok.Getter;
 import lombok.Setter;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.okcore.addon.waila.IWailaTileInfoProvider;
+import ruiseki.okcore.helper.BlockStateHelpers;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.persist.nbt.NBTPersist;
+import ruiseki.okcore.tileentity.TileEntityOK;
+import ruiseki.okcore.tileentity.TileTicking;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
-import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
-import ruiseki.omoshiroikamo.core.network.packet.PacketProgress;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.network.PacketProgress;
 
 /**
  * Base class for tile entities in Omoshiroi Kamo mod.
@@ -36,8 +38,7 @@ import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
  * <li>Interaction with ItemStacks for saving/loading</li>
  * </ul>
  */
-public abstract class AbstractTE extends AbstractTickingTE
-    implements TileEntityOK.ITickingTile, IWailaTileInfoProvider {
+public abstract class AbstractTE extends TileTicking implements TileEntityOK.ITickingTile, IWailaTileInfoProvider {
 
     /** Forces client-side update to render changes. */
     protected boolean forceClientUpdate = true;
@@ -93,7 +94,7 @@ public abstract class AbstractTE extends AbstractTickingTE
      * @return facing direction
      */
     public ForgeDirection getFacing() {
-        return BlockStateHelpers.getFacingProp(worldObj, xCoord, yCoord, zCoord);
+        return BlockStateHelpers.get(worldObj, xCoord, yCoord, zCoord, "facing");
     }
 
     /**
@@ -318,7 +319,7 @@ public abstract class AbstractTE extends AbstractTickingTE
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
 
     }

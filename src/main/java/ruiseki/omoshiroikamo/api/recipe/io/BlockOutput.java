@@ -31,7 +31,7 @@ import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Recipe output that changes blocks at structure positions.
@@ -537,7 +537,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
 
     /**
      * Sets a block at the given position.
-     * 
+     *
      * @return true if block was changed (or at least attempted)
      */
     private boolean setBlockAt(World world, ChunkCoordinates pos, String blockId, NBTTagCompound nbt) {

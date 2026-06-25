@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.block.IBlock;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.okcore.block.IBlock;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilDoor;
 import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilLeaves;
 import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilLog;

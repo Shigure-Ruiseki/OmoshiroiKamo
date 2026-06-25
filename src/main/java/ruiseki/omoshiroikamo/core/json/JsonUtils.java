@@ -10,6 +10,8 @@ import net.minecraft.entity.EntityList;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
+// TODO: Change to OK Core
+@Deprecated
 public class JsonUtils {
 
     private JsonUtils() {}

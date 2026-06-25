@@ -4,13 +4,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import ruiseki.okcore.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.structure.BlockResolver;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
+import ruiseki.omoshiroikamo.core.compat.LibMods;
 import ruiseki.omoshiroikamo.core.energy.capability.EnergyIntegrationRegistry;
 import ruiseki.omoshiroikamo.core.energy.capability.IEnergyIntegrationDelegate;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
-import ruiseki.omoshiroikamo.core.integration.LibMods;
+import ruiseki.omoshiroikamo.core.structure.BlockResolver;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort;

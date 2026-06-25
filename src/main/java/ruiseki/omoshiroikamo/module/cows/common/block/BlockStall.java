@@ -12,11 +12,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.util.WailaUtils;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
 public class BlockStall extends AbstractBlock<TEStall> {
@@ -67,7 +67,7 @@ public class BlockStall extends AbstractBlock<TEStall> {
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity tileEntity = accessor.getTileEntity();
         if (tileEntity instanceof TEStall stall) {

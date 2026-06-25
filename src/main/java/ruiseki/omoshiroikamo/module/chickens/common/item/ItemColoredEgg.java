@@ -8,14 +8,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityColoredEgg;
 
 public class ItemColoredEgg extends ItemOK {
@@ -24,7 +23,7 @@ public class ItemColoredEgg extends ItemOK {
         super(ModObject.COLORED_EGG.name);
         setMaxStackSize(16);
         setMaxDamage(0);
-        setTextureName("chicken/colored_egg");
+        setTextureName(Reference.PREFIX_MOD + "chicken/colored_egg");
     }
 
     @Override
@@ -59,9 +58,7 @@ public class ItemColoredEgg extends ItemOK {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        TooltipUtils builder = TooltipUtils.builder();
-        builder.addLang(Reference.TOOLTIP + "colored_egg.l1");
-        list.addAll(builder.build());
+        list.add(LangHelpers.localize(Reference.TOOLTIP + "colored_egg.l1"));
     }
 
     @Override

@@ -3,6 +3,8 @@ package ruiseki.omoshiroikamo.core.json;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+// TODO: Change to OK Core
+@Deprecated
 public class FluidJson {
 
     public String name;

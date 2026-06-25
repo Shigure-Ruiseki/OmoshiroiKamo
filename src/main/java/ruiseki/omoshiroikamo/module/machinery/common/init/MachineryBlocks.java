@@ -4,9 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.block.IBlock;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.okcore.block.IBlock;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidInputPort;
@@ -87,7 +86,7 @@ public enum MachineryBlocks {
         this.block = null;
     }
 
-    MachineryBlocks(BlockOK block) {
+    MachineryBlocks(IBlock block) {
         this.enabled = true;
         this.block = block;
     }
@@ -104,7 +103,7 @@ public enum MachineryBlocks {
         return block != null ? Item.getItemFromBlock(getBlock()) : null;
     }
 
-    public void setBlock(BlockOK block) {
+    public void setBlock(IBlock block) {
         this.block = block;
     }
 

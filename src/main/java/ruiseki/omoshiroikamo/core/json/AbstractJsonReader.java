@@ -15,14 +15,16 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Base class for JSON readers.
  * Supports reading from a single file or a directory of files.
- * 
+ *
  * @param <T> The type of object produced by this reader.
  */
+// TODO: Change to OK Core
+@Deprecated
 public abstract class AbstractJsonReader<T> {
 
     protected final File path;

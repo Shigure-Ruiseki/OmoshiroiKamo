@@ -9,10 +9,10 @@ import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.okcore.block.property.BlockPropertyReg;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
-import ruiseki.omoshiroikamo.core.block.property.BlockPropertyReg;
-import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.util.WailaUtils;
 
 public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
 
@@ -34,7 +34,7 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity tile = accessor.getTileEntity();
         if (tile instanceof TESimulationChamber te) {

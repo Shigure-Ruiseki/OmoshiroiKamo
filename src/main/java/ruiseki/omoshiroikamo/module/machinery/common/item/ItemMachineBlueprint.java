@@ -18,11 +18,12 @@ import com.gtnewhorizon.structurelib.alignment.constructable.ConstructableUtilit
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
-import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
+import ruiseki.omoshiroikamo.core.structure.CustomStructureRegistry;
+import ruiseki.omoshiroikamo.core.structure.StructureManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
@@ -38,7 +39,7 @@ public class ItemMachineBlueprint extends ItemOK {
     public ItemMachineBlueprint() {
         super("machineBlueprint");
         setMaxStackSize(1);
-        setTextureName("modular/machineBlueprint");
+        setTextureName(Reference.PREFIX_MOD + "modular/machineBlueprint");
     }
 
     /**

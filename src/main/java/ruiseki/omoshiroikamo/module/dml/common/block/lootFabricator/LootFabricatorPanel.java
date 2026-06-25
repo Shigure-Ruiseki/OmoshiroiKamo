@@ -37,13 +37,12 @@ import com.google.common.collect.ImmutableList;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.MathHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeWidget;
 
@@ -331,10 +330,14 @@ public class LootFabricatorPanel extends ModularPanel {
             } else {
                 currentOutputItemPage = 0;
             }
-            totalOutputItemPages = MathHelpers.divideAndRoundUp(lootItemList.size(), ITEMS_PER_PAGE);
+            totalOutputItemPages = divideAndRoundUp(lootItemList.size(), ITEMS_PER_PAGE);
             setPageButtonsEnabled(totalOutputItemPages > 1);
         }
         updateOutputSelectButtons();
+    }
+
+    public static int divideAndRoundUp(int a, int b) {
+        return a / b + ((a % b == 0) ? 0 : 1);
     }
 
     private void updateOutputSelectButtons() {
@@ -351,7 +354,7 @@ public class LootFabricatorPanel extends ModularPanel {
 
             if (absoluteIndex < lootItemList.size()) {
                 ItemStack stack = lootItemList.get(absoluteIndex);
-                button.setItem(absoluteIndex, stack, ItemUtils.areStacksEqual(stack, outputItem));
+                button.setItem(absoluteIndex, stack, ItemStackHelpers.areStacksEqual(stack, outputItem));
             } else {
                 button.setItem(-1, null, false);
             }

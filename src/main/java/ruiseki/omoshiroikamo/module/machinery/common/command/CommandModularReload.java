@@ -5,8 +5,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
-import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.init.ModBase;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
 

@@ -16,7 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.fluids.Fluid;
 
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * テスト環境において Forge/Minecraft のレジストリをリフレクションで偽装するためのユーティリティ

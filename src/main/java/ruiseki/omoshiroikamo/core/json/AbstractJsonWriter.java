@@ -16,9 +16,11 @@ import com.google.gson.JsonObject;
 /**
  * Base class for JSON writers.
  * Handles serializing objects to JSON files.
- * 
+ *
  * @param <T> The type of object to write.
  */
+// TODO: Change to OK Core
+@Deprecated
 public abstract class AbstractJsonWriter<T> {
 
     protected final File path;
@@ -36,7 +38,7 @@ public abstract class AbstractJsonWriter<T> {
 
     /**
      * Writes the given data to the JSON file(s).
-     * 
+     *
      * @param data the data to write
      * @throws IOException if an I/O error occurs
      */

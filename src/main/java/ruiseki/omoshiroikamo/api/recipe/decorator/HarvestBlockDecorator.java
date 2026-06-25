@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.okcore.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
@@ -20,7 +21,6 @@ import ruiseki.omoshiroikamo.api.recipe.io.BlockOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
 
 /**
  * Decorator that harvests blocks affected by the recipe's BlockInputs and
@@ -72,7 +72,7 @@ public class HarvestBlockDecorator extends RecipeDecorator {
 
     /**
      * Harvest blocks from either inputs or outputs.
-     * 
+     *
      * @param context    Recipe context
      * @param ports      Available ports (for item insertion)
      * @param fromInputs True if checking inputs, false for outputs
@@ -169,7 +169,7 @@ public class HarvestBlockDecorator extends RecipeDecorator {
                     if (inSlot == null) {
                         inv.setInventorySlotContents(i, remaining);
                         return null;
-                    } else if (ItemUtils.areStackMergable(inSlot, remaining)) {
+                    } else if (ItemStackHelpers.areStackMergable(inSlot, remaining)) {
                         int canAdd = Math.min(remaining.stackSize, inv.getInventoryStackLimit() - inSlot.stackSize);
                         inSlot.stackSize += canAdd;
                         remaining.stackSize -= canAdd;

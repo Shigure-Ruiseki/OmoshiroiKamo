@@ -12,21 +12,21 @@ import net.minecraft.util.IIcon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemChickenFood extends ItemOK {
 
-    // Add NEI compat
+    // TODO: Add NEI compat
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemChickenFood() {
-        super(ModObject.CHICKEN_FOOD);
+        super(ModObject.CHICKEN_FOOD.name);
         setHasSubtypes(true);
         setMaxStackSize(64);
     }
@@ -51,7 +51,7 @@ public class ItemChickenFood extends ItemOK {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister reg) {
-        this.itemIcon = reg.registerIcon(Reference.MOD_ID + ":chicken/chicken_food");
+        this.itemIcon = reg.registerIcon(Reference.PREFIX_MOD + "chicken/chicken_food");
     }
 
     @Override

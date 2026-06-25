@@ -15,14 +15,14 @@ import net.minecraft.world.World;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 public class BlockSolarCell extends BlockOK implements IMBBlock, IJsonModelBlock {
 
@@ -42,12 +42,13 @@ public class BlockSolarCell extends BlockOK implements IMBBlock, IJsonModelBlock
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockSolar.class;
     }
 
     @Override
-    protected void registerBlockColor() {
+    public void registerComponent() {
+        super.registerComponent();
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override

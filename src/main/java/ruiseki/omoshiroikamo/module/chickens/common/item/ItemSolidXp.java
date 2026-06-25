@@ -6,14 +6,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import ruiseki.okcore.item.ItemOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemSolidXp extends ItemOK {
 
     public ItemSolidXp() {
-        super(ModObject.SOLID_XP);
-        setTextureName("chicken/solid_xp");
+        super(ModObject.SOLID_XP.name);
+        setTextureName(Reference.PREFIX_MOD + "chicken/solid_xp");
     }
 
     public boolean hasCustomEntity(ItemStack stack) {

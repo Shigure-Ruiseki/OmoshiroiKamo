@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.chickens.common.init;
 
-import static ruiseki.omoshiroikamo.api.enums.EnumDye.DYE_ORE_NAMES;
+import static com.enderio.core.common.util.DyeColor.DYE_ORE_NAMES;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;

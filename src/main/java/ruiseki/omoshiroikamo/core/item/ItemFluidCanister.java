@@ -32,6 +32,7 @@ import com.gtnewhorizon.gtnhlib.itemrendering.ItemWithTextures;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.client.render.item.MaskedBlockItemTexture;

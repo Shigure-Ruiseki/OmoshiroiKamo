@@ -9,7 +9,7 @@ import net.minecraft.block.BlockSapling;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.world.gen.WorldGeneratorTree;
+import ruiseki.okcore.world.gen.WorldGeneratorTree;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 
 public class WorldGeneratorMenrilTree extends WorldGeneratorTree {

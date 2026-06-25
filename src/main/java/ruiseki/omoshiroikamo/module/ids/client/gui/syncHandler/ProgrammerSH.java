@@ -10,7 +10,7 @@ import net.minecraft.network.PacketBuffer;
 
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
+import ruiseki.okcore.helper.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.ids.common.block.programmer.ProgrammerHandler;
 import ruiseki.omoshiroikamo.module.ids.common.block.programmer.ProgrammerPanel;
 import ruiseki.omoshiroikamo.module.ids.common.util.LogicNBTUtils;

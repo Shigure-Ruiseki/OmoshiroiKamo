@@ -3,18 +3,19 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class BlockModifierHaste extends BlockModifier {
 
     protected BlockModifierHaste() {
         super(ModObject.MODIFIER_HASTE.name, "haste");
-        setTextureName("multiblock/modifier_haste");
+        setTextureName(Reference.PREFIX_MOD + "multiblock/modifier_haste");
     }
 
     public static BlockModifierHaste create() {

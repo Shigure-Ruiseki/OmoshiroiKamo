@@ -12,7 +12,7 @@ import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
 import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
-import ruiseki.omoshiroikamo.core.common.structure.StructureValidator;
+import ruiseki.omoshiroikamo.core.structure.StructureValidator;
 
 /**
  * StructureValidator のテスト

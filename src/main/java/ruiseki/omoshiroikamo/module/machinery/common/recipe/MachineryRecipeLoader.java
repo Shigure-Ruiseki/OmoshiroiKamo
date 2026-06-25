@@ -14,9 +14,9 @@ import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.parser.DecoratorParser;
 import ruiseki.omoshiroikamo.api.recipe.parser.RecipeParserRegistry;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.json.ParsingContext;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Loader class that converts JSON objects into ModularRecipe instances.

@@ -3,19 +3,20 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class BlockModifierAccuracy extends BlockModifier {
 
     protected BlockModifierAccuracy() {
         super(ModObject.MODIFIER_ACCURACY.name, "accuracy");
-        setTextureName("multiblock/modifier_accuracy");
+        setTextureName(Reference.PREFIX_MOD + "multiblock/modifier_accuracy");
     }
 
     public static BlockModifierAccuracy create() {

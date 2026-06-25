@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.core.command.utils;
 
-import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.init.ModBase;
 import ruiseki.omoshiroikamo.module.dml.common.command.CommandMobDump;
 
 public class CommandDump extends CommandMod {

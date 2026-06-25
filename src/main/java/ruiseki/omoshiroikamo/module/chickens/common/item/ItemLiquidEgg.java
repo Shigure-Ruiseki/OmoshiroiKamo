@@ -17,22 +17,21 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
 
     public ItemLiquidEgg() {
-        super(ModObject.LIQUID_EGG);
+        super(ModObject.LIQUID_EGG.name);
         setMaxStackSize(16);
         setMaxDamage(0);
-        setTextureName("chicken/liquid_egg");
+        setTextureName(Reference.PREFIX_MOD + "chicken/liquid_egg");
     }
 
     @Override
@@ -63,9 +62,7 @@ public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
 
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        TooltipUtils builder = TooltipUtils.builder();
-        builder.addLang(Reference.TOOLTIP + "liquid_egg.l1");
-        list.addAll(builder.build());
+        list.add(LangHelpers.localize(Reference.TOOLTIP + "liquid_egg.l1"));
     }
 
     @Override

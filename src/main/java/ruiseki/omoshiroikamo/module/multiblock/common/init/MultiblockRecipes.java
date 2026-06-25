@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.init;
 
-import static ruiseki.omoshiroikamo.api.enums.EnumDye.DYE_ORE_NAMES;
+import static com.enderio.core.common.util.DyeColor.DYE_ORE_NAMES;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
@@ -10,7 +10,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.core.integration.LibMods;
+import ruiseki.omoshiroikamo.core.compat.LibMods;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.base.BlockCrystal;
 
 public class MultiblockRecipes {

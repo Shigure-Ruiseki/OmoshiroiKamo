@@ -20,15 +20,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
 
-import ruiseki.omoshiroikamo.core.block.orientable.IOrientableBlock;
-import ruiseki.omoshiroikamo.core.block.orientable.MetaRotation;
-import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
-import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
+import ruiseki.okcore.addon.waila.IWailaBlockInfoProvider;
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
-import ruiseki.omoshiroikamo.core.tileentity.IOrientable;
 
-public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
-    implements IWailaBlockInfoProvider, IOrientableBlock {
+public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implements IWailaBlockInfoProvider {
     // TODO: Change block meta to extendedFacing for all the tileentities
 
     public static final DirectionBlockProperty FACING = DirectionBlockProperty.facing(0b0011, dir -> switch (dir) {
@@ -45,17 +42,14 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
         default -> NORTH;
     });
 
+    public boolean rotatable = false;
+
     @Override
     public void registerProperties() {
         super.registerProperties();
         if (!isHasSubtypes()) {
             registerProperty(this, FACING);
         }
-    }
-
-    @Override
-    public boolean usesMetadata() {
-        return !isHasSubtypes();
     }
 
     protected AbstractBlock(String name, Class<T> teClass, Material mat) {
@@ -96,10 +90,10 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, player, stack);
-        if (isRotatable()) {
+        if (rotatable) {
             int heading = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
             ForgeDirection facing = getDirectionForHeading(heading);
-            BlockStateHelpers.setFacingProp(world, x, y, z, facing);
+            BlockStateHelpers.set(world, x, y, z, FACING, facing);
         }
     }
 
@@ -132,11 +126,6 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
             return ((AbstractTE) te).isActive();
         }
         return false;
-    }
-
-    @Override
-    public IOrientable getOrientable(IBlockAccess world, int x, int y, int z) {
-        return new MetaRotation(world, x, y, z);
     }
 
 }

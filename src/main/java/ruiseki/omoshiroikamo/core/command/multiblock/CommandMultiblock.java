@@ -4,8 +4,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
 
-import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.init.ModBase;
 
 /**
  * Multiblock management subcommand handler.

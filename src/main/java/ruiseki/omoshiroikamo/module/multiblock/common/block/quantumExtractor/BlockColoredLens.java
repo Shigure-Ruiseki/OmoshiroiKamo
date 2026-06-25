@@ -17,11 +17,11 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 public class BlockColoredLens extends BlockOK implements IMBBlock {
 
@@ -39,12 +39,13 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockColoredLens.class;
     }
 
     @Override
-    protected void registerBlockColor() {
+    public void registerComponent() {
+        super.registerComponent();
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override

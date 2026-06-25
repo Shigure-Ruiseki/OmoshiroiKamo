@@ -6,9 +6,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.item.ItemOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemCrystal extends ItemOK {
 
@@ -16,7 +17,7 @@ public class ItemCrystal extends ItemOK {
 
     public ItemCrystal() {
         super(ModObject.CRYSTAL.name);
-        setTextureName("multiblock/crystal");
+        setTextureName(Reference.PREFIX_MOD + "multiblock/crystal");
     }
 
     @Override

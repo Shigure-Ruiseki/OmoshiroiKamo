@@ -10,9 +10,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.okcore.block.BlockOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.TileVisBridge;
 
 /**
@@ -38,7 +38,7 @@ public class BlockVisBridge extends BlockOK {
     }
 
     @Override
-    protected void registerTileEntity() {
+    public void registerTileEntity() {
         GameRegistry.registerTileEntity(TileVisBridge.class, name + "_TE");
     }
 

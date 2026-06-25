@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,15 +16,13 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.helper.KeyboardHelpers;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemDataModel extends ItemOK {
     // TODO: add mod integration by default
@@ -81,33 +80,33 @@ public class ItemDataModel extends ItemOK {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        TooltipUtils builder = TooltipUtils.builder();
-
         if (DataModel.hasExtraTooltip(stack)) {
-            builder.add(DataModel.getExtraTooltip(stack));
+            list.add(DataModel.getExtraTooltip(stack));
         }
 
-        if (!KeyboardHelpers.isHoldingShift()) {
-            builder.addLang("tooltip.holdshift");
+        if (!GuiScreen.isShiftKeyDown()) {
+            list.add(LangHelpers.localize("tooltip.holdshift"));
         } else {
             int tier = DataModel.getTier(stack);
-            builder
-                .addLang("tooltip.data_model.tier", LangHelpers.localize(ModelTierRegistry.INSTANCE.getTierName(tier)));
+            list.add(
+                LangHelpers.localize(
+                    "tooltip.data_model.tier",
+                    LangHelpers.localize(ModelTierRegistry.INSTANCE.getTierName(tier))));
             if (tier != ModelTierRegistry.INSTANCE.getMaxTierValue()) {
-                builder.addLang(
-                    "tooltip.data_model.data_collected",
-                    DataModel.getCurrentTierSimulationCountWithKills(stack),
-                    DataModel.getTierRoof(stack));
-                builder.addLang("tooltip.data_model.kill_multiplier", DataModel.getKillMultiplier(stack));
+                list.add(
+                    LangHelpers.localize(
+                        "tooltip.data_model.data_collected",
+                        DataModel.getCurrentTierSimulationCountWithKills(stack),
+                        DataModel.getTierRoof(stack)));
+                list.add(
+                    LangHelpers.localize("tooltip.data_model.kill_multiplier", DataModel.getKillMultiplier(stack)));
             }
-            builder.addLang("tooltip.data_model.rf_cost", DataModel.getSimulationTickCost(stack));
-            builder.addLang("tooltip.data_model.type", DataModel.getMatterTypeName(stack));
+            list.add(LangHelpers.localize("tooltip.data_model.rf_cost", DataModel.getSimulationTickCost(stack)));
+            list.add(LangHelpers.localize("tooltip.data_model.type", DataModel.getMatterTypeName(stack)));
 
             if (!DataModel.canSimulate(stack)) {
-                builder.addLang("tooltip.data_model.cannot_simulate");
+                list.add(LangHelpers.localize("tooltip.data_model.cannot_simulate"));
             }
         }
-
-        list.addAll(builder.build());
     }
 }

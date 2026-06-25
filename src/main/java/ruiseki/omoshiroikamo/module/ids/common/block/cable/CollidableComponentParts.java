@@ -12,8 +12,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.okcore.block.collidable.ICollidable;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.core.block.collidable.ICollidable;
 
 public class CollidableComponentParts implements ICollidable.IComponent<ForgeDirection, BlockCable> {
 

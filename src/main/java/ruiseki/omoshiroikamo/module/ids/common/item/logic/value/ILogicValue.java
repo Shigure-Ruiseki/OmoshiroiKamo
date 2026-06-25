@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
+import ruiseki.okcore.datastructure.BlockStack;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
 
 public interface ILogicValue {

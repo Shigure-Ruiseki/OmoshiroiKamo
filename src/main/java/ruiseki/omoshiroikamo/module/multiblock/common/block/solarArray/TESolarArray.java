@@ -13,13 +13,13 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.energy.EnergyTransfer;
+import ruiseki.okcore.energy.IOKEnergySource;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.helper.PlayerHelpers;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.PlayerHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockAchievements;

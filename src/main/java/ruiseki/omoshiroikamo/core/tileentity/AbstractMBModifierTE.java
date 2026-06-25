@@ -12,9 +12,9 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.mojang.authlib.GameProfile;
 
 import lombok.Getter;
+import ruiseki.okcore.helper.PlayerHelpers;
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.api.enums.CraftingState;
-import ruiseki.omoshiroikamo.core.helper.PlayerHelpers;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 
 /**
  * Base class for multiblock modifier tile entities.

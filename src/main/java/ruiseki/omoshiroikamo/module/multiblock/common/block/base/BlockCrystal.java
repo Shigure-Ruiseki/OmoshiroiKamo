@@ -9,10 +9,11 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.item.ItemBlockOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 public class BlockCrystal extends BlockOK {
 
@@ -20,7 +21,7 @@ public class BlockCrystal extends BlockOK {
 
     protected BlockCrystal() {
         super(ModObject.BLOCK_CRYSTAL.name);
-        setTextureName("multiblock/crystal_block");
+        setTextureName(Reference.PREFIX_MOD + "multiblock/crystal_block");
         hasSubtypes = true;
     }
 
@@ -29,7 +30,7 @@ public class BlockCrystal extends BlockOK {
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockCrystal.class;
     }
 

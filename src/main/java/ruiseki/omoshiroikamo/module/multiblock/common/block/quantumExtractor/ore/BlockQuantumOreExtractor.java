@@ -12,12 +12,12 @@ import net.minecraft.tileentity.TileEntity;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.block.AbstractTieredMBBlock;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.util.WailaUtils;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.TEQuantumExtractor;
 
 public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExtractor> {
@@ -56,7 +56,7 @@ public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExt
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity tile = accessor.getTileEntity();
         if (tile instanceof TEQuantumExtractor te) {

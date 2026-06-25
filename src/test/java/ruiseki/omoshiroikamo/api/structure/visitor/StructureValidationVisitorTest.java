@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
 import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
 import ruiseki.omoshiroikamo.api.structure.io.ItemRequirement;
+import ruiseki.omoshiroikamo.core.structure.StructureValidator;
 
 /**
  * StructureValidationVisitor のテスト
@@ -266,7 +267,7 @@ public class StructureValidationVisitorTest {
         IStructureEntry entry = builder.build();
 
         // StructureValidatorを使用
-        ruiseki.omoshiroikamo.core.common.structure.StructureValidator structureValidator = new ruiseki.omoshiroikamo.core.common.structure.StructureValidator();
+        StructureValidator structureValidator = new StructureValidator();
         boolean hasErrors = structureValidator.validateStructure(entry);
 
         // 正常な構造なのでエラーなし
