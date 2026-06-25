@@ -3,9 +3,10 @@ package ruiseki.omoshiroikamo.module.ids.common.item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 
+import ruiseki.okcore.item.ItemFoodOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.IDsConfig;
-import ruiseki.omoshiroikamo.core.item.ItemFoodOK;
 
 public class ItemMenrilBerries extends ItemFoodOK {
 
@@ -14,7 +15,7 @@ public class ItemMenrilBerries extends ItemFoodOK {
         if (IDsConfig.nightVision) {
             setPotionEffect(Potion.nightVision.id, 20, 1, 1.0F);
         }
-        setTextureName("ids/menril_berries");
+        setTextureName(Reference.PREFIX_MOD + "ids/menril_berries");
     }
 
     @Override

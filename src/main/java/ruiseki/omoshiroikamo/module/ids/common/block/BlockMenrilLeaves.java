@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.IDsConfig;
 import ruiseki.omoshiroikamo.core.block.tree.BlockLeavesOK;
@@ -17,7 +18,7 @@ public class BlockMenrilLeaves extends BlockLeavesOK {
 
     public BlockMenrilLeaves() {
         super(ModObject.MENRIL_LEAVES.name);
-        setTextureName("ids/menril_leaves");
+        setTextureName(Reference.PREFIX_MOD + "ids/menril_leaves");
     }
 
     @Override
