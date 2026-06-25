@@ -14,7 +14,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.okcore.block.IBlock;
-import ruiseki.omoshiroikamo.Reference;
 
 public class BlockLogOK extends BlockLog implements IBlock {
 

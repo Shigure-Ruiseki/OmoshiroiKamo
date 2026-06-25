@@ -14,7 +14,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.okcore.block.IBlock;
-import ruiseki.omoshiroikamo.Reference;
 
 public abstract class BlockLeavesOK extends BlockLeaves implements IBlock {
 

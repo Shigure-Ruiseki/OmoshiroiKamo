@@ -15,7 +15,6 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.okcore.block.IBlock;
-import ruiseki.omoshiroikamo.Reference;
 
 public class BlockDoorOK extends BlockDoor implements IBlock {
 
@@ -54,7 +53,7 @@ public class BlockDoorOK extends BlockDoor implements IBlock {
     public void registerBlockIcons(IIconRegister reg) {
         this.field_150017_a = new IIcon[2];
         this.field_150016_b = new IIcon[2];
-        this.field_150017_a[0] = reg.registerIcon( this.getTextureName() + "_upper");
+        this.field_150017_a[0] = reg.registerIcon(this.getTextureName() + "_upper");
         this.field_150016_b[0] = reg.registerIcon(this.getTextureName() + "_lower");
         this.field_150017_a[1] = new IconFlipped(this.field_150017_a[0], true, false);
         this.field_150016_b[1] = new IconFlipped(this.field_150016_b[0], true, false);

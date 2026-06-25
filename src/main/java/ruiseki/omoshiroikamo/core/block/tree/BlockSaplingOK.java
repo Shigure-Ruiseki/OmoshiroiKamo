@@ -18,7 +18,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.okcore.block.IBlock;
 import ruiseki.okcore.world.gen.WorldGeneratorTree;
-import ruiseki.omoshiroikamo.Reference;
 
 public class BlockSaplingOK extends BlockSapling implements IBlock {
 
