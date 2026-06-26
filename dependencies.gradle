@@ -51,7 +51,7 @@ dependencies {
     devOnlyNonPublishable("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-992-GTNH:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:AE2FluidCraft-Rework:1.5.95-gtnh:dev") { transitive = false }
     devOnlyNonPublishable(rfg.deobf("com.github.Thorfusion:Mekanism-Community-Edition:9.10.46:DEV"))
-    devOnlyNonPublishable("com.github.GTNewHorizons:ThaumicEnergistics:1.7.55-GTNH:dev") { transitive = false }
+    devOnlyNonPublishable("com.github.GTNewHorizons:ThaumicEnergistics:1.7.14-GTNH:dev") { transitive = false }
     devOnlyNonPublishable('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
     devOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
     devOnlyNonPublishable(rfg.deobf('curse.maven:thaumcraft-nei-plugin-225095:2241913'))
