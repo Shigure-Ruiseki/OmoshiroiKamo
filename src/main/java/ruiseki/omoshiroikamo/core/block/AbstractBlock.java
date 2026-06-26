@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
+import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
 
 import ruiseki.okcore.addon.waila.IWailaBlockInfoProvider;
 import ruiseki.okcore.block.BlockOK;
@@ -41,6 +42,8 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
         case 3 -> WEST;
         default -> NORTH;
     });
+
+    public static final IntegerBlockProperty CRAFTING_STATE = IntegerBlockProperty.meta("craftingState", 0b1100, 2);
 
     public boolean rotatable = false;
 

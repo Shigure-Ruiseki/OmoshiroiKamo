@@ -1,23 +1,19 @@
 package ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber;
 
+import static com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry.registerProperty;
+
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
-import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
-
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
-import ruiseki.okcore.block.property.BlockPropertyReg;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.util.WailaUtils;
 
 public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
-
-    @BlockPropertyReg
-    public static final IntegerBlockProperty CRAFTING_STATE = IntegerBlockProperty.meta("craftingState", 0b1100, 2);
 
     protected BlockSimulationChamber() {
         super(ModObject.SIMULATION_CHAMBER.name, TESimulationChamber.class);
@@ -26,6 +22,12 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
 
     public static BlockSimulationChamber create() {
         return new BlockSimulationChamber();
+    }
+
+    @Override
+    public void registerProperties() {
+        super.registerProperties();
+        registerProperty(this, CRAFTING_STATE);
     }
 
     @Override

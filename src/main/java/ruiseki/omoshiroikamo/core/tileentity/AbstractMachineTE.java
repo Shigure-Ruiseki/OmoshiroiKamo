@@ -1,6 +1,9 @@
 package ruiseki.omoshiroikamo.core.tileentity;
 
+import static ruiseki.omoshiroikamo.core.block.AbstractBlock.CRAFTING_STATE;
+
 import lombok.Getter;
+import ruiseki.okcore.helper.BlockStateHelpers;
 import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.CraftingState;
@@ -117,7 +120,9 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
             craftingState = newState;
 
             if (worldObj != null && !worldObj.isRemote && shouldSyncCraftingStateToBlock()) {
-                // BlockStateHelpers.set(worldObj, xCoord, yCoord, zCoord, "craftingState", craftingState);
+                if (BlockStateHelpers.has(worldObj, xCoord, yCoord, zCoord, CRAFTING_STATE)) {
+                    BlockStateHelpers.set(worldObj, xCoord, yCoord, zCoord, CRAFTING_STATE, craftingState.getIndex());
+                }
             }
 
             OmoshiroiKamo.instance.getPacketHandler()

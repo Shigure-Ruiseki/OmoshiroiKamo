@@ -177,21 +177,22 @@ public class LootFabricatorPanel extends ModularPanel {
 
         this.outputItem = tileEntity.getOutputItem();
 
-        syncManager.syncValue("itemPageSyncer", new IntSyncValue(this::getCurrentOutputItemPage));
-        syncManager.syncValue("energySyncer", new IntSyncValue(tileEntity::getEnergyStored));
-        syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
-        FloatSyncValue processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress);
+        syncManager.syncValue("itemPageSyncer", new IntSyncValue(this::getCurrentOutputItemPage).allowC2S());
+        syncManager.syncValue("energySyncer", new IntSyncValue(tileEntity::getEnergyStored).allowC2S());
+        syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored).allowC2S());
+        FloatSyncValue processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress).allowC2S();
         syncManager.syncValue("processSyncer", processSyncer);
         outputSyncer = GenericSyncValue.builder(ItemStack.class)
             .getter(tileEntity::getOutputItem)
             .setter(tileEntity::setOutputItem)
             .adapter(ByteBufAdapters.ITEM_STACK)
-            .build();
+            .build()
+            .allowC2S();
         syncManager.syncValue("outputSyncer", outputSyncer);
         EnumSyncValue<RedstoneMode, ?> redstoneModeSyncer = new EnumSyncValue<>(
             RedstoneMode.class,
             tileEntity::getRedstoneMode,
-            tileEntity::setRedstoneMode);
+            tileEntity::setRedstoneMode).allowC2S();
         syncManager.syncValue("redstoneModeSyncer", redstoneModeSyncer);
 
         deselectButton = new ButtonItemDeselect(this).pos(77, 5);

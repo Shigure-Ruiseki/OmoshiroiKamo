@@ -203,11 +203,6 @@ public class TESimulationChamber extends AbstractMachineTE
     }
 
     @Override
-    public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
-        return energyStorage.receiveEnergy(amount, simulate);
-    }
-
-    @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
         openGui(player);

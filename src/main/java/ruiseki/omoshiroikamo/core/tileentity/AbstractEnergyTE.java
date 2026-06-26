@@ -1,23 +1,15 @@
 package ruiseki.omoshiroikamo.core.tileentity;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import cofh.api.energy.IEnergyStorage;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergySource;
 import ruiseki.okcore.capabilities.Capability;
 import ruiseki.okcore.datastructure.LazyOptional;
 import ruiseki.okcore.energy.EnergyStorage;
-import ruiseki.okcore.energy.IOKEnergyIO;
+import ruiseki.okcore.energy.IOKEnergyHandler;
 import ruiseki.okcore.energy.capability.CapabilityEnergy;
 import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
@@ -28,12 +20,8 @@ import ruiseki.omoshiroikamo.core.network.PacketEnergy;
  * Abstract base class for tile entities that store and manage energy.
  * Handles energy storage, synchronization with clients, and basic energy API for
  * interaction with other energy-capable tiles.
- * IC2 integration is handled via @Optional.Interface annotations, which allow
- * the class to implement IC2 interfaces only when IC2 is present at runtime.
  */
-@Optional.InterfaceList({ @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
-    @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2") })
-public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyIO, IEnergySink, IEnergySource {
+public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyHandler {
 
     /** Last known energy stored, used for periodic client synchronization. */
     private int lastSyncPowerStored;
@@ -141,33 +129,6 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyIO
     }
 
     @Override
-    public void register() {
-        if (!worldObj.isRemote && Loader.isModLoaded("IC2") && EnergyConfig.ic2Capability) {
-            registerIC2();
-        }
-    }
-
-    @Override
-    public void deregister() {
-        if (!worldObj.isRemote && Loader.isModLoaded("IC2") && ic2Registered) {
-            deregisterIC2();
-        }
-    }
-
-    @Optional.Method(modid = "IC2")
-    private void registerIC2() {
-        if (ic2Registered) return;
-        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-        ic2Registered = true;
-    }
-
-    @Optional.Method(modid = "IC2")
-    private void deregisterIC2() {
-        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-        ic2Registered = false;
-    }
-
-    @Override
     public void doUpdate() {
         if (worldObj.isRemote) {
             super.doUpdate();
@@ -198,61 +159,10 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyIO
     }
 
     @Override
-    @Optional.Method(modid = "IC2")
-    public double getDemandedEnergy() {
-        int missing = getMaxEnergyStored() - getEnergyStored();
-        return Math.max(0, (double) missing / EnergyConfig.rftToEU);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public int getSinkTier() {
-        return EnergyConfig.ic2SinkTier;
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public double injectEnergy(ForgeDirection direction, double amount, double voltage) {
-        int rf = (int) (amount * EnergyConfig.rftToEU);
-        int accepted = energyStorage.receiveEnergy(rf, false);
-        return amount - ((double) accepted / EnergyConfig.rftToEU);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
-        return canConnectEnergy(direction);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public double getOfferedEnergy() {
-        return (double) getEnergyStored() / EnergyConfig.rftToEU;
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public void drawEnergy(double amount) {
-        int rf = (int) (amount * EnergyConfig.rftToEU);
-        energyStorage.extractEnergy(rf, false);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public int getSourceTier() {
-        return EnergyConfig.ic2SourceTier;
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction) {
-        return canConnectEnergy(direction);
-    }
-
-    @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability,
         @Nullable ForgeDirection facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
+        if (capability == CapabilityEnergy.ENERGY || capability == CapabilityEnergy.ENERGY_SINK_CAPABILITY
+            || capability == CapabilityEnergy.ENERGY_SOURCE_CAPABILITY) {
             return energyCap.cast();
         }
         return super.getCapability(capability, facing);
