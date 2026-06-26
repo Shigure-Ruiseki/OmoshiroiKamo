@@ -1,0 +1,25 @@
+name: Update version JSON
+
+on:
+  workflow_run:
+    workflows: [ "Release tagged build" ]
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  call-update-version:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+
+    uses: Shigure-Ruiseki/OK-Actions-Workflows/.github/workflows/update-version.yml@master
+    with:
+      head_branch: ${{ github.event.workflow_run.head_branch || github.ref_name }}
+      target_folder: 'version'
+      extra_downloads: '{}'
+    secrets:
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}

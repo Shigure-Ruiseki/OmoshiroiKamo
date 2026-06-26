@@ -43,8 +43,6 @@ import ruiseki.omoshiroikamo.core.compat.nei.NEIConfig;
 import ruiseki.omoshiroikamo.core.compat.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.compat.waila.WailaCompat;
 import ruiseki.omoshiroikamo.core.event.MemoryEventHandler;
-import ruiseki.omoshiroikamo.core.event.UpdateNotificationHandler;
-import ruiseki.omoshiroikamo.core.update.UpdateChecker;
 import ruiseki.omoshiroikamo.module.chickens.ChickensModule;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
@@ -86,6 +84,7 @@ public class OmoshiroiKamo extends ModBase {
     public OmoshiroiKamo() {
         super(Reference.MOD_ID, Reference.MOD_NAME);
         putGenericReference(REFKEY_MOD_VERSION, Reference.VERSION);
+        putGenericReference(REFKEY_VERSION_CHECKER_URL, Reference.UPDATE_URL);
     }
 
     @EventHandler
@@ -121,11 +120,6 @@ public class OmoshiroiKamo extends ModBase {
             }
         }
         WailaCompat.init();
-        if (MinecraftHelpers.isClientSide()) {
-            FMLCommonHandler.instance()
-                .bus()
-                .register(new UpdateNotificationHandler());
-        }
     }
 
     @Override
@@ -142,7 +136,6 @@ public class OmoshiroiKamo extends ModBase {
         if (MinecraftHelpers.isClientSide()) {
             TextureLoader
                 .loadFromConfig(Reference.MOD_ID, Reference.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
-            UpdateChecker.checkUpdates();
         }
     }
 
