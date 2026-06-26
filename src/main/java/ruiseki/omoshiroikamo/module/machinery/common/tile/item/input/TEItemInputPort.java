@@ -9,10 +9,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 

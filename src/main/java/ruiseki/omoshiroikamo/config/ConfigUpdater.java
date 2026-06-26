@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 public class ConfigUpdater {
 

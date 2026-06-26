@@ -15,7 +15,6 @@ import com.google.common.collect.Maps;
 import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -30,22 +29,19 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.helper.MinecraftHelpers;
+import ruiseki.okcore.init.ModBase;
+import ruiseki.okcore.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
 import ruiseki.omoshiroikamo.core.CoreModule;
-import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.core.client.util.TextureLoader;
-import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.command.CommandOK;
+import ruiseki.omoshiroikamo.core.compat.LibMods;
+import ruiseki.omoshiroikamo.core.compat.nei.NEIConfig;
+import ruiseki.omoshiroikamo.core.compat.structureLib.StructureCompat;
+import ruiseki.omoshiroikamo.core.compat.waila.WailaCompat;
 import ruiseki.omoshiroikamo.core.event.MemoryEventHandler;
-import ruiseki.omoshiroikamo.core.event.UpdateNotificationHandler;
-import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
-import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.integration.LibMods;
-import ruiseki.omoshiroikamo.core.integration.nei.NEIConfig;
-import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
-import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
-import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
-import ruiseki.omoshiroikamo.core.update.UpdateChecker;
 import ruiseki.omoshiroikamo.module.chickens.ChickensModule;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
@@ -87,11 +83,12 @@ public class OmoshiroiKamo extends ModBase {
     public OmoshiroiKamo() {
         super(Reference.MOD_ID, Reference.MOD_NAME);
         putGenericReference(REFKEY_MOD_VERSION, Reference.VERSION);
+        putGenericReference(REFKEY_VERSION_CHECKER, GeneralConfig.useVersionChecker);
+        putGenericReference(REFKEY_VERSION_CHECKER_URL, Reference.UPDATE_URL);
     }
 
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
-        CapabilityManager.INSTANCE.injectCapabilities(event.getASMHarvestedData());
         registerModule(new CoreModule());
         registerModule(new ChickensModule());
         registerModule(new CowsModule());
@@ -123,11 +120,6 @@ public class OmoshiroiKamo extends ModBase {
             }
         }
         WailaCompat.init();
-        if (MinecraftHelpers.isClientSide()) {
-            FMLCommonHandler.instance()
-                .bus()
-                .register(new UpdateNotificationHandler());
-        }
     }
 
     @Override
@@ -144,7 +136,6 @@ public class OmoshiroiKamo extends ModBase {
         if (MinecraftHelpers.isClientSide()) {
             TextureLoader
                 .loadFromConfig(Reference.MOD_ID, Reference.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
-            UpdateChecker.checkUpdates();
         }
     }
 
@@ -201,6 +192,17 @@ public class OmoshiroiKamo extends ModBase {
      */
     public static void okLog(Level level, String message) {
         OmoshiroiKamo.instance.log(level, message);
+    }
+
+    /**
+     * Log a new message of the given level for this mod.
+     *
+     * @param level   The level in which the message must be shown.
+     * @param message The message to show.
+     * @param params  Parameters to replace in the message.
+     */
+    public static void okLog(Level level, String message, Object... params) {
+        OmoshiroiKamo.instance.log(level, message, params);
     }
 
     private static final Map<String, Object> REMAPS = new HashMap<>();

@@ -7,11 +7,10 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
-import ruiseki.omoshiroikamo.core.item.weighted.WeightedRandomUtil;
-import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.item.weighted.IFocusableRegistry;
+import ruiseki.okcore.item.weighted.WeightedStackBase;
 
 public class FocusableRegistry implements IFocusableRegistry {
 
@@ -64,7 +63,7 @@ public class FocusableRegistry implements IFocusableRegistry {
     public List<WeightedStackBase> getFocusedList(EnumDye focusColor, float boostMultiplier) {
         // Create copies
         List<WeightedStackBase> weightedCopy = new ArrayList<>(this.oreStacks.size());
-        WeightedRandomUtil.copyWSList(weightedCopy, this.oreStacks);
+        ItemStackHelpers.copyWSList(weightedCopy, this.oreStacks);
 
         List<ItemStack> focusList = this.valuesOfFocus(focusColor);
         HashSet<ItemStack> focusSet = new HashSet<>(focusList);
@@ -102,7 +101,7 @@ public class FocusableRegistry implements IFocusableRegistry {
     @Override
     public List<WeightedStackBase> getUnFocusedList() {
         ArrayList<WeightedStackBase> weightedCopy = new ArrayList<>(this.oreStacks.size());
-        WeightedRandomUtil.copyWSList(weightedCopy, this.oreStacks);
+        ItemStackHelpers.copyWSList(weightedCopy, this.oreStacks);
 
         double totalWeight = 0;
         for (WeightedStackBase ws : weightedCopy) {
@@ -129,7 +128,7 @@ public class FocusableRegistry implements IFocusableRegistry {
             List<ItemStack> list = this.priorityOres.get(dye);
             if (list != null) {
                 for (ItemStack item : list) {
-                    if (item != null && ItemUtils.areStacksEqual(item, stack)) {
+                    if (item != null && ItemStackHelpers.areStacksEqual(item, stack)) {
                         return dye;
                     }
                 }

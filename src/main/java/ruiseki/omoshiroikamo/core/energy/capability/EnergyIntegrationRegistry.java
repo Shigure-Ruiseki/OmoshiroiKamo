@@ -29,7 +29,7 @@ import java.util.List;
  *
  * <p>
  * <b>Example Usage:</b>
- * 
+ *
  * <pre>
  * {@code
  * // During mod integration initialization
@@ -42,7 +42,10 @@ import java.util.List;
  * }
  * }
  * </pre>
+ * 
+ * Change to use {@link ruiseki.okcore.capabilities.Capability}.
  */
+@Deprecated
 public class EnergyIntegrationRegistry {
 
     private static final List<IEnergyIntegrationDelegate> delegates = new ArrayList<>();

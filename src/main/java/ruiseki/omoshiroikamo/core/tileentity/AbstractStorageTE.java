@@ -11,17 +11,19 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.gtnewhorizon.gtnhlib.capability.item.ItemSink;
-import com.gtnewhorizon.gtnhlib.capability.item.ItemSource;
-import com.gtnewhorizon.gtnhlib.item.InventoryItemSink;
-import com.gtnewhorizon.gtnhlib.item.InventoryItemSource;
-
+import ruiseki.okcore.capabilities.Capability;
+import ruiseki.okcore.datastructure.LazyOptional;
+import ruiseki.okcore.fluid.SmartTank;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.item.capability.CapabilityItemHandler;
+import ruiseki.okcore.item.capability.IItemSink;
+import ruiseki.okcore.item.capability.IItemSource;
+import ruiseki.okcore.item.capability.minecraft.InventoryItemSink;
+import ruiseki.okcore.item.capability.minecraft.InventoryItemSource;
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.fluid.SmartTank;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.network.packet.PacketFluidTanks;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.network.PacketFluidTanks;
 import ruiseki.omoshiroikamo.core.util.SlotDefinition;
 
 public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory {
@@ -35,6 +37,9 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     @NBTPersist("FluidTanks")
     public List<SmartTank> fluidTanks;
     protected boolean tanksDirty = false;
+
+    protected LazyOptional<IItemSink> sinkCap = null;
+    protected LazyOptional<IItemSource> sourceCap = null;
 
     public AbstractStorageTE(SlotDefinition slotDefinition) {
         this.slotDefinition = slotDefinition;
@@ -80,7 +85,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
         }
         ItemStack existing = inv.getStackInSlot(slot);
         if (existing != null) {
-            return ItemUtils.areStackMergable(existing, itemstack);
+            return ItemStackHelpers.areStackMergable(existing, itemstack);
         }
         return isItemValidForSlot(slot, itemstack);
     }
@@ -185,18 +190,26 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     }
 
     @Override
-    public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
-        if (capability == ItemSink.class) {
-            ItemSink sink = new InventoryItemSink(this, side);
-            sink.setAllowedSinkSlots(slotDefinition.getItemInputSlots());
-            return capability.cast(sink);
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability,
+        @Nullable ForgeDirection facing) {
+        if (capability == CapabilityItemHandler.ITEM_SINK_CAPABILITY) {
+            if (sinkCap == null) {
+                IItemSink sink = new InventoryItemSink(this, facing);
+                sink.setAllowedSinkSlots(slotDefinition.getItemInputSlots());
+                sinkCap = LazyOptional.of(() -> sink);
+            }
+            return sinkCap.cast();
         }
 
-        if (capability == ItemSource.class) {
-            ItemSource sink = new InventoryItemSource(this, side);
-            sink.setAllowedSourceSlots(slotDefinition.getItemOutputSlots());
-            return capability.cast(sink);
+        if (capability == CapabilityItemHandler.ITEM_SOURCE_CAPABILITY) {
+            if (sourceCap == null) {
+                IItemSource source = new InventoryItemSource(this, facing);
+                source.setAllowedSourceSlots(slotDefinition.getItemOutputSlots());
+                sourceCap = LazyOptional.of(() -> source);
+            }
+            return sourceCap.cast();
         }
-        return null;
+
+        return super.getCapability(capability, facing);
     }
 }

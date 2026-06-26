@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 import com.google.gson.JsonObject;
 
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Registry for parsing ICondition from JSON objects.
@@ -21,7 +21,7 @@ public class ConditionParserRegistry {
 
     /**
      * Register a parser for a specific condition type with an inference detector.
-     * 
+     *
      * @param type     The condition type key (e.g., "dimension", "biome")
      * @param parser   Function that creates ICondition from JsonObject
      * @param detector Predicate to check if a JsonObject matches this condition
@@ -36,7 +36,7 @@ public class ConditionParserRegistry {
     /**
      * Register a parser for a specific condition type (without automatic
      * inference).
-     * 
+     *
      * @param type   The condition type key
      * @param parser Function that creates ICondition from JsonObject
      */
@@ -46,7 +46,7 @@ public class ConditionParserRegistry {
 
     /**
      * Parse a JsonObject into an ICondition.
-     * 
+     *
      * @param json The JsonObject representing the condition.
      * @return The parsed ICondition, or null if parsing failed.
      */

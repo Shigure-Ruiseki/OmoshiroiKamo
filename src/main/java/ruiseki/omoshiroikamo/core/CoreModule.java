@@ -10,21 +10,16 @@ import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import ruiseki.okcore.helper.MinecraftHelpers;
+import ruiseki.okcore.init.ModModuleBase;
+import ruiseki.okcore.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.capabilities.energy.CapabilityEnergy;
-import ruiseki.omoshiroikamo.core.capabilities.fluid.CapabilityFluidHandler;
-import ruiseki.omoshiroikamo.core.capabilities.item.CapabilityItemHandler;
-import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
-import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.command.CommandReload;
 import ruiseki.omoshiroikamo.core.command.multiblock.CommandMultiblock;
-import ruiseki.omoshiroikamo.core.common.init.CoreItems;
-import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
-import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
-import ruiseki.omoshiroikamo.core.init.ModModuleBase;
-import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
+import ruiseki.omoshiroikamo.core.init.CoreItems;
+import ruiseki.omoshiroikamo.core.init.CoreOreDict;
+import ruiseki.omoshiroikamo.core.init.CoreRecipes;
+import ruiseki.omoshiroikamo.core.structure.StructureManager;
 
 public class CoreModule extends ModModuleBase {
 
@@ -57,13 +52,6 @@ public class CoreModule extends ModModuleBase {
         // Initialize the custom structure system
         StructureManager.getInstance()
             .initialize(event.getModConfigurationDirectory());
-
-        CapabilityItemHandler.register();
-        CapabilityEnergy.register();
-        CapabilityFluidHandler.register();
-        CapabilityRedstone.register();
-        CapabilityLight.register();
-
     }
 
     @Override

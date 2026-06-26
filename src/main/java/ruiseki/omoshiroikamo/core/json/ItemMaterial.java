@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 /**
  * Material representation of an ItemStack in JSON.
  */
+// TODO: Change to OK Core
+@Deprecated
 public class ItemMaterial extends AbstractJsonMaterial {
 
     public String name;

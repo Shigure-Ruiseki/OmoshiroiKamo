@@ -28,10 +28,10 @@ import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
 import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.TierStructureRef;
 import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
-import ruiseki.omoshiroikamo.core.common.structure.migration.StructureMigrationRegistry;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
 import ruiseki.omoshiroikamo.core.json.ParsingContext;
+import ruiseki.omoshiroikamo.core.structure.migration.StructureMigrationRegistry;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Reader that parses JSON into IStructureEntry.

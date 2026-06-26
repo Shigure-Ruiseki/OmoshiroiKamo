@@ -27,9 +27,9 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.BaseVariableWidget;
 import ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.EmptyVariable;

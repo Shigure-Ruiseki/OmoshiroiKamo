@@ -38,23 +38,21 @@ import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
-import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Flow;
-import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.inventory.ItemStackKey;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.ILogicNet;
@@ -152,7 +150,8 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
         for (int slot : slots) {
             ItemStack s = inv.getStackInSlot(slot);
             if (s != null && s.stackSize > 0) {
-                hash = 31 * hash + ItemStackKeyPool.get(s).hash;
+                hash = 31 * hash + ItemStackKey.of(s)
+                    .hashCode();
                 hash = 31 * hash + s.stackSize;
             }
         }
@@ -279,9 +278,9 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
             .setDisablePanelsBelow(false)
             .setCloseOnOutOfBoundsClick(false);
 
-        Column col = new Column();
+        Flow col = Flow.column();
 
-        Row allowInsertions = new Row();
+        Flow allowInsertions = Flow.row();
         allowInsertions.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.allowInsertions")).width(162))
             .child(
@@ -290,7 +289,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
                     .size(12)
                     .value(new BooleanSyncValue(this::isAllowInsertions, this::setAllowInsertions)));
 
-        Row allowExtractions = new Row();
+        Flow allowExtractions = Flow.row();
         allowExtractions.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.allowExtractions")).width(162))
             .child(
@@ -299,7 +298,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
                     .size(12)
                     .value(new BooleanSyncValue(this::isAllowExtractions, this::setAllowExtractions)));
 
-        Row blackList = new Row();
+        Flow blackList = Flow.row();
         blackList.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.blackList")).width(162))
             .child(
@@ -308,7 +307,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
                     .size(12)
                     .value(new BooleanSyncValue(this::isBlackList, this::setBlackList)));
 
-        Row transferLimit = new Row();
+        Flow transferLimit = Flow.row();
         transferLimit.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.transferLimit")).width(162))
             .child(
@@ -319,7 +318,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
                     .setDefaultNumber(1)
                     .setFormatAsInteger(true));
 
-        Row nbt = new Row();
+        Flow nbt = Flow.row();
         nbt.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.nbt")).width(162))
             .child(
@@ -328,7 +327,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
                     .size(12)
                     .value(new BooleanSyncValue(this::isNbt, this::setNbt)));
 
-        Row stackSize = new Row();
+        Flow stackSize = Flow.row();
         stackSize.coverChildren()
             .child(new TextWidget<>(LangHelpers.localize("gui.ids.stackSize")).width(162))
             .child(
@@ -432,7 +431,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
             if (s == null || s.stackSize <= 0) continue;
             if (!allowExtractions) return null;
             if (runtimeFilter != null && !runtimeFilter.test(s)) continue;
-            if (!ItemUtils.areStacksEqual(required, s)) continue;
+            if (!ItemStackHelpers.areStacksEqual(required, s)) continue;
 
             int take = Math.min(remaining, s.stackSize);
             ItemStack taken = inv.decrStackSize(slot, take);
@@ -482,7 +481,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
                 inv.setInventorySlotContents(slot, placed);
                 inserted += add;
                 changed = true;
-            } else if (ItemUtils.areStacksEqual(target, remaining)) {
+            } else if (ItemStackHelpers.areStacksEqual(target, remaining)) {
                 int space = target.getMaxStackSize() - target.stackSize;
                 if (space > 0) {
                     int add = Math.min(space, remaining.stackSize);
@@ -545,7 +544,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderHelpers.bindTexture(activeSlot != -1 ? active : inactive);
+        RenderUtils.bindTexture(activeSlot != -1 ? active : inactive);
 
         rotateForSide(getSide());
 
@@ -576,7 +575,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(inactive);
+        RenderUtils.bindTexture(inactive);
         model.renderAll();
 
         GL11.glPopMatrix();
@@ -661,7 +660,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     private boolean matches(ItemStack filter, ItemStack target) {
         if (filter == null || target == null) return false;
 
-        if (!ItemUtils.areStacksEqual(filter, target, !nbt)) {
+        if (!ItemStackHelpers.areStacksEqual(filter, target, !nbt)) {
             return false;
         }
 

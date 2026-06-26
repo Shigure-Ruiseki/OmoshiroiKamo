@@ -18,12 +18,14 @@ import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.recipe.expression.RecipeScriptException;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Universal collector for JSON-related parsing and validation errors.
  * Replaces and generalizes module-specific collectors.
  */
+// TODO: Change to OK Core
+@Deprecated
 public class JsonErrorCollector {
 
     private static JsonErrorCollector INSTANCE;

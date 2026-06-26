@@ -17,17 +17,16 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
+import ruiseki.omoshiroikamo.core.compat.ModCompatInformation;
 
 public class ItemChicken extends ItemOK {
 
@@ -35,7 +34,7 @@ public class ItemChicken extends ItemOK {
     private final Map<Integer, IIcon> overlayIcons = new HashMap<>();
 
     public ItemChicken() {
-        super(ModObject.CHICKEN);
+        super(ModObject.CHICKEN.name);
         setHasSubtypes(true);
         setMaxStackSize(64);
     }
@@ -181,51 +180,48 @@ public class ItemChicken extends ItemOK {
         SpawnType spawnType = chicken.getItem()
             .getSpawnType();
 
-        TooltipUtils builder = TooltipUtils.builder();
+        list.add(
+            LangHelpers.localize(
+                Reference.TOOLTIP + "spawn_egg.tier",
+                chicken.getItem()
+                    .getTier()));
 
-        // Tier
-        builder.addLang(
-            Reference.TOOLTIP + "spawn_egg.tier",
-            chicken.getItem()
-                .getTier());
-
-        builder.addAll(chicken.getStatsInfoTooltip());
-
-        // Lay item
-        builder.addLangIf(
-            layItem != null && layItem.getItem() != null,
-            Reference.TOOLTIP + "spawn_egg.layitem",
-            layItem.getDisplayName());
-        builder.addLangIf(layItem == null || layItem.getItem() == null, Reference.TOOLTIP + "spawn_egg.nolayitem");
-
-        // Spawn type (chỉ hiển thị nếu khác NONE)
-        EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
-        EnumChatFormatting valueColor;
-
-        if (spawnType == SpawnType.NORMAL) {
-            valueColor = EnumChatFormatting.GREEN;
-        } else if (spawnType == SpawnType.HELL) {
-            valueColor = EnumChatFormatting.RED;
-        } else if (spawnType == SpawnType.SNOW) {
-            valueColor = EnumChatFormatting.AQUA;
-        } else {
-            valueColor = EnumChatFormatting.WHITE;
+        if (chicken.getStatsInfoTooltip() != null) {
+            list.addAll(chicken.getStatsInfoTooltip());
         }
 
-        builder.addLabelWithLangValue(
-            Reference.TOOLTIP + "spawn_egg.spawnType",
-            labelColor,
-            spawnType.toString(),
-            valueColor);
+        if (layItem != null && layItem.getItem() != null) {
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.layitem", layItem.getDisplayName()));
+        } else {
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.nolayitem"));
+        }
 
-        // Not breedable
-        builder.addColoredLangIf(
-            !chicken.getItem()
-                .isBreedable(),
-            EnumChatFormatting.RED,
-            Reference.TOOLTIP + "spawn_egg.notbreedable");
+        EnumChatFormatting valueColor;
+        switch (spawnType) {
+            case NORMAL:
+                valueColor = EnumChatFormatting.GREEN;
+                break;
+            case HELL:
+                valueColor = EnumChatFormatting.RED;
+                break;
+            case SNOW:
+                valueColor = EnumChatFormatting.AQUA;
+                break;
+            default:
+                valueColor = EnumChatFormatting.WHITE;
+                break;
+        }
 
-        // Breedable with parents
+        EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
+        String labelKey = Reference.TOOLTIP + "spawn_egg.spawnType";
+        String label = new ChatComponentTranslation(labelKey).getFormattedText();
+        list.add(labelColor + label + ": " + valueColor + String.valueOf(spawnType) + EnumChatFormatting.RESET);
+
+        if (!chicken.getItem()
+            .isBreedable()) {
+            list.add(EnumChatFormatting.RED + LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.notbreedable"));
+        }
+
         if (chicken.getItem()
             .isBreedable()
             && chicken.getItem()
@@ -241,24 +237,29 @@ public class ItemChicken extends ItemOK {
                     .getParent2()
                     .getDisplayName()).getFormattedText();
 
-            builder.addLabelWithValue(
-                new ChatComponentTranslation(Reference.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
-                EnumChatFormatting.YELLOW,
-                parent1 + " & " + parent2,
-                EnumChatFormatting.GOLD);
+            String breedableLabel = new ChatComponentTranslation(Reference.TOOLTIP + "spawn_egg.breedable")
+                .getFormattedText();
+
+            list.add(
+                EnumChatFormatting.YELLOW + breedableLabel
+                    + ": "
+                    + EnumChatFormatting.GOLD
+                    + parent1
+                    + " & "
+                    + parent2
+                    + EnumChatFormatting.RESET);
         }
 
-        // Mod compat tooltips
         if (ModCompatInformation.TOOLTIP.containsKey(
             chicken.getItem()
                 .getId())) {
             ModCompatInformation info = ModCompatInformation.TOOLTIP.get(
                 chicken.getItem()
                     .getId());
-            builder.addAll(info.getToolTip());
+            if (info != null && info.getToolTip() != null) {
+                list.addAll(info.getToolTip());
+            }
         }
-
-        list.addAll(builder.build());
     }
 
 }

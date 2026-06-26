@@ -15,9 +15,8 @@ import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.GuiOverlayButton;
 import codechicken.nei.recipe.IRecipeHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import ruiseki.okcore.inventory.ItemStackKey;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
-import ruiseki.omoshiroikamo.core.item.ItemStackKey;
-import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndexClient;
 
@@ -172,7 +171,7 @@ public class TerminalOverlay implements IOverlayHandler {
     private boolean consumeIfEnough(ItemIndexClient index, ItemStack stack, Object2IntOpenHashMap<ItemStackKey> used) {
         if (stack == null) return false;
 
-        ItemStackKey key = ItemStackKeyPool.get(stack);
+        ItemStackKey key = ItemStackKey.of(stack);
         int need = stack.stackSize;
         int available = index.getStored(key) - used.getOrDefault(key, 0);
 

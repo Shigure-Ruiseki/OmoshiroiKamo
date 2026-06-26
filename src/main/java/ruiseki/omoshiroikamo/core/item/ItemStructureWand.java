@@ -15,10 +15,11 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.structure.StructureConstants;
-import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.structure.StructureConstants;
+import ruiseki.omoshiroikamo.core.structure.WandSelectionManager;
 
 /**
  * Wand item used for structure scanning.
@@ -39,7 +40,7 @@ public class ItemStructureWand extends ItemOK {
     private static final String NBT_DIMENSION = "dimension";
 
     public ItemStructureWand() {
-        super(ModObject.STRUCTURE_WAND);
+        super(ModObject.STRUCTURE_WAND.name);
         setMaxStackSize(1);
     }
 

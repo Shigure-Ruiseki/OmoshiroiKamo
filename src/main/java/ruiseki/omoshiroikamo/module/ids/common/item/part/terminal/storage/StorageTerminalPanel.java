@@ -31,6 +31,8 @@ import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import ruiseki.okcore.addon.nei.NEISearchField;
+import ruiseki.okcore.inventory.ItemStackKey;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
@@ -38,9 +40,7 @@ import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.core.client.gui.widget.ExpandedWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.SearchBarWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
-import ruiseki.omoshiroikamo.core.integration.nei.NEISearchField;
 import ruiseki.omoshiroikamo.core.item.CraftingFilter;
-import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.CraftingSlotSH;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.IDsItemSlotSH;

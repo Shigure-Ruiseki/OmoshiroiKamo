@@ -31,16 +31,15 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.capabilities.redstone.CapabilityRedstone;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.helper.TileHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.core.block.IDynamicRedstone;
-import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.helper.TileHelpers;
+import ruiseki.omoshiroikamo.core.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.ILogicNet;
@@ -107,17 +106,15 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
     @Override
     public void onAttached() {
         super.onAttached();
-        IDynamicRedstone cap = TileHelpers
-            .getCapability(getWorld(), getPos(), getSide(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-        cap.setAllowRedstoneInput(true);
+        TileHelpers.getCapability(getWorld(), getPos(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY, getSide())
+            .ifPresent(cap -> cap.setAllowRedstoneInput(true));
     }
 
     @Override
     public void onDetached() {
         super.onDetached();
-        IDynamicRedstone cap = TileHelpers
-            .getCapability(getWorld(), getPos(), getSide(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-        cap.setAllowRedstoneInput(false);
+        TileHelpers.getCapability(getWorld(), getPos(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY, getSide())
+            .ifPresent(cap -> cap.setAllowRedstoneInput(false));
     }
 
     @Override
@@ -253,10 +250,10 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(texture);
+        RenderUtils.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderHelpers.bindTexture(back_texture);
+        RenderUtils.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();
@@ -284,10 +281,10 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(texture);
+        RenderUtils.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderHelpers.bindTexture(back_texture);
+        RenderUtils.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();

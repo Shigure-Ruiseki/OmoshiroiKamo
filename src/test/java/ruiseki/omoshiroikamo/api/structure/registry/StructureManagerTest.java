@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.structure.StructureManager;
 
 /**
  * StructureManager のテスト

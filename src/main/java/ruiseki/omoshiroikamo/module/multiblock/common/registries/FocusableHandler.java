@@ -14,11 +14,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import cpw.mods.fml.common.registry.GameData;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
-import ruiseki.omoshiroikamo.core.item.weighted.WeightedItemStack;
-import ruiseki.omoshiroikamo.core.item.weighted.WeightedOreStack;
-import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.item.weighted.IFocusableRegistry;
+import ruiseki.okcore.item.weighted.WeightedItemStack;
+import ruiseki.okcore.item.weighted.WeightedOreStack;
+import ruiseki.okcore.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 
 public class FocusableHandler {

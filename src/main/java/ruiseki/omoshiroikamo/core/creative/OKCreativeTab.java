@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.okcore.helper.LangHelpers;
 
 public class OKCreativeTab extends CreativeTabs {
 

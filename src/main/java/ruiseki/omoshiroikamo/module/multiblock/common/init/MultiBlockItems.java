@@ -5,9 +5,10 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
+import ruiseki.okcore.item.ItemOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.multiblock.common.item.ItemAssembler;
 import ruiseki.omoshiroikamo.module.multiblock.common.item.ItemCrystal;
 
@@ -17,10 +18,10 @@ public enum MultiBlockItems {
 
     CRYSTAL(new ItemCrystal()),
     ASSEMBLER(new ItemAssembler()),
-    STABILIZED_ENDER_PEAR(new ItemOK().setName(ModObject.STABILIZED_ENDER_PEAR)
-        .setTextureName("multiblock/ender_stabilized")),
-    PHOTOVOLTAIC_CELL(new ItemOK().setName(ModObject.PHOTOVOLTAIC_CELL)
-        .setTextureName("multiblock/photovoltaic_cell")),
+    STABILIZED_ENDER_PEAR(new ItemOK(ModObject.STABILIZED_ENDER_PEAR.name)
+        .setTextureName(Reference.PREFIX_MOD + "multiblock/ender_stabilized")),
+    PHOTOVOLTAIC_CELL(new ItemOK(ModObject.PHOTOVOLTAIC_CELL.name)
+        .setTextureName(Reference.PREFIX_MOD + "multiblock/photovoltaic_cell")),
 
     ;
     // spotless: on

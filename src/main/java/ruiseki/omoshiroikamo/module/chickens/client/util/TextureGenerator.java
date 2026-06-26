@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 public class TextureGenerator {
 

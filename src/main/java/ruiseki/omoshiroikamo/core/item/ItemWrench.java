@@ -11,10 +11,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.item.IToolHammer;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketToggleSide;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -72,9 +73,8 @@ public class ItemWrench extends ItemOK implements IToolHammer {
 
                 if (world.provider.dimensionId == cDim && (cx != x || cy != y || cz != z)) {
                     TileEntity cte = world.getTileEntity(cx, cy, cz);
-                    if (cte instanceof TEMachineController) {
+                    if (cte instanceof TEMachineController controller) {
                         if (!world.isRemote) {
-                            TEMachineController controller = (TEMachineController) cte;
                             controller.registerExternalPort(x, y, z, getSelectedPortType(stack), player);
                             return true;
                         }

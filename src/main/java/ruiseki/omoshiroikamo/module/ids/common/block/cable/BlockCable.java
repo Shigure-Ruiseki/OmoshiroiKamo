@@ -24,25 +24,21 @@ import cpw.mods.fml.relauncher.SideOnly;
 import lombok.experimental.Delegate;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.okcore.addon.waila.IWailaBlockInfoProvider;
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.block.IDynamicLight;
+import ruiseki.okcore.block.IDynamicRedstone;
+import ruiseki.okcore.block.collidable.CollidableComponent;
+import ruiseki.okcore.block.collidable.ICollidable;
+import ruiseki.okcore.block.collidable.ICollidableParent;
+import ruiseki.okcore.capabilities.light.CapabilityLight;
+import ruiseki.okcore.capabilities.redstone.CapabilityRedstone;
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.helper.TileHelpers;
+import ruiseki.okcore.item.ItemBlockOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.ids.ICable;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.block.IDynamicLight;
-import ruiseki.omoshiroikamo.core.block.IDynamicRedstone;
-import ruiseki.omoshiroikamo.core.block.collidable.CollidableComponent;
-import ruiseki.omoshiroikamo.core.block.collidable.ICollidable;
-import ruiseki.omoshiroikamo.core.block.collidable.ICollidableParent;
-import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
-import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
-import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.helper.BlockHelpers;
-import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
-import ruiseki.omoshiroikamo.core.helper.TileHelpers;
-import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
-import ruiseki.omoshiroikamo.module.ids.client.render.RenderCable;
 
 public class BlockCable extends BlockOK
     implements ICollidable<ForgeDirection>, ICollidableParent, IWailaBlockInfoProvider {
@@ -68,26 +64,13 @@ public class BlockCable extends BlockOK
         super(ModObject.CABLE.name, TECable.class, BLOCK_MATERIAL);
         setHardness(BLOCK_HARDNESS);
         setStepSound(soundTypeStone);
-        setBlockTextureName("ids/cable");
+        setBlockTextureName(Reference.PREFIX_MOD + "ids/cable");
         isFullSize = isOpaque = false;
     }
 
     @Override
-    protected void registerComponent() {
-        super.registerComponent();
-        if (MinecraftHelpers.isClientSide()) {
-            BlockHelpers.bindTileEntitySpecialRenderer(TECable.class, this);
-        }
-    }
-
-    @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockCable.class;
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected BaseBlockRender<? extends BlockOK, ? extends TileEntityOK> getRenderer() {
-        return new RenderCable();
     }
 
     @Override
@@ -167,41 +150,42 @@ public class BlockCable extends BlockOK
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection dir = ForgeDirection.getOrientation(side)
             .getOpposite();
-        IDynamicRedstone cap = TileHelpers
-            .getCapability(world, new BlockPos(x, y, z), dir, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-        return cap != null && (cap.getRedstoneLevel() > 0 || cap.isAllowRedstoneInput());
+        return TileHelpers
+            .getCapability(world, new BlockPos(x, y, z), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY, dir)
+            .map(cap -> cap.getRedstoneLevel() > 0)
+            .orElse(false);
     }
 
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection dir = ForgeDirection.getOrientation(side)
             .getOpposite();
-        IDynamicRedstone cap = TileHelpers
-            .getCapability(world, new BlockPos(x, y, z), dir, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-        return cap != null ? cap.getRedstoneLevel() : 0;
+        return TileHelpers
+            .getCapability(world, new BlockPos(x, y, z), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY, dir)
+            .map(IDynamicRedstone::getRedstoneLevel)
+            .orElse(0);
     }
 
     @Override
     public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection dir = ForgeDirection.getOrientation(side)
             .getOpposite();
-        IDynamicRedstone cap = TileHelpers
-            .getCapability(world, new BlockPos(x, y, z), dir, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-        return cap != null && cap.isStrong() ? cap.getRedstoneLevel() : 0;
+        return TileHelpers
+            .getCapability(world, new BlockPos(x, y, z), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY, dir)
+            .map(cap -> cap.isStrong() ? cap.getRedstoneLevel() : 0)
+            .orElse(0);
     }
 
     // IDynamicLight
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z) {
-        int light = 0;
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-            IDynamicLight dynamicLight = TileHelpers
-                .getCapability(world, new BlockPos(x, y, z), side, CapabilityLight.DYNAMIC_LIGHT_CAPABILITY);
-            if (dynamicLight != null) {
-                light = Math.max(light, dynamicLight.getLightLevel());
-            }
+            return TileHelpers
+                .getCapability(world, new BlockPos(x, y, z), CapabilityLight.DYNAMIC_LIGHT_CAPABILITY, side)
+                .map(IDynamicLight::getLightLevel)
+                .orElse(0);
         }
-        return light;
+        return 0;
     }
 
     // ICollidable & ICollidableParent

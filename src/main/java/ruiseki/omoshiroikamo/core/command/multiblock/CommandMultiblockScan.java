@@ -9,11 +9,11 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.init.ModBase;
 import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.common.structure.StructureConstants;
-import ruiseki.omoshiroikamo.core.common.structure.StructureScanner;
-import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.structure.StructureConstants;
+import ruiseki.omoshiroikamo.core.structure.StructureScanner;
 
 public class CommandMultiblockScan extends CommandMod {
 

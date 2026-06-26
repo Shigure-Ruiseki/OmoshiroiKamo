@@ -5,9 +5,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.network.CodecField;
-import ruiseki.omoshiroikamo.core.network.PacketCodec;
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.network.CodecField;
+import ruiseki.okcore.network.PacketCodec;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 
 public class PacketStall extends PacketCodec {

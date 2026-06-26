@@ -4,9 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.block.IBlock;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import org.apache.logging.log4j.Level;
+
+import ruiseki.okcore.block.IBlock;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.module.chickens.common.block.BlockBreeder;
 import ruiseki.omoshiroikamo.module.chickens.common.block.BlockRoost;
 import ruiseki.omoshiroikamo.module.chickens.common.block.BlockRoostCollector;
@@ -28,16 +29,16 @@ public enum ChickensBlocks {
         for (ChickensBlocks block : VALUES) {
             try {
                 block.block.init();
-                Logger.info("Successfully initialized {}", block.name());
+                OmoshiroiKamo.okLog(Level.INFO, "Successfully initialized {}", block.name());
             } catch (Exception e) {
-                Logger.error("Failed to initialize block: +{}", block.name());
+                OmoshiroiKamo.okLog(Level.ERROR, "Failed to initialize block: +{}", block.name());
             }
         }
     }
 
     private final IBlock block;
 
-    ChickensBlocks(BlockOK block) {
+    ChickensBlocks(IBlock block) {
         this.block = block;
     }
 

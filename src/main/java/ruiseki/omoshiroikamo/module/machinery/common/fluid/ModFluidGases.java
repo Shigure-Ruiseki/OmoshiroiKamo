@@ -9,10 +9,10 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.okcore.world.gen.SimpleMinableWorldGenerator;
+import ruiseki.okcore.world.gen.WorldGenMinableExtended;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.world.gen.SimpleMinableWorldGenerator;
-import ruiseki.omoshiroikamo.core.world.gen.WorldGenMinableExtended;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidBase;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockLiquidBase;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemBlockFluid;

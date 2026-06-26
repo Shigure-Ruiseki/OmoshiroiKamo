@@ -17,15 +17,15 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.helper.MinecraftHelpers;
+import ruiseki.okcore.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.api.modular.ModularTier;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierConfigLoader;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
@@ -71,7 +71,8 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
     }
 
     @Override
-    protected void registerBlockColor() {
+    public void registerComponent() {
+        super.registerComponent();
         BlockColor.registerBlockColors(this, this);
     }
 
@@ -149,7 +150,7 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockMachineCasing.class;
     }
 

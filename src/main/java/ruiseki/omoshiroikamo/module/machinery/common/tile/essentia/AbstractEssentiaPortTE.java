@@ -6,11 +6,11 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;

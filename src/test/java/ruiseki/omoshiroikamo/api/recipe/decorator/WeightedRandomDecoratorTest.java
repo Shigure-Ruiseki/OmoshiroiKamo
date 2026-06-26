@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
@@ -28,8 +30,6 @@ import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * WeightedRandomDecorator の統計的な検証テスト

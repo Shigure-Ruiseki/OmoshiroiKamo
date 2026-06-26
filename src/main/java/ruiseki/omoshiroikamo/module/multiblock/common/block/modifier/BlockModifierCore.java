@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.modifier;
 
 import java.util.List;
 
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 
@@ -9,7 +10,7 @@ public class BlockModifierCore extends BlockModifier {
 
     protected BlockModifierCore() {
         super(ModObject.MODIFIER_NULL.name, "");
-        setTextureName("multiblock/modifier_core");
+        setTextureName(Reference.PREFIX_MOD + "multiblock/modifier_core");
     }
 
     public static BlockModifierCore create() {

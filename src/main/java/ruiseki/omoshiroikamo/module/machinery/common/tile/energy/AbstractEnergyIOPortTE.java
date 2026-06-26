@@ -27,6 +27,8 @@ import com.google.common.collect.ImmutableList;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
@@ -37,8 +39,6 @@ import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.ToggleWidget;

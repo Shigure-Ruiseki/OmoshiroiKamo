@@ -24,7 +24,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  *
  * <p>
  * <b>Example:</b>
- * 
+ *
  * <pre>
  * {@code
  * // In MachineryIntegration
@@ -39,7 +39,10 @@ import net.minecraftforge.common.util.ForgeDirection;
  * }
  * }
  * </pre>
+ * 
+ * Change to use {@link ruiseki.okcore.capabilities.Capability}.
  */
+@Deprecated
 public interface IEnergyIntegrationDelegate {
 
     /**

@@ -2,12 +2,12 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon;
 
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofChain;
-import static ruiseki.omoshiroikamo.core.integration.structureLib.StructureLibUtils.ofBlockAdderWithPos;
+import static ruiseki.omoshiroikamo.core.compat.structureLib.StructureLibUtils.ofBlockAdderWithPos;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 
-import ruiseki.omoshiroikamo.core.common.structure.StructureRegistrationUtils;
+import ruiseki.omoshiroikamo.core.structure.StructureRegistrationUtils;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 public class QuantumBeaconStructure {

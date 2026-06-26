@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.ids.common.item.logic.value;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
+import ruiseki.okcore.datastructure.BlockStack;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypes;
 

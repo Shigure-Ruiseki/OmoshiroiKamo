@@ -11,6 +11,8 @@ import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.registry.GameData;
 
+// TODO: Change to OK Core
+@Deprecated
 public class ItemJson implements IJsonMaterial {
 
     public String name; // registry name

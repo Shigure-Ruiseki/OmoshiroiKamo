@@ -6,14 +6,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.okcore.energy.IOKEnergySource;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * perTick=true: Energy consumed every tick during processing.

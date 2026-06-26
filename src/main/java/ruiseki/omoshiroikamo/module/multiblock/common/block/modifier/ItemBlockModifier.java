@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
+import ruiseki.okcore.item.ItemBlockOK;
 
 /**
  * Custom ItemBlock for Modifier blocks that displays tooltips from

@@ -18,6 +18,9 @@ public class GeneralConfig {
     public static boolean enableDebug;
 
     @Config.DefaultBoolean(true)
+    public static boolean useVersionChecker;
+
+    @Config.DefaultBoolean(true)
     public static boolean enableUpdateNotification;
 
     public static void registerConfig() throws ConfigException {

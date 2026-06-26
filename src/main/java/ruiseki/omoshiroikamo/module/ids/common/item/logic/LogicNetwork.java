@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.ids.common.item.logic;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.okcore.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.part.ILogicReader;

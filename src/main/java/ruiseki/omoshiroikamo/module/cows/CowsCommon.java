@@ -1,9 +1,9 @@
 package ruiseki.omoshiroikamo.module.cows;
 
+import ruiseki.okcore.init.ModBase;
+import ruiseki.okcore.network.PacketHandler;
+import ruiseki.okcore.proxy.CommonProxyComponent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.network.PacketHandler;
-import ruiseki.omoshiroikamo.core.proxy.CommonProxyComponent;
 import ruiseki.omoshiroikamo.module.cows.common.network.PacketStall;
 
 public class CowsCommon extends CommonProxyComponent {

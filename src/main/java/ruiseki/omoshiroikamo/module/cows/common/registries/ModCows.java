@@ -9,13 +9,13 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
+import ruiseki.okcore.event.handler.NetherPopEventHandler;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.event.NetherPopulateEvent;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
 public class ModCows {
@@ -49,7 +49,7 @@ public class ModCows {
                 biomesForSpawning.toArray(new BiomeGenBase[biomesForSpawning.size()]));
             if (biomesForSpawning.contains(BiomeGenBase.hell)) {
                 MinecraftForge.TERRAIN_GEN_BUS
-                    .register(new NetherPopulateEvent(CowConfig.netherSpawnChanceMultiplier, EntityCowsCow.class));
+                    .register(new NetherPopEventHandler(CowConfig.netherSpawnChanceMultiplier, EntityCowsCow.class));
             }
         }
     }

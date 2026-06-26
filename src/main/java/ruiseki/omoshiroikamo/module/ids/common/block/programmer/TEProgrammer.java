@@ -11,8 +11,8 @@ import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 
 public class TEProgrammer extends AbstractTE implements IGuiHolder<PosGuiData> {

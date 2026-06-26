@@ -11,11 +11,11 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 public class BlockLens extends BlockOK implements IMBBlock, IJsonModelBlock {
 
@@ -35,7 +35,7 @@ public class BlockLens extends BlockOK implements IMBBlock, IJsonModelBlock {
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockLens.class;
     }
 

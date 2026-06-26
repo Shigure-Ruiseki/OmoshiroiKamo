@@ -13,8 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.core.block.IBlock;
+import ruiseki.okcore.block.IBlock;
 
 public abstract class BlockLeavesOK extends BlockLeaves implements IBlock {
 
@@ -38,6 +37,11 @@ public abstract class BlockLeavesOK extends BlockLeaves implements IBlock {
     }
 
     @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public boolean isHasSubtypes() {
         return false;
     }
@@ -57,8 +61,8 @@ public abstract class BlockLeavesOK extends BlockLeaves implements IBlock {
         this.field_150129_M[0] = new IIcon[1];
         this.field_150129_M[1] = new IIcon[1];
 
-        this.field_150129_M[0][0] = reg.registerIcon(Reference.PREFIX_MOD + getTextureName());
-        this.field_150129_M[1][0] = reg.registerIcon(Reference.PREFIX_MOD + getTextureName() + "_opaque");
+        this.field_150129_M[0][0] = reg.registerIcon(getTextureName());
+        this.field_150129_M[1][0] = reg.registerIcon(getTextureName() + "_opaque");
     }
 
     @Override

@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import ruiseki.omoshiroikamo.core.structure.CustomStructureRegistry;
+
 /**
  * CustomStructureRegistry のテスト
  *
@@ -34,34 +36,28 @@ public class CustomStructureRegistryTest {
         // CustomStructureRegistryは静的メソッドを持つため、
         // 実際のゲーム環境でのテストが必要
         // ここでは存在確認のみ
-        assertDoesNotThrow(
-            () -> { ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.class.getName(); });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.class.getName(); });
     }
 
     @Test
     @DisplayName("getDefinition() でnull許容")
     public void testGetDefinition_NullSafe() {
         // 未登録の名前でnullが返る
-        assertDoesNotThrow(
-            () -> {
-                ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.getDefinition("nonexistent");
-            });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.getDefinition("nonexistent"); });
     }
 
     @Test
     @DisplayName("hasDefinition() の動作")
     public void testHasDefinition() {
         // メソッドの存在確認
-        assertDoesNotThrow(
-            () -> { ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.hasDefinition("test"); });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.hasDefinition("test"); });
     }
 
     @Test
     @DisplayName("getControllerOffset() の取得")
     public void testGetControllerOffset() {
         // デフォルト値[0,0,0]が返ることを確認
-        int[] offset = ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry
-            .getControllerOffset("nonexistent");
+        int[] offset = CustomStructureRegistry.getControllerOffset("nonexistent");
 
         assertNotNull(offset);
         assertEquals(3, offset.length);
@@ -123,8 +119,7 @@ public class CustomStructureRegistryTest {
     @DisplayName("複数構造の登録")
     public void testRegisterMultipleStructures() {
         // 複数の構造を登録しても問題ない
-        assertDoesNotThrow(
-            () -> { ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.class.getName(); });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.class.getName(); });
     }
 
     @Test
@@ -132,8 +127,7 @@ public class CustomStructureRegistryTest {
     public void testRegisterDuplicate() {
         // 同名で再登録した場合、上書きされる
         // （実装依存）
-        assertDoesNotThrow(
-            () -> { ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.class.getName(); });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.class.getName(); });
     }
 
     @Test
@@ -141,8 +135,7 @@ public class CustomStructureRegistryTest {
     public void testRegisterEmptyLayerStructure() {
         // 空レイヤーの構造は登録を拒否する
         // （警告ログが出る）
-        assertDoesNotThrow(
-            () -> { ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.class.getName(); });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.class.getName(); });
     }
 
     @Test
@@ -150,16 +143,14 @@ public class CustomStructureRegistryTest {
     public void testCreateElementFromMapping() {
         // BlockMapping → IStructureElement 変換
         // （privateメソッドのため、間接的な確認）
-        assertDoesNotThrow(
-            () -> { ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.class.getName(); });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.class.getName(); });
     }
 
     @Test
     @DisplayName("複数ブロックのchain要素作成")
     public void testCreateChainElement() {
         // 複数ブロックIDからchain要素を作成
-        assertDoesNotThrow(
-            () -> { ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.class.getName(); });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.class.getName(); });
     }
 
     @Test
@@ -167,8 +158,7 @@ public class CustomStructureRegistryTest {
     public void testGetRegisteredNames() {
         // 登録済み構造の名前一覧を取得
         assertDoesNotThrow(() -> {
-            java.util.Set<String> names = ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry
-                .getRegisteredNames();
+            java.util.Set<String> names = CustomStructureRegistry.getRegisteredNames();
             assertNotNull(names);
         });
     }
@@ -177,8 +167,7 @@ public class CustomStructureRegistryTest {
     @DisplayName("registerAll() を2回呼んでも安全")
     public void testRegisterAll_TwiceSafe() {
         // 2回呼んでもエラーにならない
-        assertDoesNotThrow(
-            () -> { ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry.class.getName(); });
+        assertDoesNotThrow(() -> { CustomStructureRegistry.class.getName(); });
     }
 
     // ========================================

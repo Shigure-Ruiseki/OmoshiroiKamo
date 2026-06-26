@@ -17,18 +17,17 @@ import net.minecraftforge.fluids.FluidStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.helper.ItemNBTHelpers;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
-import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
+import ruiseki.omoshiroikamo.core.compat.ModCompatInformation;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
@@ -38,7 +37,7 @@ public class ItemCowSpawnEgg extends ItemOK {
     protected IIcon baseIcon;
 
     public ItemCowSpawnEgg() {
-        super(ModObject.COW_SPAWN_EGG);
+        super(ModObject.COW_SPAWN_EGG.name);
         setHasSubtypes(true);
     }
 
@@ -139,7 +138,6 @@ public class ItemCowSpawnEgg extends ItemOK {
         if (tile.hasCow()) {
             return false;
         }
-        // Tạo entity từ spawn egg giống như activate
         EntityCowsCow cow = new EntityCowsCow(world);
         cow.setPosition(tile.xCoord + 0.5, tile.yCoord, tile.zCoord + 0.5);
         cow.onSpawnWithEgg(null);
@@ -149,7 +147,6 @@ public class ItemCowSpawnEgg extends ItemOK {
             cow.addRandomTraits();
         }
 
-        // Nếu egg có NBT thì copy sang entity
         if (stack.hasTagCompound()) {
             NBTTagCompound entityNBT = new NBTTagCompound();
             cow.writeEntityToNBT(entityNBT);
@@ -163,10 +160,8 @@ public class ItemCowSpawnEgg extends ItemOK {
             cow.readEntityFromNBT(entityNBT);
         }
 
-        // Set cow vào TileStall
         tile.setCow(cow);
 
-        // Nếu không ở chế độ Creative thì giảm stack
         if (!player.capabilities.isCreativeMode) {
             stack.stackSize--;
         }
@@ -183,42 +178,40 @@ public class ItemCowSpawnEgg extends ItemOK {
 
         FluidStack milk = cow.createMilkFluid();
         SpawnType spawnType = cow.getSpawnType();
-        TooltipUtils builder = TooltipUtils.builder();
 
-        // Tier
-        builder.addLang(Reference.TOOLTIP + "spawn_egg.tier", cow.getTier());
+        list.add(LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.tier", cow.getTier()));
 
-        // Milk fluid
-        builder.addLangIf(
-            milk != null && milk.getFluid() != null,
-            Reference.TOOLTIP + "spawn_egg.milkfluid",
-            milk.getLocalizedName());
-        builder.addLangIf(milk.getFluid() == null, Reference.TOOLTIP + "spawn_egg.nomilkfluid");
-
-        EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
-        EnumChatFormatting valueColor;
-
-        if (spawnType == SpawnType.NORMAL) {
-            valueColor = EnumChatFormatting.GREEN;
-        } else if (spawnType == SpawnType.HELL) {
-            valueColor = EnumChatFormatting.RED;
-        } else if (spawnType == SpawnType.SNOW) {
-            valueColor = EnumChatFormatting.AQUA;
+        if (milk != null && milk.getFluid() != null) {
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.milkfluid", milk.getLocalizedName()));
         } else {
-            valueColor = EnumChatFormatting.WHITE;
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.nomilkfluid"));
         }
 
-        builder.addLabelWithLangValue(
-            Reference.TOOLTIP + "spawn_egg.spawnType",
-            labelColor,
-            spawnType.toString(),
-            valueColor);
+        EnumChatFormatting valueColor;
+        switch (spawnType) {
+            case NORMAL:
+                valueColor = EnumChatFormatting.GREEN;
+                break;
+            case HELL:
+                valueColor = EnumChatFormatting.RED;
+                break;
+            case SNOW:
+                valueColor = EnumChatFormatting.AQUA;
+                break;
+            default:
+                valueColor = EnumChatFormatting.WHITE;
+                break;
+        }
 
-        // Breedable
-        builder
-            .addColoredLangIf(!cow.isBreedable(), EnumChatFormatting.RED, Reference.TOOLTIP + "spawn_egg.notbreedable");
+        EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
+        String labelKey = Reference.TOOLTIP + "spawn_egg.spawnType";
+        String label = new ChatComponentTranslation(labelKey).getFormattedText();
+        list.add(labelColor + label + ": " + valueColor + String.valueOf(spawnType) + EnumChatFormatting.RESET);
 
-        // Breedable with parents
+        if (!cow.isBreedable()) {
+            list.add(EnumChatFormatting.RED + LangHelpers.localize(Reference.TOOLTIP + "spawn_egg.notbreedable"));
+        }
+
         if (cow.isBreedable() && cow.getParent1() != null && cow.getParent2() != null) {
             String parent1 = new ChatComponentTranslation(
                 cow.getParent1()
@@ -227,20 +220,25 @@ public class ItemCowSpawnEgg extends ItemOK {
                 cow.getParent2()
                     .getDisplayName()).getFormattedText();
 
-            builder.addLabelWithValue(
-                new ChatComponentTranslation(Reference.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
-                EnumChatFormatting.YELLOW,
-                parent1 + " & " + parent2,
-                EnumChatFormatting.GOLD);
+            String breedableLabel = new ChatComponentTranslation(Reference.TOOLTIP + "spawn_egg.breedable")
+                .getFormattedText();
+
+            list.add(
+                EnumChatFormatting.YELLOW + breedableLabel
+                    + ": "
+                    + EnumChatFormatting.GOLD
+                    + parent1
+                    + " & "
+                    + parent2
+                    + EnumChatFormatting.RESET);
         }
 
-        // ModCompat tooltip
         if (ModCompatInformation.TOOLTIP.containsKey(cow.getId())) {
             ModCompatInformation info = ModCompatInformation.TOOLTIP.get(cow.getId());
-            builder.addAll(info.getToolTip());
+            if (info != null && info.getToolTip() != null) {
+                list.addAll(info.getToolTip());
+            }
         }
-
-        list.addAll(builder.build());
     }
 
 }

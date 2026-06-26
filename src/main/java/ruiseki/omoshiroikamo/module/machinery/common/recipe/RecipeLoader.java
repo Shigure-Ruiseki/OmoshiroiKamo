@@ -12,8 +12,8 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 public class RecipeLoader {
 

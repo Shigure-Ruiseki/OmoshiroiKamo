@@ -7,7 +7,7 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLModelTierReader;
 import ruiseki.omoshiroikamo.module.dml.recipe.DMLModelTierWriter;
 

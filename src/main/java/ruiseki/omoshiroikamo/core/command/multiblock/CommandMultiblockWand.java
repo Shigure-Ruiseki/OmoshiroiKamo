@@ -5,10 +5,10 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 
-import ruiseki.omoshiroikamo.core.command.CommandMod;
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.init.ModBase;
 import ruiseki.omoshiroikamo.core.command.multiblock.wand.CommandMultiblockWandClear;
 import ruiseki.omoshiroikamo.core.command.multiblock.wand.CommandMultiblockWandSave;
-import ruiseki.omoshiroikamo.core.init.ModBase;
 
 public class CommandMultiblockWand extends CommandMod {
 

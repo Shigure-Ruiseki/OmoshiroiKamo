@@ -16,7 +16,7 @@ import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ManaOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.VisOutput;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Registry to reconstruct IRecipeOutput from NBT.

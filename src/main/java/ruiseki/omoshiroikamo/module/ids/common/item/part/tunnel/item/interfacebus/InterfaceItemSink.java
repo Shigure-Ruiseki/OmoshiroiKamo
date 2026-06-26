@@ -2,16 +2,17 @@ package ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.interfaceb
 
 import net.minecraft.item.ItemStack;
 
+import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.gtnewhorizon.gtnhlib.GTNHLib;
-import com.gtnewhorizon.gtnhlib.capability.item.ItemSink;
-import com.gtnewhorizon.gtnhlib.item.ImmutableItemStack;
-import com.gtnewhorizon.gtnhlib.item.InventoryIterator;
-import com.gtnewhorizon.gtnhlib.item.StandardInventoryIterator;
+import ruiseki.okcore.item.IImmutableItemStack;
+import ruiseki.okcore.item.IInventoryIterator;
+import ruiseki.okcore.item.capability.IItemSink;
+import ruiseki.okcore.item.capability.minecraft.InventoryIterator;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 
-public class InterfaceItemSink implements ItemSink {
+public class InterfaceItemSink implements IItemSink {
 
     private final IItemInterface iface;
     private int[] allowedSlots;
@@ -22,7 +23,7 @@ public class InterfaceItemSink implements ItemSink {
 
     @Override
     public void resetSink() {
-        ItemSink.super.resetSink();
+        IItemSink.super.resetSink();
         allowedSlots = null;
     }
 
@@ -32,7 +33,7 @@ public class InterfaceItemSink implements ItemSink {
     }
 
     @Override
-    public int store(ImmutableItemStack stack) {
+    public int store(IImmutableItemStack stack) {
         if (stack.isEmpty()) return 0;
 
         ItemStack mcStack = stack.toStack();
@@ -59,8 +60,8 @@ public class InterfaceItemSink implements ItemSink {
     }
 
     @Override
-    public @NotNull StandardInventoryIterator sinkIterator() {
-        return new StandardInventoryIterator(
+    public @NotNull InventoryIterator sinkIterator() {
+        return new InventoryIterator(
             iface.getInventory(),
             iface.getSide()
                 .getOpposite(),
@@ -80,8 +81,8 @@ public class InterfaceItemSink implements ItemSink {
     }
 
     @Override
-    public @Nullable InventoryIterator simulatedSinkIterator() {
-        return new StandardInventoryIterator(iface.getInventory(), iface.getSide(), iface.getSlots(), allowedSlots) {
+    public @Nullable IInventoryIterator simulatedSinkIterator() {
+        return new InventoryIterator(iface.getInventory(), iface.getSide(), iface.getSlots(), allowedSlots) {
 
             @Override
             protected boolean canAccess(ItemStack stack, int slot) {
@@ -110,8 +111,8 @@ public class InterfaceItemSink implements ItemSink {
             }
 
             @Override
-            public ImmutableItemStack previous() {
-                GTNHLib.LOG.warn("This simulated sink iterator doesn't support backward traversal");
+            public IImmutableItemStack previous() {
+                OmoshiroiKamo.okLog(Level.ERROR, "This simulated sink iterator doesn't support backward traversal");
                 return null;
             }
 

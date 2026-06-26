@@ -14,22 +14,22 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import ruiseki.okcore.helper.ItemNBTHelpers;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
 public class ItemCowHalter extends ItemOK {
 
     public ItemCowHalter() {
-        super(ModObject.COW_HALTER);
+        super(ModObject.COW_HALTER.name);
         setMaxStackSize(1);
-        setTextureName("cow/cow_halter");
+        setTextureName(Reference.PREFIX_MOD + "cow/cow_halter");
     }
 
     @Override
@@ -128,16 +128,18 @@ public class ItemCowHalter extends ItemOK {
         int strength = tag.getInteger(STRENGTH_NBT);
         int growth = tag.getInteger(GROWTH_NBT);
         int gain = tag.getInteger(GAIN_NBT);
-        CowsRegistryItem cow = CowsRegistry.INSTANCE.getByType(stack.getItemDamage() - 1);
 
-        TooltipUtils builder = TooltipUtils.builder();
-        builder.addIf(stack.getItemDamage() == 0, "Empty. Right Click on cow to pick it up!");
-        if (stack.getItemDamage() != 0) {
-            builder.addColoredLang(EnumChatFormatting.WHITE, cow.getDisplayName());
-            builder.addLang(Reference.TOOLTIP + "mob.growth", growth)
-                .addLang(Reference.TOOLTIP + "mob.gain", gain)
-                .addLang(Reference.TOOLTIP + "mob.strength", strength);
+        CowsRegistryItem cow = stack.getItemDamage() > 0 ? CowsRegistry.INSTANCE.getByType(stack.getItemDamage() - 1)
+            : null;
+
+        if (stack.getItemDamage() == 0) {
+            list.add("Empty. Right Click on cow to pick it up!");
+        } else if (cow != null) {
+            list.add(EnumChatFormatting.WHITE + cow.getDisplayName());
+
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "mob.growth", growth));
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "mob.gain", gain));
+            list.add(LangHelpers.localize(Reference.TOOLTIP + "mob.strength", strength));
         }
-        list.addAll(builder.build());
     }
 }

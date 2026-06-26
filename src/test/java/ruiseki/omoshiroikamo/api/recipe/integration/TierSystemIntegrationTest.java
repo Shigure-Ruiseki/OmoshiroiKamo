@@ -14,6 +14,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
@@ -21,12 +23,10 @@ import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * Tier システムの統合テスト
- * 
+ *
  * マシン（コンポーネントごとの Tier）とレシピ（要求 Tier）の
  * 相互作用が正しく動作することを検証します（仕様の決定打）。
  */

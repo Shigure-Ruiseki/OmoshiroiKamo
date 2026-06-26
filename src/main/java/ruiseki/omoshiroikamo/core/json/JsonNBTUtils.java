@@ -23,6 +23,8 @@ import com.google.gson.JsonPrimitive;
  * Utility class to convert between GSON JsonObjects and Minecraft
  * NBTTagCompounds.
  */
+// TODO: Change to OK Core
+@Deprecated
 public class JsonNBTUtils {
 
     /**

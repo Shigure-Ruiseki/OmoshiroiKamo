@@ -13,13 +13,13 @@ import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
+import ruiseki.okcore.block.BlockOK;
+import ruiseki.okcore.block.property.BlockPropertyReg;
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.api.client.render.IJsonModelBlock;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.block.property.BlockPropertyReg;
-import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 public class BlockBasaltStructure extends BlockOK implements IMBBlock, IJsonModelBlock {
 
@@ -36,12 +36,13 @@ public class BlockBasaltStructure extends BlockOK implements IMBBlock, IJsonMode
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockBasaltStructure.class;
     }
 
     @Override
-    protected void registerBlockColor() {
+    public void registerComponent() {
+        super.registerComponent();
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override

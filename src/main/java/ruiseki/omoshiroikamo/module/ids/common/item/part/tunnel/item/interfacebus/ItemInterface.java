@@ -26,12 +26,12 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.inventory.ItemStackKey;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPart;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
@@ -97,7 +97,8 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
         for (int slot : slots) {
             ItemStack s = inv.getStackInSlot(slot);
             if (s != null && s.stackSize > 0) {
-                hash = 31 * hash + ItemStackKeyPool.get(s).hash;
+                hash = 31 * hash + ItemStackKey.of(s)
+                    .hashCode();
                 hash = 31 * hash + s.stackSize;
             }
         }
@@ -149,7 +150,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
 
             ItemStack s = inv.getStackInSlot(slot);
             if (s == null || s.stackSize <= 0) continue;
-            if (!ItemUtils.areStacksEqual(required, s)) continue;
+            if (!ItemStackHelpers.areStacksEqual(required, s)) continue;
 
             int take = Math.min(remaining, s.stackSize);
             ItemStack taken = inv.decrStackSize(slot, take);
@@ -191,7 +192,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
                 ItemStack placed = remaining.splitStack(add);
                 inv.setInventorySlotContents(slot, placed);
                 changed = true;
-            } else if (ItemUtils.areStacksEqual(target, remaining)) {
+            } else if (ItemStackHelpers.areStacksEqual(target, remaining)) {
                 int space = target.getMaxStackSize() - target.stackSize;
                 if (space > 0) {
                     int add = Math.min(space, remaining.stackSize);
@@ -245,7 +246,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderHelpers.bindTexture(texture);
+        RenderUtils.bindTexture(texture);
 
         rotateForSide(getSide());
 
@@ -276,7 +277,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(texture);
+        RenderUtils.bindTexture(texture);
         model.renderAll();
 
         GL11.glPopMatrix();

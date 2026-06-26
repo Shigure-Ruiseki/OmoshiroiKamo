@@ -12,9 +12,9 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output.TEEssentiaOutputPort;
@@ -66,7 +66,7 @@ public class BlockEssentiaOutputPort extends AbstractPortBlock<TEEssentiaOutputP
     }
 
     @Override
-    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
+    public Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockEssentiaOutputPort.class;
     }
 

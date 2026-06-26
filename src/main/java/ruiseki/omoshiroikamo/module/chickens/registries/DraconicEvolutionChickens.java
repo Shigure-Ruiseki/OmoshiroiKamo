@@ -5,7 +5,7 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
-import ruiseki.omoshiroikamo.core.integration.LibMods;
+import ruiseki.omoshiroikamo.core.compat.LibMods;
 
 public class DraconicEvolutionChickens extends BaseChickenHandler {
 

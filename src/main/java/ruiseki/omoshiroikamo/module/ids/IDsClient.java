@@ -3,10 +3,10 @@ package ruiseki.omoshiroikamo.module.ids;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import ruiseki.okcore.init.ModBase;
+import ruiseki.okcore.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.ids.ICablePartItem;
-import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.module.ids.client.render.ItemPartRenderer;
 import ruiseki.omoshiroikamo.module.ids.common.item.CablePartRegistry;
 

@@ -8,11 +8,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import ruiseki.okcore.color.EnumDye;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.core.integration.LibMods;
+import ruiseki.omoshiroikamo.core.compat.LibMods;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 public class BaseChickens extends BaseChickenHandler {

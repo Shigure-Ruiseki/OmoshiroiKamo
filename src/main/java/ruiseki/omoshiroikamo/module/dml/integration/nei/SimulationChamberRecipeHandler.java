@@ -14,14 +14,14 @@ import com.cleanroommc.modularui.utils.Color;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import ruiseki.okcore.addon.nei.RecipeHandlerBase;
+import ruiseki.okcore.helper.ItemStackHelpers;
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber.BlockSimulationChamber;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
@@ -101,8 +101,8 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
             ItemStack pristine = model.getPristineMatter();
             ItemStack living = model.getLivingMatter();
 
-            if ((isPristine && ItemUtils.areStacksEqual(result, pristine))
-                || (isLiving && ItemUtils.areStacksEqual(result, living))) {
+            if ((isPristine && ItemStackHelpers.areStacksEqual(result, pristine))
+                || (isLiving && ItemStackHelpers.areStacksEqual(result, living))) {
 
                 ItemStack modelStack = DMLItems.DATA_MODEL.newItemStack(1, model.getId());
 

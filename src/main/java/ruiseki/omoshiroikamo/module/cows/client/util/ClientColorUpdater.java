@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.cows.common.registries.ModCows;
 
 /**

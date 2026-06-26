@@ -17,8 +17,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
@@ -26,34 +24,27 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 
 import cofh.api.item.IToolHammer;
 import lombok.Getter;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.okcore.addon.waila.IWailaTileInfoProvider;
+import ruiseki.okcore.block.collidable.ICollidable;
+import ruiseki.okcore.datastructure.EnumFacingMap;
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.core.block.collidable.ICollidable;
-import ruiseki.omoshiroikamo.core.capabilities.Capability;
-import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
-import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
-import ruiseki.omoshiroikamo.core.datastructure.EnumFacingMap;
-import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTickingTE;
-import ruiseki.omoshiroikamo.module.ids.common.capabilities.SidedDynamicLight;
-import ruiseki.omoshiroikamo.module.ids.common.capabilities.SidedDynamicRedstone;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.item.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyPart;
 
-public class TECable extends AbstractTickingTE
-    implements ICable, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
+public class TECable extends AbstractTickingTE implements ICable, IWailaTileInfoProvider, IGuiHolder<SidedPosGuiData> {
 
     @NBTPersist
     private byte connectionMask;
@@ -89,13 +80,7 @@ public class TECable extends AbstractTickingTE
     private EnumFacingMap<Integer> previousLightLevels;
 
     public TECable() {
-        for (ForgeDirection facing : ForgeDirection.VALID_DIRECTIONS) {
-            addCapabilitySided(CapabilityLight.DYNAMIC_LIGHT_CAPABILITY, facing, new SidedDynamicLight(this, facing));
-            addCapabilitySided(
-                CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY,
-                facing,
-                new SidedDynamicRedstone(this, facing));
-        }
+
     }
 
     @Override
@@ -562,7 +547,7 @@ public class TECable extends AbstractTickingTE
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
 
         EntityPlayer player = accessor.getPlayer();
@@ -720,15 +705,5 @@ public class TECable extends AbstractTickingTE
 
     private static byte bit(ForgeDirection dir) {
         return (byte) (1 << dir.ordinal());
-    }
-
-    @Override
-    public boolean hasCapability(@NotNull Capability<?> capability, ForgeDirection facing) {
-        return super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(@NotNull Capability<T> capability, ForgeDirection facing) {
-        return super.getCapability(capability, facing);
     }
 }

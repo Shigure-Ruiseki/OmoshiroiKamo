@@ -1,0 +1,30 @@
+package ruiseki.omoshiroikamo.core.achievement;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
+
+import ruiseki.omoshiroikamo.Reference;
+
+public class AchievementEntry extends Achievement {
+
+    public static List<Achievement> achievements = new ArrayList<>();
+
+    public AchievementEntry(String name, int x, int y, ItemStack icon, Achievement parent) {
+        super(Reference.ACHIEVEMENT + name, Reference.MOD_ID + "." + name, x, y, icon, parent);
+        achievements.add(this);
+        registerStat();
+    }
+
+    public AchievementEntry(String name, int x, int y, Item icon, Achievement parent) {
+        this(name, x, y, new ItemStack(icon), parent);
+    }
+
+    public AchievementEntry(String name, int x, int y, Block icon, Achievement parent) {
+        this(name, x, y, new ItemStack(icon), parent);
+    }
+}

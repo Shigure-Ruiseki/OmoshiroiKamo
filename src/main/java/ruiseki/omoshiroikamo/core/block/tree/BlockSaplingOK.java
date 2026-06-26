@@ -16,9 +16,8 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.core.block.IBlock;
-import ruiseki.omoshiroikamo.core.world.gen.WorldGeneratorTree;
+import ruiseki.okcore.block.IBlock;
+import ruiseki.okcore.world.gen.WorldGeneratorTree;
 
 public class BlockSaplingOK extends BlockSapling implements IBlock {
 
@@ -47,6 +46,11 @@ public class BlockSaplingOK extends BlockSapling implements IBlock {
     }
 
     @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public boolean isHasSubtypes() {
         return false;
     }
@@ -63,7 +67,7 @@ public class BlockSaplingOK extends BlockSapling implements IBlock {
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        blockIcon = reg.registerIcon(Reference.PREFIX_MOD + getTextureName());
+        blockIcon = reg.registerIcon(getTextureName());
     }
 
     public BlockSaplingOK setTextureName(String texture) {

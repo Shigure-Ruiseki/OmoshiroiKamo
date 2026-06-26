@@ -4,9 +4,9 @@ import net.minecraftforge.common.MinecraftForge;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.init.ModBase;
+import ruiseki.okcore.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.module.cows.client.render.RenderCowsCow;
 import ruiseki.omoshiroikamo.module.cows.client.render.StallTESR;
 import ruiseki.omoshiroikamo.module.cows.client.util.ClientColorUpdater;

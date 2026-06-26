@@ -6,11 +6,11 @@ import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 
+import ruiseki.okcore.color.EnumDye;
+import ruiseki.okcore.item.weighted.IFocusableRegistry;
+import ruiseki.okcore.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
-import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.module.multiblock.common.registries.FocusableHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.registries.FocusableRegistry;
 

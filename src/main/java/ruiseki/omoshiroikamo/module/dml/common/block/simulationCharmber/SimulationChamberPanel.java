@@ -28,12 +28,12 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import lombok.Getter;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.helper.StringHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
-import ruiseki.omoshiroikamo.core.common.util.StringAnimator;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.StringHelpers;
+import ruiseki.omoshiroikamo.core.util.StringAnimator;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeWidget;
 

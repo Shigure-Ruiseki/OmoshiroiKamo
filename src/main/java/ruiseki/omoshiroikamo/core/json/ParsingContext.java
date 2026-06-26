@@ -7,6 +7,8 @@ import java.io.File;
  * processed.
  * Uses ThreadLocal to ensure thread safety during potentially parallel parsing.
  */
+// TODO: Change to OK Core
+@Deprecated
 public class ParsingContext {
 
     private static final ThreadLocal<File> currentFile = new ThreadLocal<>();

@@ -27,9 +27,9 @@ import com.cleanroommc.modularui.utils.GlStateManager;
 import com.cleanroommc.modularui.utils.Platform;
 import com.cleanroommc.modularui.widget.Widget;
 
+import ruiseki.okcore.inventory.ItemStackKey;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiDraw;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.IDsItemSlotSH;
 
 public class IDsItemSlot extends Widget<IDsItemSlot> implements Interactable, RecipeViewerIngredientProvider {

@@ -35,16 +35,15 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.capabilities.redstone.CapabilityRedstone;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.helper.TileHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.core.block.IDynamicRedstone;
-import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.helper.TileHelpers;
+import ruiseki.omoshiroikamo.core.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.ILogicNet;
@@ -304,10 +303,10 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(texture);
+        RenderUtils.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderHelpers.bindTexture(back_texture);
+        RenderUtils.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();
@@ -335,10 +334,10 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(texture);
+        RenderUtils.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderHelpers.bindTexture(back_texture);
+        RenderUtils.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();
@@ -417,9 +416,8 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         value = Math.max(0, Math.min(15, value));
         if (value == lastOutput) return;
         lastOutput = value;
-        IDynamicRedstone cap = TileHelpers
-            .getCapability(getWorld(), getPos(), getSide(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-        cap.setRedstoneLevel(lastOutput, lastOutput > 8);
+        TileHelpers.getCapability(getWorld(), getPos(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY, getSide())
+            .ifPresent(cap -> cap.setRedstoneLevel(lastOutput, lastOutput > 8));
     }
 
     @Override

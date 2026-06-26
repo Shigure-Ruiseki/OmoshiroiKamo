@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import crazypants.enderio.power.IInternalPowerProvider;
 import crazypants.enderio.power.IInternalPowerReceiver;
 import crazypants.enderio.power.IPowerStorage;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * EnderIO integration handler using direct API access.
@@ -32,7 +32,9 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  * <li>Any device implementing {@code IInternalPowerReceiver} - Energy receivers</li>
  * <li>Any device implementing {@code IInternalPowerProvider} - Energy providers</li>
  * </ul>
+ * Change to use {@link ruiseki.okcore.capabilities.Capability}.
  */
+@Deprecated
 public class EnderIOIntegration {
 
     /**

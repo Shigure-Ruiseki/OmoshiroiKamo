@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.core.util;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
+import ruiseki.okcore.persist.nbt.INBTSerializable;
 
 /**
  * Simple mana storage implementation (similar to CoFH EnergyStorage)

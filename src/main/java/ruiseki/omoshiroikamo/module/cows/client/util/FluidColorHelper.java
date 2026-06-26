@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.Fluid;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Helper to determine colors for fluids, with client-side texture analysis.

@@ -5,10 +5,10 @@ import java.util.List;
 
 import net.minecraft.item.ItemBlock;
 
+import ruiseki.okcore.block.BlockOK;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.api.multiblock.ModifierRegistry;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
 
 public abstract class BlockModifier extends BlockOK implements IModifierBlock {
 
@@ -37,7 +37,7 @@ public abstract class BlockModifier extends BlockOK implements IModifierBlock {
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockModifier.class;
     }
 

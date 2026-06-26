@@ -10,17 +10,18 @@ import net.minecraft.world.World;
 
 import org.joml.Vector3d;
 
+import ruiseki.okcore.item.ItemOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemChickenCatcher extends ItemOK {
 
     public ItemChickenCatcher() {
-        super(ModObject.CHICKEN_CATCHER);
+        super(ModObject.CHICKEN_CATCHER.name);
         setMaxDamage(64);
         setMaxStackSize(1);
-        setTextureName("chicken/chicken_catcher");
+        setTextureName(Reference.PREFIX_MOD + "chicken/chicken_catcher");
     }
 
     @Override

@@ -15,7 +15,7 @@ import org.apache.commons.io.FileUtils;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 // Copy and modify from EnderCore
 public class ResourcePackAssembler {

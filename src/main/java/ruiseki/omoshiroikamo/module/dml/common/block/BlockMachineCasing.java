@@ -3,8 +3,8 @@ package ruiseki.omoshiroikamo.module.dml.common.block;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 
+import ruiseki.okcore.block.BlockOK;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
 
 public class BlockMachineCasing extends BlockOK {
 

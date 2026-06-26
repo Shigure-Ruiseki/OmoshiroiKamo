@@ -13,7 +13,7 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
-import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.util.WailaUtils;
 
 public class BlockBreeder extends AbstractBlock<TEBreeder> {
     // TODO: Add specific conditions for breeding
@@ -45,7 +45,7 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> {
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity tileEntity = accessor.getTileEntity();
         if (tileEntity instanceof TEBreeder roost) {

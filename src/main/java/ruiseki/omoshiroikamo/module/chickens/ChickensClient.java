@@ -2,9 +2,9 @@ package ruiseki.omoshiroikamo.module.chickens;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.init.ModBase;
+import ruiseki.okcore.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.module.chickens.client.render.BreederTESR;
 import ruiseki.omoshiroikamo.module.chickens.client.render.RenderChickensChicken;
 import ruiseki.omoshiroikamo.module.chickens.client.render.RoostTESR;

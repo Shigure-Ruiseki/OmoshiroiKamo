@@ -14,7 +14,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.network.packet.PacketClientFlight;
+import ruiseki.omoshiroikamo.core.network.PacketClientFlight;
 
 /**
  * Event handler for re-syncing flight state after dimension change or respawn

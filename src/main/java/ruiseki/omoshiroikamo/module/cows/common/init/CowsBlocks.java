@@ -4,9 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.block.BlockOK;
-import ruiseki.omoshiroikamo.core.block.IBlock;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.okcore.block.IBlock;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.cows.common.block.BlockStall;
 
 public enum CowsBlocks {
@@ -33,7 +32,7 @@ public enum CowsBlocks {
 
     private final IBlock block;
 
-    CowsBlocks(BlockOK block) {
+    CowsBlocks(IBlock block) {
         this.block = block;
     }
 

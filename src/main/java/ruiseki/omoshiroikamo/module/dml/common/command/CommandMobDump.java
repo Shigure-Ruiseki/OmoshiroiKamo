@@ -21,11 +21,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.init.ModBase;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.common.writer.MobDataWriter;
 
 public class CommandMobDump extends CommandMod {

@@ -30,14 +30,14 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.datastructure.BlockStack;
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
+import ruiseki.omoshiroikamo.core.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.ILogicNet;
@@ -281,10 +281,10 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(texture);
+        RenderUtils.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderHelpers.bindTexture(back_texture);
+        RenderUtils.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();
@@ -312,10 +312,10 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(texture);
+        RenderUtils.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderHelpers.bindTexture(back_texture);
+        RenderUtils.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();

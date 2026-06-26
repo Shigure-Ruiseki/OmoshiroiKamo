@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 
 import lombok.Getter;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.core.item.ItemUtils;
+import ruiseki.okcore.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
@@ -329,7 +329,7 @@ public class ModelRegistryItem extends AbstractJsonMaterial {
             for (ItemStack loot : lootItems) {
                 if (loot == null) continue;
 
-                if (ItemUtils.areStacksEqual(loot, stack)) {
+                if (ItemStackHelpers.areStacksEqual(loot, stack)) {
                     return true;
                 }
             }
@@ -347,7 +347,7 @@ public class ModelRegistryItem extends AbstractJsonMaterial {
             ItemStack loot = lootItems.get(i);
             if (loot == null) continue;
 
-            if (ItemUtils.areStacksEqual(loot, stack)) {
+            if (ItemStackHelpers.areStacksEqual(loot, stack)) {
                 return i;
             }
         }

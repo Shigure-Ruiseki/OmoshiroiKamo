@@ -3,8 +3,8 @@ package ruiseki.omoshiroikamo.module.ids.common.init;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.item.IItem;
+import ruiseki.okcore.item.IItem;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.ids.common.item.ItemMenrilBerries;
 import ruiseki.omoshiroikamo.module.ids.common.item.ItemVariableCard;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.block.ItemBlockReader;

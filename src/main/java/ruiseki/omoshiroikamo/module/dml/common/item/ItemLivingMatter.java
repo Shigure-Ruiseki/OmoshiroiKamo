@@ -14,13 +14,11 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.helper.KeyboardHelpers;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 public class ItemLivingMatter extends ItemOK {
 
@@ -66,16 +64,14 @@ public class ItemLivingMatter extends ItemOK {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        TooltipUtils builder = TooltipUtils.builder();
         LivingRegistryItem item = LivingRegistry.INSTANCE.getByType(stack.getItemDamage());
         if (item != null) {
-            builder.addLang("tooltip.living_matter.consume_for_xp", KeyboardHelpers.getUseKeyName());
-            builder.addLang("tooltip.living_matter.consume_stack", KeyboardHelpers.getSneakKeyName());
-            builder.addLang("tooltip.living_matter.xp", item.getXpValue());
+            list.add(LangHelpers.localize("tooltip.living_matter.consume_for_xp", "Left Click"));
+            list.add(LangHelpers.localize("tooltip.living_matter.consume_stack", "Shift"));
+            list.add(LangHelpers.localize("tooltip.living_matter.xp", item.getXpValue()));
         }
-
-        list.addAll(builder.build());
     }
 
     @Override

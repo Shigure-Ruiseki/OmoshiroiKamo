@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus;
 
-import ruiseki.omoshiroikamo.core.energy.capability.EnergySink;
+import ruiseki.okcore.energy.capability.IEnergySink;
 
-public class InterfaceEnergySink implements EnergySink {
+public class InterfaceEnergySink implements IEnergySink {
 
     private final IEnergyInterface iFace;
 

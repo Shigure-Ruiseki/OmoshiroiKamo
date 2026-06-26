@@ -9,8 +9,12 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.okcore.helper.LangHelpers;
 
+/**
+ * Change to use {@link ruiseki.okcore.client.key.IKeyHandler}
+ */
+@Deprecated
 public class KeyHandler {
 
     public static final KeyHandler instance = new KeyHandler();

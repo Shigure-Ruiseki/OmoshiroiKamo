@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.util.Logger;
 
 /**
  * Expression that performs mathematical functions like sin, cos, sqrt, etc.

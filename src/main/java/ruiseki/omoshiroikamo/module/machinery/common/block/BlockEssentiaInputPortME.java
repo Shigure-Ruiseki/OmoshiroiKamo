@@ -47,7 +47,7 @@ public class BlockEssentiaInputPortME extends AbstractPortBlock<TEEssentiaInputP
     }
 
     @Override
-    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
+    public Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockEssentiaInputPortME.class;
     }
 

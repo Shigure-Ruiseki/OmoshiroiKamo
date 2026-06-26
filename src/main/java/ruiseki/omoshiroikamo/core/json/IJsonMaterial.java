@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
  * Interface for materials that can be serialized to/from JSON.
  * Represents a logical unit of data (e.g., Item, Condition).
  */
+// TODO: Change to OK Core
+@Deprecated
 public interface IJsonMaterial {
 
     /**

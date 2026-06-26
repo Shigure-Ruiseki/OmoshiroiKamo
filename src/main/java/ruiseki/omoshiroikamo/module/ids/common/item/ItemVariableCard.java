@@ -12,12 +12,12 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.ItemNBTHelpers;
+import ruiseki.okcore.helper.LangHelpers;
+import ruiseki.okcore.item.ItemOK;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;

@@ -5,8 +5,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import ruiseki.okcore.item.ItemOK;
+import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.item.ItemOK;
 
 /**
  * Transitional item used during liquid egg consumption.
@@ -15,9 +16,9 @@ import ruiseki.omoshiroikamo.core.item.ItemOK;
 public class ItemEmptyEgg extends ItemOK {
 
     public ItemEmptyEgg() {
-        super(ModObject.EMPTY_EGG);
+        super(ModObject.EMPTY_EGG.name);
         setMaxStackSize(64);
-        setTextureName("chicken/liquid_egg"); // Placeholder if no dedicated icon
+        setTextureName(Reference.PREFIX_MOD + "chicken/liquid_egg"); // Placeholder if no dedicated icon
     }
 
     @Override

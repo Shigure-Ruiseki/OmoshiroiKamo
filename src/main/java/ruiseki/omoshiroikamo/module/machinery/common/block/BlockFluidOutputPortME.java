@@ -52,7 +52,7 @@ public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortM
     }
 
     @Override
-    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
+    public Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockFluidOutputPortME.class;
     }
 
@@ -72,7 +72,7 @@ public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortM
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+    public void getWailaBody(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         tooltip.clear();
         TileEntity te = accessor.getTileEntity();

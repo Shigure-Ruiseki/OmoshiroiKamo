@@ -41,13 +41,13 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.okcore.helper.LangHelpers;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
+import ruiseki.omoshiroikamo.core.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.ILogicNet;
@@ -282,7 +282,7 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderHelpers.bindTexture(activeSlot != -1 ? active : inactive);
+        RenderUtils.bindTexture(activeSlot != -1 ? active : inactive);
 
         rotateForSide(getSide());
 
@@ -313,7 +313,7 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
 
         rotateForSide(getSide());
 
-        RenderHelpers.bindTexture(inactive);
+        RenderUtils.bindTexture(inactive);
         model.renderAll();
 
         GL11.glPopMatrix();

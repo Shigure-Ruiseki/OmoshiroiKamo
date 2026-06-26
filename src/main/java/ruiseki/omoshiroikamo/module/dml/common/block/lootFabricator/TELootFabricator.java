@@ -16,15 +16,15 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import lombok.Getter;
+import ruiseki.okcore.energy.IOKEnergySink;
+import ruiseki.okcore.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.CraftingState;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
-import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMachineTE;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPristineMatter;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
 
@@ -153,11 +153,6 @@ public class TELootFabricator extends AbstractMachineTE
     @Override
     public boolean isActive() {
         return isCrafting();
-    }
-
-    @Override
-    public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
-        return energyStorage.receiveEnergy(amount, simulate);
     }
 
     @Override

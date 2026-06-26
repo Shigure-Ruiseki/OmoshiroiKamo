@@ -7,8 +7,9 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.okcore.command.CommandMod;
+import ruiseki.okcore.init.ModBase;
 import ruiseki.omoshiroikamo.core.command.utils.CommandUtils;
-import ruiseki.omoshiroikamo.core.init.ModBase;
 
 /**
  * Main command handler for /ok

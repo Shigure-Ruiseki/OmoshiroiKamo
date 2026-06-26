@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
+import ruiseki.okcore.event.handler.NetherPopEventHandler;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
@@ -21,8 +22,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.event.NetherPopulateEvent;
+import ruiseki.omoshiroikamo.core.util.Logger;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemLiquidEgg;
@@ -74,7 +74,7 @@ public class ModChickens {
                 biomesForSpawning.toArray(new BiomeGenBase[biomesForSpawning.size()]));
             if (biomesForSpawning.contains(BiomeGenBase.hell)) {
                 MinecraftForge.TERRAIN_GEN_BUS.register(
-                    new NetherPopulateEvent(ChickenConfig.netherSpawnChanceMultiplier, EntityChickensChicken.class));
+                    new NetherPopEventHandler(ChickenConfig.netherSpawnChanceMultiplier, EntityChickensChicken.class));
             }
         }
     }

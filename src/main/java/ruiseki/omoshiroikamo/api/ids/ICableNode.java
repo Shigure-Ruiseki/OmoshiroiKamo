@@ -8,10 +8,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import ruiseki.okcore.capabilities.Capability;
+import ruiseki.okcore.capabilities.ICapabilityProvider;
+import ruiseki.okcore.datastructure.BlockPos;
+import ruiseki.okcore.datastructure.LazyOptional;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.core.capabilities.Capability;
-import ruiseki.omoshiroikamo.core.capabilities.ICapabilityProvider;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractCableNetwork;
 
 public interface ICableNode extends ICapabilityProvider {
@@ -56,13 +57,8 @@ public interface ICableNode extends ICapabilityProvider {
     }
 
     @Override
-    @Nullable
-    default <T> T getCapability(Capability<T> capability, ForgeDirection facing) {
-        return null;
-    }
-
-    @Override
-    default boolean hasCapability(@NotNull Capability<?> capability, @Nullable ForgeDirection facing) {
-        return false;
+    @NotNull
+    default <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable ForgeDirection side) {
+        return LazyOptional.empty();
     }
 }

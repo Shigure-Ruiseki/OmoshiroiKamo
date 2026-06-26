@@ -5,13 +5,14 @@ import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.gtnewhorizon.gtnhlib.capability.item.ItemSource;
-import com.gtnewhorizon.gtnhlib.item.ImmutableItemStack;
-import com.gtnewhorizon.gtnhlib.item.ItemStack2IntFunction;
-import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
-import com.gtnewhorizon.gtnhlib.item.StandardInventoryIterator;
+import ruiseki.okcore.item.IImmutableItemStack;
+import ruiseki.okcore.item.IInventoryIterator;
+import ruiseki.okcore.item.IItemStack2IntFunction;
+import ruiseki.okcore.item.IItemStackPredicate;
+import ruiseki.okcore.item.capability.IItemSource;
+import ruiseki.okcore.item.capability.minecraft.InventoryIterator;
 
-public class InterfaceItemSource implements ItemSource {
+public class InterfaceItemSource implements IItemSource {
 
     private final IItemInterface iface;
 
@@ -23,7 +24,7 @@ public class InterfaceItemSource implements ItemSource {
 
     @Override
     public void resetSource() {
-        ItemSource.super.resetSource();
+        IItemSource.super.resetSource();
         allowedSlots = null;
     }
 
@@ -33,11 +34,11 @@ public class InterfaceItemSource implements ItemSource {
     }
 
     @Override
-    public @Nullable ItemStack pull(@Nullable ItemStackPredicate filter, @Nullable ItemStack2IntFunction amount) {
-        StandardInventoryIterator iter = sourceIterator();
+    public @Nullable ItemStack pull(@Nullable IItemStackPredicate filter, @Nullable IItemStack2IntFunction amount) {
+        IInventoryIterator iter = sourceIterator();
 
         while (iter.hasNext()) {
-            ImmutableItemStack slot = iter.next();
+            IImmutableItemStack slot = iter.next();
             if (slot == null || slot.isEmpty()) continue;
 
             if (filter != null && !filter.test(slot)) continue;
@@ -67,8 +68,8 @@ public class InterfaceItemSource implements ItemSource {
     }
 
     @Override
-    public @NotNull StandardInventoryIterator sourceIterator() {
-        return new StandardInventoryIterator(
+    public @NotNull IInventoryIterator sourceIterator() {
+        return new InventoryIterator(
             iface.getInventory(),
             iface.getSide()
                 .getOpposite(),

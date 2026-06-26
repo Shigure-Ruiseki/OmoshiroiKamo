@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo;
 
-import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
+import ruiseki.okcore.init.ModBase;
+import ruiseki.okcore.proxy.ClientProxyComponent;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends ClientProxyComponent {

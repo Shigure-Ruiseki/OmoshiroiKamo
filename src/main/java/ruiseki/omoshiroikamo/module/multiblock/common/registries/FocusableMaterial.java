@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.multiblock.common.registries;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.okcore.color.EnumDye;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 import ruiseki.omoshiroikamo.module.multiblock.common.registries.FocusableHandler.FocusableType;
 
