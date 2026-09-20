@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/cube",
 	"textures": {
-		"particle": "omoshiroikamo:block/multiblock/hardened_structure",
-		"base": "omoshiroikamo:block/multiblock/hardened_structure",
-		"overlay": "omoshiroikamo:block/multiblock/structure_frame_overlay"
+		"particle": "omoshiroikamo:blocks/multiblock/hardened_structure",
+		"base": "omoshiroikamo:blocks/multiblock/hardened_structure",
+		"overlay": "omoshiroikamo:blocks/multiblock/structure_frame_overlay"
 	},
 	"elements": [
 		{

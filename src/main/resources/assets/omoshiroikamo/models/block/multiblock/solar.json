@@ -3,8 +3,8 @@
   "parent": "block/cube",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "omoshiroikamo:block/multiblock/solar",
-		"solar_side": "omoshiroikamo:block/multiblock/basalt"
+		"particle": "omoshiroikamo:blocks/multiblock/solar",
+		"solar_side": "omoshiroikamo:blocks/multiblock/basalt"
 	},
 	"elements": [
 		{
