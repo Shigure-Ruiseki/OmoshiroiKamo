@@ -2,10 +2,10 @@
 	"credit": "Designed by ValkyrieofNight",
 	"parent": "block/cube",
   "textures": {
-    "tier": "omoshiroikamo:block/multiblock/cont_tier",
-    "laser_core": "omoshiroikamo:block/multiblock/laser_core",
-    "vmbase": "omoshiroikamo:block/multiblock/basalt",
-    "particle": "minecraft:block/emerald_block"
+    "tier": "omoshiroikamo:blocks/multiblock/cont_tier",
+    "laser_core": "omoshiroikamo:blocks/multiblock/laser_core",
+    "vmbase": "omoshiroikamo:blocks/multiblock/basalt",
+    "particle": "blocks/emerald_block"
   },
   "elements": [
     {

@@ -2,8 +2,8 @@
     "parent": "block/cube",
     "textures": {
         "particle": "#base",
-        "base": "omoshiroikamo:block/modular/tier_0_base",
-        "overlay": "omoshiroikamo:block/modular/casing_circuitry_overlay"
+        "base": "omoshiroikamo:blocks/modular/tier_0_base",
+        "overlay": "omoshiroikamo:blocks/modular/casing_circuitry_overlay"
     },
     "elements": [
         {

@@ -2,9 +2,9 @@
     "credit": "Made with Blockbench",
     "parent": "block/cube",
     "textures": {
-        "particle": "omoshiroikamo:block/modular/controller_base",
-        "base": "omoshiroikamo:block/modular/controller_base",
-        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_machine_controller"
+        "particle": "omoshiroikamo:blocks/modular/controller_base",
+        "base": "omoshiroikamo:blocks/modular/controller_base",
+        "overlay": "omoshiroikamo:blocks/modularmachineryOverlay/overlay_machine_controller"
     },
     "elements": [
         {

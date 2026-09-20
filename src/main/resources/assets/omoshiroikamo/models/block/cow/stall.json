@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"0": "block/hardened_clay_stained_cyan",
-		"1": "block/hay_block_top",
-		"2": "block/iron_bars",
-		"particle": "block/iron_bars"
+		"0": "blocks/hardened_clay_stained_cyan",
+		"1": "blocks/hay_block_top",
+		"2": "blocks/iron_bars",
+		"particle": "blocks/iron_bars"
 	},
 	"elements": [
 		{
